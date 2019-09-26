@@ -45,9 +45,7 @@ public class DataModel {
 
             if (recordType.equals(VALUE_INDIVIDUAL)) {
                 if (info.getCode() == 0) {
-                    if (person != null) {
-                        addPerson(person);
-                    }
+                    addPerson(person);
                     person = new Person(info.getType());
                 } else if (person != null) {
                     person.setInformation(info, lastType);
@@ -59,9 +57,7 @@ public class DataModel {
 
             } else if (recordType.equals(VALUE_FAMILY)) {
                 if (info.getCode() == 0) {
-                    if (person != null) {
-                        addPerson(person);
-                    }
+                    addPerson(person);
                     person = null;
                     couple = spouseMap.get(info.getType().replace("@", ""));
                 } else if (info.getType().equals(TYPE_CHILD)) {
@@ -83,16 +79,18 @@ public class DataModel {
         }
     }
 
-    public void addPerson(Person person) {
-        if (spouseMap.containsKey(person.getSpouseID())) {
-            Couple partner = spouseMap.get(person.getSpouseID());
-            partner.addSpouse(person);
-        } else if (person.getSpouseID() != null) {
-            spouseMap.put(person.getSpouseID(), new Couple(person));
-        }
+    private void addPerson(Person person) {
+        if (person != null) {
+            if (spouseMap.containsKey(person.getSpouseID())) {
+                Couple partner = spouseMap.get(person.getSpouseID());
+                partner.addSpouse(person);
+            } else if (person.getSpouseID() != null) {
+                spouseMap.put(person.getSpouseID(), new Couple(person));
+            }
 
-        individualMap.put(person.getId(), person);
-        recordList.add(person);
+            individualMap.put(person.getId(), person);
+            recordList.add(person);
+        }
     }
 
     public int getIndividualsCount() {

@@ -21,6 +21,7 @@ public class Person {
     private final static String MARKER = "@";
 
     private final ArrayList<Person> children;
+    private final ArrayList<Integer> ancestorLine;
     private final String id;
 
     private String firstName;
@@ -33,7 +34,6 @@ public class Person {
     private String parentID;
     private String spouseID;
 
-    private ArrayList<Integer> ancestorLine;
     private int ancestorGenerations;
 
     private Couple parents;
@@ -46,6 +46,40 @@ public class Person {
         ancestorGenerations = 0;
         children = new ArrayList<>();
         ancestorLine = new ArrayList<>();
+        firstName = "";
+        surname = "";
+        birthDate = "";
+        birthPlace = "";
+        deathDate = "";
+        deathPlace = "";
+    }
+
+    public Person(Person person) {
+        if (person != null) {
+            this.id = person.getId();
+            this.children = new ArrayList<>(person.getChildren());
+            this.ancestorLine = new ArrayList<>(person.getAncestorLine());
+
+            this.firstName = person.getFirstName();
+            this.surname = person.getSurname();
+            this.sex = person.getSex();
+            this.birthDate = person.getBirthDate();
+            this.birthPlace = person.getBirthPlace();
+            this.deathDate = person.getDeathDate();
+            this.deathPlace = person.getDeathPlace();
+            this.parentID = person.getParentID();
+            this.spouseID = person.getSpouseID();
+            this.ancestorGenerations = person.getAncestorGenerations();
+            this.parents = person.getParents();
+            this.spouse = person.getSpouse();
+            this.father = person.getFather();
+            this.mother = person.getMother();
+        } else {
+            this.id = "";
+            ancestorGenerations = 0;
+            children = new ArrayList<>();
+            ancestorLine = new ArrayList<>();
+        }
     }
 
     public String getId() {
@@ -69,6 +103,11 @@ public class Person {
     }
 
     public String getName() {
+        if (getFirstName().isEmpty()) {
+            return getSurname();
+        } else if (getSurname().isEmpty()) {
+            return getFirstName();
+        }
         return getFirstName() + " " + getSurname();
     }
 

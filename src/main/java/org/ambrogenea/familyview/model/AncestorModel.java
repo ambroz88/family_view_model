@@ -14,7 +14,7 @@ public class AncestorModel extends DataModel {
     }
 
     public Person generateAncestors(int rowIndex) {
-        Person person = getRecordList().get(rowIndex);
+        Person person = new Person(getRecordList().get(rowIndex));
         Couple parents = findParents(person);
 
         person = addParents(person, parents);
@@ -24,30 +24,21 @@ public class AncestorModel extends DataModel {
 
     private Person addParents(Person person, Couple parents) {
         if (person != null && parents != null && !parents.isEmpty()) {
-            Couple fathersParents = findParents(parents.getHusband());
-            Couple mothersParents = findParents(parents.getWife());
 
-            System.out.println("-----add parents---------");
-            System.out.println("Child: " + person);
-            System.out.println("Child children count: " + person.getAncestorLine().size());
-            Person father = parents.getHusband();
-            System.out.println("Father: " + father);
-            if (father != null) {
+            if (parents.getHusband() != null) {
+                Person father = new Person(parents.getHusband());
+                Couple fathersParents = findParents(father);
                 father.addChildrenCode(person.getAncestorLine());
-                System.out.println("Fathers children count: " + father.getAncestorLine().size());
+                person.setFather(addParents(father, fathersParents));
             }
-            person.setFather(addParents(father, fathersParents));
 
-            Person mother = parents.getWife();
-            System.out.println("Mother: " + mother);
-            System.out.println("Child children count: " + person.getAncestorLine().size());
-            if (mother != null) {
-                System.out.println("Mothers children count: " + mother.getAncestorLine().size());
+            if (parents.getWife() != null) {
+                Person mother = new Person(parents.getWife());
+                Couple mothersParents = findParents(mother);
                 mother.addChildrenCode(person.getAncestorLine());
-                System.out.println("Mothers children count: " + mother.getAncestorLine().size());
+                person.setMother(addParents(mother, mothersParents));
             }
-            person.setMother(addParents(mother, mothersParents));
-            System.out.println("-------------------------");
+
         }
         return person;
     }
@@ -67,8 +58,7 @@ public class AncestorModel extends DataModel {
                     mother = getIndividualMap().get(parents.getWife().getId());
                 }
 
-                parents.setHusband(father);
-                parents.setWife(mother);
+                parents = new Couple(father, mother);
             }
         }
         return parents;

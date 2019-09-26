@@ -19,6 +19,16 @@ public class Couple {
         children = new ArrayList<>();
     }
 
+    public Couple(Person husband, Person wife) {
+        if (husband != null) {
+            this.husband = new Person(husband);
+        }
+        if (wife != null) {
+            this.wife = new Person(wife);
+        }
+        children = new ArrayList<>();
+    }
+
     public Couple(Person person) {
         children = new ArrayList<>();
         addSpouse(person);
