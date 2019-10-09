@@ -283,7 +283,9 @@ public class Person {
             setParentID(info.getValue());
         }
         if (info.getType().equals(TYPE_SPOUSE)) {
-            setSpouseID(info.getValue());
+            if (getSpouseID() == null) {
+                setSpouseID(info.getValue());
+            }
         }
     }
 
