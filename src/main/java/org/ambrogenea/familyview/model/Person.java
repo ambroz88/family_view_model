@@ -17,11 +17,9 @@ public class Person {
     public final static String TYPE_PLACE = "PLAC";
     public final static String TYPE_SPOUSE = "FAMS";
     public final static String TYPE_PARENTS = "FAMC";
-
     private final static String MARKER = "@";
 
     private final ArrayList<Person> children;
-    private final ArrayList<Integer> ancestorLine;
     private final String id;
 
     private String firstName;
@@ -34,18 +32,13 @@ public class Person {
     private String parentID;
     private String spouseID;
 
-    private int ancestorGenerations;
-
     private Couple parents;
     private Person spouse;
-    private Person father;
-    private Person mother;
 
     public Person(String id) {
         this.id = id.replace(MARKER, "");
-        ancestorGenerations = 0;
         children = new ArrayList<>();
-        ancestorLine = new ArrayList<>();
+
         firstName = "";
         surname = "";
         birthDate = "";
@@ -58,7 +51,6 @@ public class Person {
         if (person != null) {
             this.id = person.getId();
             this.children = new ArrayList<>(person.getChildren());
-            this.ancestorLine = new ArrayList<>(person.getAncestorLine());
 
             this.firstName = person.getFirstName();
             this.surname = person.getSurname();
@@ -69,16 +61,11 @@ public class Person {
             this.deathPlace = person.getDeathPlace();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
-            this.ancestorGenerations = person.getAncestorGenerations();
             this.parents = person.getParents();
             this.spouse = person.getSpouse();
-            this.father = person.getFather();
-            this.mother = person.getMother();
         } else {
             this.id = "";
-            ancestorGenerations = 0;
             children = new ArrayList<>();
-            ancestorLine = new ArrayList<>();
         }
     }
 
@@ -117,12 +104,6 @@ public class Person {
 
     public void setSex(String sex) {
         this.sex = sex;
-        ancestorLine.clear();
-        if (sex.equals(Couple.MALE)) {
-            ancestorLine.add(AncestorModel.CODE_MALE);
-        } else {
-            ancestorLine.add(AncestorModel.CODE_FEMALE);
-        }
     }
 
     public String getBirthDate() {
@@ -189,62 +170,12 @@ public class Person {
         this.spouse = spouse;
     }
 
-    public Person getFather() {
-        return father;
-    }
-
-    public void setFather(Person father) {
-        this.father = father;
-        if (getMother() == null) {
-            if (father != null) {
-                ancestorGenerations = father.getAncestorGenerations() + 1;
-            }
-        } else {
-            if (father != null && father.getAncestorGenerations() >= mother.getAncestorGenerations()) {
-                ancestorGenerations = father.getAncestorGenerations() + 1;
-            }
-        }
-    }
-
-    public Person getMother() {
-        return mother;
-    }
-
-    public void setMother(Person mother) {
-        this.mother = mother;
-        if (getFather() == null) {
-            if (mother != null) {
-                ancestorGenerations = mother.getAncestorGenerations() + 1;
-            }
-        } else {
-            if (mother != null && mother.getAncestorGenerations() >= father.getAncestorGenerations()) {
-                ancestorGenerations = mother.getAncestorGenerations() + 1;
-            }
-        }
-    }
-
     public void setSpouse(Couple spouse) {
         if (getSex().equals(Couple.MALE)) {
             this.spouse = spouse.getWife();
         } else if (getSex().equals(Couple.FEMALE)) {
             this.spouse = spouse.getHusband();
         }
-    }
-
-    public int getAncestorGenerations() {
-        return ancestorGenerations;
-    }
-
-    public ArrayList<Integer> getAncestorLine() {
-        return ancestorLine;
-    }
-
-    public void addChildrenCode(ArrayList<Integer> childrenCodes) {
-        ancestorLine.addAll(0, childrenCodes);
-    }
-
-    public void addAncestorCode(int code) {
-        ancestorLine.add(code);
     }
 
     public ArrayList<Person> getChildren() {
