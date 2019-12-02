@@ -12,29 +12,29 @@ public class Couple {
     public static final String FEMALE = "F";
 
     private final ArrayList<String> children;
-    private Person wife;
-    private Person husband;
+    private AncestorPerson wife;
+    private AncestorPerson husband;
 
     public Couple() {
         children = new ArrayList<>();
     }
 
-    public Couple(Person husband, Person wife) {
+    public Couple(AncestorPerson husband, AncestorPerson wife) {
         if (husband != null) {
-            this.husband = new Person(husband);
+            this.husband = husband;
         }
         if (wife != null) {
-            this.wife = new Person(wife);
+            this.wife = wife;
         }
         children = new ArrayList<>();
     }
 
-    public Couple(Person person) {
+    public Couple(AncestorPerson person) {
         children = new ArrayList<>();
         addSpouse(person);
     }
 
-    public void addSpouse(Person person) {
+    public void addSpouse(AncestorPerson person) {
         if (person.getSex().equals(MALE)) {
             setHusband(person);
         } else if (person.getSex().equals(FEMALE)) {
@@ -42,11 +42,11 @@ public class Couple {
         }
     }
 
-    public void setWife(Person wife) {
+    public void setWife(AncestorPerson wife) {
         this.wife = wife;
     }
 
-    public void setHusband(Person husband) {
+    public void setHusband(AncestorPerson husband) {
         this.husband = husband;
     }
 
@@ -58,11 +58,11 @@ public class Couple {
         }
     }
 
-    public Person getWife() {
+    public AncestorPerson getWife() {
         return wife;
     }
 
-    public Person getHusband() {
+    public AncestorPerson getHusband() {
         return husband;
     }
 

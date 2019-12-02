@@ -75,14 +75,14 @@ public class AncestorModel extends DataModel {
         if (person != null) {
             parents = getSpouseMap().get(person.getParentID());
             if (parents != null) {
-                Person father = null;
-                Person mother = null;
+                AncestorPerson father = null;
+                AncestorPerson mother = null;
 
                 if (parents.getHusband() != null) {
-                    father = getIndividualMap().get(parents.getHusband().getId());
+                    father = new AncestorPerson(getIndividualMap().get(parents.getHusband().getId()));
                 }
                 if (parents.getWife() != null) {
-                    mother = getIndividualMap().get(parents.getWife().getId());
+                    mother = new AncestorPerson(getIndividualMap().get(parents.getWife().getId()));
                 }
 
                 parents = new Couple(father, mother);

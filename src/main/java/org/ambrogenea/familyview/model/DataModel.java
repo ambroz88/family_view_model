@@ -34,7 +34,7 @@ public class DataModel {
 
     public void loadGEDCOMLines(ArrayList<String> rows) {
         Information info;
-        Person person = null;
+        AncestorPerson person = null;
         String lastType = "";
         Couple couple = new Couple();
 
@@ -46,7 +46,7 @@ public class DataModel {
             if (recordType.equals(VALUE_INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
-                    person = new Person(info.getType());
+                    person = new AncestorPerson(info.getType());
                 } else if (person != null) {
                     person.setInformation(info, lastType);
                 }
@@ -79,7 +79,7 @@ public class DataModel {
         }
     }
 
-    private void addPerson(Person person) {
+    private void addPerson(AncestorPerson person) {
         if (person != null) {
             if (spouseMap.containsKey(person.getSpouseID())) {
                 Couple partner = spouseMap.get(person.getSpouseID());

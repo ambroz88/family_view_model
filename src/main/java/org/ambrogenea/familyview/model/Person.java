@@ -38,6 +38,7 @@ public class Person {
     public Person(String id) {
         this.id = id.replace(MARKER, "");
         children = new ArrayList<>();
+        parents = new Couple();
 
         firstName = "";
         surname = "";
@@ -66,6 +67,7 @@ public class Person {
         } else {
             this.id = "";
             children = new ArrayList<>();
+            parents = new Couple();
         }
     }
 
@@ -156,6 +158,22 @@ public class Person {
 
     public Couple getParents() {
         return parents;
+    }
+
+    public void setFather(AncestorPerson father) {
+        getParents().setHusband(father);
+    }
+
+    public AncestorPerson getFather() {
+        return getParents().getHusband();
+    }
+
+    public void setMother(AncestorPerson mother) {
+        getParents().setWife(mother);
+    }
+
+    public AncestorPerson getMother() {
+        return getParents().getWife();
     }
 
     public void setParents(Couple parents) {
