@@ -1,5 +1,7 @@
 package org.ambrogenea.familyview.model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -26,6 +28,14 @@ public class AncestorModel extends DataModel {
         Couple parents = findParents(person);
 
         person = addManParents(person, parents);
+        return person;
+    }
+
+    public AncestorPerson generateFathersFamily(int rowIndex) {
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        Couple parents = findParents(person);
+
+        person = addManParentsWithSiblings(person, parents);
         return person;
     }
 
@@ -70,22 +80,47 @@ public class AncestorModel extends DataModel {
         return person;
     }
 
+    private AncestorPerson addManParentsWithSiblings(AncestorPerson person, Couple parents) {
+        if (person != null && parents != null && !parents.isEmpty()) {
+
+            if (parents.getHusband() != null) {
+                AncestorPerson father = new AncestorPerson(parents.getHusband());
+                Couple fathersParents = findParents(father);
+                father.addChildrenCode(person.getAncestorLine());
+                person.setFather(addManParentsWithSiblings(father, fathersParents));
+            }
+
+            if (parents.getWife() != null) {
+                AncestorPerson mother = new AncestorPerson(parents.getWife());
+                mother.addChildrenCode(person.getAncestorLine());
+                person.setMother(mother);
+            }
+
+            ArrayList<String> children = parents.getChildrenIndexes();
+            int position = 0;
+            while (!children.get(position).equals(person.getId())) {
+                Person sibling = getIndividualMap().get(children.get(position));
+                person.addOlderSibling(sibling);
+                position++;
+            }
+
+            position++;
+            while (position < children.size()) {
+                Person sibling = getIndividualMap().get(children.get(position));
+                person.addYoungerSibling(sibling);
+                position++;
+            }
+
+        }
+        return person;
+    }
+
     private Couple findParents(Person person) {
         Couple parents = null;
         if (person != null) {
             parents = getSpouseMap().get(person.getParentID());
             if (parents != null) {
-                AncestorPerson father = null;
-                AncestorPerson mother = null;
-
-                if (parents.getHusband() != null) {
-                    father = new AncestorPerson(getIndividualMap().get(parents.getHusband().getId()));
-                }
-                if (parents.getWife() != null) {
-                    mother = new AncestorPerson(getIndividualMap().get(parents.getWife().getId()));
-                }
-
-                parents = new Couple(father, mother);
+                parents = new Couple(parents);
             }
         }
         return parents;

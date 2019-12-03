@@ -62,8 +62,8 @@ public class Person {
             this.deathPlace = person.getDeathPlace();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
-            this.parents = person.getParents();
-            this.spouse = person.getSpouse();
+            this.parents = new Couple(person.getParents());
+            this.spouse = new Person(person.getSpouse());
         } else {
             this.id = "";
             children = new ArrayList<>();

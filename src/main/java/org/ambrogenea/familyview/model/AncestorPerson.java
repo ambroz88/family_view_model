@@ -1,6 +1,7 @@
 package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -9,14 +10,20 @@ import java.util.ArrayList;
 public class AncestorPerson extends Person {
 
     private final ArrayList<Integer> ancestorLine;
+    private final ArrayList<Person> youngerSiblings;
+    private final ArrayList<Person> olderSiblings;
     private int ancestorGenerations;
 
     public AncestorPerson(AncestorPerson person) {
         super(person);
+        youngerSiblings = new ArrayList<>();
+        olderSiblings = new ArrayList<>();
 
         if (person != null) {
             this.ancestorLine = new ArrayList<>(person.getAncestorLine());
             this.ancestorGenerations = person.getAncestorGenerations();
+            Collections.copy(person.getYoungerSiblings(), youngerSiblings);
+            Collections.copy(person.getOlderSiblings(), olderSiblings);
             setFather(person.getFather());
             setMother(person.getMother());
         } else {
@@ -29,6 +36,8 @@ public class AncestorPerson extends Person {
         super(person);
         ancestorLine = new ArrayList<>();
         ancestorGenerations = 0;
+        youngerSiblings = new ArrayList<>();
+        olderSiblings = new ArrayList<>();
         this.setSex(person.getSex());
     }
 
@@ -36,6 +45,8 @@ public class AncestorPerson extends Person {
         super(id);
         ancestorGenerations = 0;
         ancestorLine = new ArrayList<>();
+        youngerSiblings = new ArrayList<>();
+        olderSiblings = new ArrayList<>();
     }
 
     @Override
@@ -93,6 +104,22 @@ public class AncestorPerson extends Person {
 
     public void addAncestorCode(int code) {
         ancestorLine.add(code);
+    }
+
+    public ArrayList<Person> getYoungerSiblings() {
+        return youngerSiblings;
+    }
+
+    public void addYoungerSibling(Person youngerSibling) {
+        this.youngerSiblings.add(youngerSibling);
+    }
+
+    public ArrayList<Person> getOlderSiblings() {
+        return olderSiblings;
+    }
+
+    public void addOlderSibling(Person olderSibling) {
+        this.olderSiblings.add(olderSibling);
     }
 
 }

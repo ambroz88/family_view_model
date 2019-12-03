@@ -61,7 +61,7 @@ public class DataModel {
                     person = null;
                     couple = spouseMap.get(info.getType().replace("@", ""));
                 } else if (info.getType().equals(TYPE_CHILD)) {
-                    couple.addChildren(info.getValue());
+                    couple.addChildrenIndex(info.getValue().replace("@", ""));
                 }
             }
         }

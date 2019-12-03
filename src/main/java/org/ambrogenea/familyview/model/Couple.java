@@ -20,18 +20,29 @@ public class Couple {
     }
 
     public Couple(AncestorPerson husband, AncestorPerson wife) {
-        if (husband != null) {
-            this.husband = husband;
-        }
-        if (wife != null) {
-            this.wife = wife;
-        }
+        this.husband = husband;
+        this.wife = wife;
         children = new ArrayList<>();
     }
 
     public Couple(AncestorPerson person) {
         children = new ArrayList<>();
         addSpouse(person);
+    }
+
+    public Couple(Couple couple) {
+        if (couple != null) {
+            if (couple.getHusband() != null) {
+                this.husband = new AncestorPerson(couple.getHusband());
+            }
+
+            if (couple.getWife() != null) {
+                this.wife = new AncestorPerson(couple.getWife());
+            }
+            this.children = couple.getChildrenIndexes();
+        } else {
+            children = new ArrayList<>();
+        }
     }
 
     public void addSpouse(AncestorPerson person) {
@@ -74,11 +85,11 @@ public class Couple {
         return wife != null;
     }
 
-    public ArrayList<String> getChildren() {
+    public ArrayList<String> getChildrenIndexes() {
         return children;
     }
 
-    public void addChildren(String childID) {
+    public void addChildrenIndex(String childID) {
         this.children.add(childID);
     }
 
