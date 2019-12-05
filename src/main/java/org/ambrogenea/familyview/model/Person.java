@@ -8,19 +8,8 @@ import java.util.ArrayList;
  */
 public class Person {
 
-    public final static String TYPE_NAME = "GIVN";
-    public final static String TYPE_SURNAME = "SURN";
-    public final static String TYPE_SEX = "SEX";
-    public final static String TYPE_BIRTH = "BIRT";
-    public final static String TYPE_DEATH = "DEAT";
-    public final static String TYPE_DATE = "DATE";
-    public final static String TYPE_PLACE = "PLAC";
-    public final static String TYPE_SPOUSE = "FAMS";
-    public final static String TYPE_PARENTS = "FAMC";
-    private final static String MARKER = "@";
-
-    private final ArrayList<Person> children;
     private final String id;
+    private ArrayList<Person> children;
 
     private String firstName;
     private String surname;
@@ -36,16 +25,8 @@ public class Person {
     private Person spouse;
 
     public Person(String id) {
-        this.id = id.replace(MARKER, "");
-        children = new ArrayList<>();
-        parents = new Couple();
-
-        firstName = "";
-        surname = "";
-        birthDate = "";
-        birthPlace = "";
-        deathDate = "";
-        deathPlace = "";
+        this.id = id.replace(Information.MARKER, "");
+        initEmpty();
     }
 
     public Person(Person person) {
@@ -66,9 +47,20 @@ public class Person {
             this.spouse = new Person(person.getSpouse());
         } else {
             this.id = "";
-            children = new ArrayList<>();
-            parents = new Couple();
+            initEmpty();
         }
+    }
+
+    private void initEmpty() {
+        children = new ArrayList<>();
+        parents = new Couple();
+
+        firstName = "";
+        surname = "";
+        birthDate = "";
+        birthPlace = "";
+        deathDate = "";
+        deathPlace = "";
     }
 
     public String getId() {
@@ -145,7 +137,7 @@ public class Person {
     }
 
     public void setParentID(String parentID) {
-        this.parentID = parentID.replace(MARKER, "");
+        this.parentID = parentID.replace(Information.MARKER, "");
     }
 
     public String getSpouseID() {
@@ -153,7 +145,7 @@ public class Person {
     }
 
     public void setSpouseID(String spouseID) {
-        this.spouseID = spouseID.replace(MARKER, "");
+        this.spouseID = spouseID.replace(Information.MARKER, "");
     }
 
     public Couple getParents() {
@@ -189,9 +181,9 @@ public class Person {
     }
 
     public void setSpouse(Couple spouse) {
-        if (getSex().equals(Couple.MALE)) {
+        if (getSex().equals(Information.VALUE_MALE)) {
             this.spouse = spouse.getWife();
-        } else if (getSex().equals(Couple.FEMALE)) {
+        } else if (getSex().equals(Information.VALUE_FEMALE)) {
             this.spouse = spouse.getHusband();
         }
     }
@@ -205,33 +197,33 @@ public class Person {
     }
 
     public void setInformation(Information info, String lastType) {
-        if (info.getType().equals(TYPE_NAME)) {
+        if (info.getType().equals(Information.TYPE_NAME)) {
             setFirstName(info.getValue());
         }
-        if (info.getType().equals(TYPE_SURNAME)) {
+        if (info.getType().equals(Information.TYPE_SURNAME)) {
             setSurname(info.getValue());
         }
-        if (info.getType().equals(TYPE_SEX)) {
+        if (info.getType().equals(Information.TYPE_SEX)) {
             setSex(info.getValue());
         }
-        if (info.getType().equals(TYPE_DATE)) {
-            if (lastType.equals(TYPE_BIRTH)) {
+        if (info.getType().equals(Information.TYPE_DATE)) {
+            if (lastType.equals(Information.TYPE_BIRTH)) {
                 setBirthDate(info.getValue());
-            } else if (lastType.equals(TYPE_DEATH)) {
+            } else if (lastType.equals(Information.TYPE_DEATH)) {
                 setDeathDate(info.getValue());
             }
         }
-        if (info.getType().equals(TYPE_PLACE)) {
-            if (lastType.equals(TYPE_BIRTH)) {
+        if (info.getType().equals(Information.TYPE_PLACE)) {
+            if (lastType.equals(Information.TYPE_BIRTH)) {
                 setBirthPlace(info.getValue());
-            } else if (lastType.equals(TYPE_DEATH)) {
+            } else if (lastType.equals(Information.TYPE_DEATH)) {
                 setDeathPlace(info.getValue());
             }
         }
-        if (info.getType().equals(TYPE_PARENTS)) {
+        if (info.getType().equals(Information.TYPE_PARENTS)) {
             setParentID(info.getValue());
         }
-        if (info.getType().equals(TYPE_SPOUSE)) {
+        if (info.getType().equals(Information.TYPE_SPOUSE)) {
             if (getSpouseID() == null) {
                 setSpouseID(info.getValue());
             }

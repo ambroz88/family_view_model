@@ -9,10 +9,6 @@ import java.util.HashMap;
  */
 public class DataModel {
 
-    private final static String VALUE_INDIVIDUAL = "INDI";
-    private final static String VALUE_FAMILY = "FAM";
-    private final static String TYPE_CHILD = "CHIL";
-
     private final HashMap<String, Couple> spouseMap;
     private final HashMap<String, Person> individualMap;
     private final ArrayList<Person> recordList;
@@ -43,7 +39,7 @@ public class DataModel {
 
             determineRecordType(info);
 
-            if (recordType.equals(VALUE_INDIVIDUAL)) {
+            if (recordType.equals(Information.VALUE_INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
                     person = new AncestorPerson(info.getType());
@@ -51,30 +47,34 @@ public class DataModel {
                     person.setInformation(info, lastType);
                 }
 
-                if (!info.getType().equals(Person.TYPE_DATE)) {
-                    lastType = info.getType();
-                }
-
-            } else if (recordType.equals(VALUE_FAMILY)) {
+            } else if (recordType.equals(Information.VALUE_FAMILY)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
                     person = null;
-                    couple = spouseMap.get(info.getType().replace("@", ""));
-                } else if (info.getType().equals(TYPE_CHILD)) {
-                    couple.addChildrenIndex(info.getValue().replace("@", ""));
+                    couple = spouseMap.get(info.getType().replace(Information.MARKER, ""));
+                } else if (info.getType().equals(Information.TYPE_CHILD)) {
+                    couple.addChildrenIndex(info.getValue().replace(Information.MARKER, ""));
+                } else if (info.getType().equals(Information.TYPE_DATE) && lastType.equals(Information.TYPE_MARRIAGE)) {
+                    couple.setMarriageDate(info.getValue());
+                } else if (info.getType().equals(Information.TYPE_PLACE) && lastType.equals(Information.TYPE_MARRIAGE)) {
+                    couple.setMarriagePlace(info.getValue());
                 }
+            }
+
+            if (!info.getType().equals(Information.TYPE_DATE)) {
+                lastType = info.getType();
             }
         }
     }
 
     private void determineRecordType(Information info) {
-        if (info.getValue().equals(VALUE_INDIVIDUAL)) {
+        if (info.getValue().equals(Information.VALUE_INDIVIDUAL)) {
             if (info.getCode() == 0) {
-                recordType = VALUE_INDIVIDUAL;
+                recordType = Information.VALUE_INDIVIDUAL;
             }
-        } else if (info.getValue().equals(VALUE_FAMILY)) {
+        } else if (info.getValue().equals(Information.VALUE_FAMILY)) {
             if (info.getCode() == 0) {
-                recordType = VALUE_FAMILY;
+                recordType = Information.VALUE_FAMILY;
             }
         }
     }

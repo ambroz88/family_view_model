@@ -53,7 +53,7 @@ public class AncestorPerson extends Person {
     public void setSex(String sex) {
         super.setSex(sex);
         ancestorLine.clear();
-        if (sex.equals(Couple.MALE)) {
+        if (sex.equals(Information.VALUE_MALE)) {
             ancestorLine.add(AncestorModel.CODE_MALE);
         } else {
             ancestorLine.add(AncestorModel.CODE_FEMALE);
@@ -120,6 +120,11 @@ public class AncestorPerson extends Person {
 
     public void addOlderSibling(Person olderSibling) {
         this.olderSiblings.add(olderSibling);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" + "name: " + getName() + "; parents: " + getParents() + ", spouse: " + getSpouse() + '}';
     }
 
 }

@@ -6,6 +6,25 @@ package org.ambrogenea.familyview.model;
  */
 public class Information {
 
+    public final static String TYPE_CHILD = "CHIL";
+    public final static String TYPE_NAME = "GIVN";
+    public final static String TYPE_SURNAME = "SURN";
+    public final static String TYPE_SEX = "SEX";
+    public final static String TYPE_BIRTH = "BIRT";
+    public final static String TYPE_DEATH = "DEAT";
+    public final static String TYPE_DATE = "DATE";
+    public final static String TYPE_PLACE = "PLAC";
+    public final static String TYPE_MARRIAGE = "MARR";
+    public final static String TYPE_SPOUSE = "FAMS";
+    public final static String TYPE_PARENTS = "FAMC";
+
+    public final static String VALUE_INDIVIDUAL = "INDI";
+    public final static String VALUE_FAMILY = "FAM";
+    public static final String VALUE_MALE = "M";
+    public static final String VALUE_FEMALE = "F";
+
+    public final static String MARKER = "@";
+
     private int code;
     private final String type;
     private final String value;

@@ -8,12 +8,11 @@ import java.util.ArrayList;
  */
 public class Couple {
 
-    public static final String MALE = "M";
-    public static final String FEMALE = "F";
-
     private final ArrayList<String> children;
     private AncestorPerson wife;
     private AncestorPerson husband;
+    private String marriageDate;
+    private String marriagePlace;
 
     public Couple() {
         children = new ArrayList<>();
@@ -40,15 +39,17 @@ public class Couple {
                 this.wife = new AncestorPerson(couple.getWife());
             }
             this.children = couple.getChildrenIndexes();
+            this.marriageDate = couple.getMarriageDate();
+            this.marriagePlace = couple.getMarriagePlace();
         } else {
             children = new ArrayList<>();
         }
     }
 
     public void addSpouse(AncestorPerson person) {
-        if (person.getSex().equals(MALE)) {
+        if (person.getSex().equals(Information.VALUE_MALE)) {
             setHusband(person);
-        } else if (person.getSex().equals(FEMALE)) {
+        } else if (person.getSex().equals(Information.VALUE_FEMALE)) {
             setWife(person);
         }
     }
@@ -61,8 +62,24 @@ public class Couple {
         this.husband = husband;
     }
 
+    public String getMarriageDate() {
+        return marriageDate;
+    }
+
+    public void setMarriageDate(String date) {
+        this.marriageDate = date;
+    }
+
+    public String getMarriagePlace() {
+        return marriagePlace;
+    }
+
+    public void setMarriagePlace(String place) {
+        this.marriagePlace = place;
+    }
+
     public Person getSpouse(String sex) {
-        if (sex.equals(MALE)) {
+        if (sex.equals(Information.VALUE_MALE)) {
             return getWife();
         } else {
             return getHusband();
