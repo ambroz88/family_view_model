@@ -41,6 +41,7 @@ public class AncestorModel extends DataModel {
 
     private AncestorPerson addManParents(AncestorPerson person, Couple parents) {
         if (person != null && parents != null && !parents.isEmpty()) {
+            person.setParents(parents);
 
             if (parents.getHusband() != null) {
                 AncestorPerson father = new AncestorPerson(parents.getHusband());
@@ -61,6 +62,7 @@ public class AncestorModel extends DataModel {
 
     private AncestorPerson addAllParents(AncestorPerson person, Couple parents) {
         if (person != null && parents != null && !parents.isEmpty()) {
+            person.setParents(parents);
 
             if (parents.getHusband() != null) {
                 AncestorPerson father = new AncestorPerson(parents.getHusband());
