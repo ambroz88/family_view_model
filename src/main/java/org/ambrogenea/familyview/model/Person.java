@@ -169,7 +169,7 @@ public class Person {
     }
 
     public void setParents(Couple parents) {
-        this.parents = parents;
+        this.parents = new Couple(parents);
     }
 
     public Person getSpouse() {
