@@ -22,11 +22,15 @@ public class Couple {
         this.husband = husband;
         this.wife = wife;
         children = new ArrayList<>();
+        marriageDate = "";
+        marriagePlace = "";
     }
 
     public Couple(AncestorPerson person) {
         children = new ArrayList<>();
         addSpouse(person);
+        marriageDate = "";
+        marriagePlace = "";
     }
 
     public Couple(Couple couple) {
@@ -43,6 +47,8 @@ public class Couple {
             this.marriagePlace = couple.getMarriagePlace();
         } else {
             children = new ArrayList<>();
+            marriageDate = "";
+            marriagePlace = "";
         }
     }
 
