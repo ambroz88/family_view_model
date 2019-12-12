@@ -177,10 +177,14 @@ public class Person {
     }
 
     public Person getSpouse() {
-        if (getSex().equals(Information.VALUE_MALE)) {
-            return spouse.getWife();
+        if (getSpouseCouple() != null) {
+            if (getSex().equals(Information.VALUE_MALE)) {
+                return spouse.getWife();
+            } else {
+                return spouse.getHusband();
+            }
         } else {
-            return spouse.getHusband();
+            return null;
         }
     }
 
