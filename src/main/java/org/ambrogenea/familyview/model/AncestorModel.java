@@ -114,6 +114,8 @@ public class AncestorModel extends DataModel {
                 position++;
             }
 
+            Couple spouse = getSpouseMap().get(person.getSpouseID());
+            person.setSpouseCouple(spouse);
         }
         return person;
     }

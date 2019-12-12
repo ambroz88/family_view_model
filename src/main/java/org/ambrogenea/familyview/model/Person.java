@@ -22,7 +22,7 @@ public class Person {
     private String spouseID;
 
     private Couple parents;
-    private Person spouse;
+    private Couple spouse;
 
     public Person(String id) {
         this.id = id.replace(Information.MARKER, "");
@@ -43,8 +43,12 @@ public class Person {
             this.deathPlace = person.getDeathPlace();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
-            this.parents = new Couple(person.getParents());
-            this.spouse = new Person(person.getSpouse());
+            if (person.getParents() != null) {
+                this.parents = new Couple(person.getParents());
+            }
+            if (person.getSpouseCouple() != null) {
+                this.spouse = new Couple(person.getSpouseCouple());
+            }
         } else {
             this.id = "";
             initEmpty();
@@ -173,18 +177,20 @@ public class Person {
     }
 
     public Person getSpouse() {
+        if (getSex().equals(Information.VALUE_MALE)) {
+            return spouse.getWife();
+        } else {
+            return spouse.getHusband();
+        }
+    }
+
+    public Couple getSpouseCouple() {
         return spouse;
     }
 
-    public void setSpouse(Person spouse) {
-        this.spouse = spouse;
-    }
-
-    public void setSpouse(Couple spouse) {
-        if (getSex().equals(Information.VALUE_MALE)) {
-            this.spouse = spouse.getWife();
-        } else if (getSex().equals(Information.VALUE_FEMALE)) {
-            this.spouse = spouse.getHusband();
+    public void setSpouseCouple(Couple spouse) {
+        if (spouse != null) {
+            this.spouse = new Couple(spouse);
         }
     }
 
