@@ -9,6 +9,9 @@ import java.util.Collections;
  */
 public class AncestorPerson extends Person {
 
+    public static final int CODE_MALE = -1;
+    public static final int CODE_FEMALE = 1;
+
     private final ArrayList<Integer> ancestorLine;
     private final ArrayList<Person> youngerSiblings;
     private final ArrayList<Person> olderSiblings;
@@ -54,9 +57,9 @@ public class AncestorPerson extends Person {
         super.setSex(sex);
         ancestorLine.clear();
         if (sex.equals(Information.VALUE_MALE)) {
-            ancestorLine.add(AncestorModel.CODE_MALE);
+            ancestorLine.add(CODE_MALE);
         } else {
-            ancestorLine.add(AncestorModel.CODE_FEMALE);
+            ancestorLine.add(CODE_FEMALE);
         }
     }
 
