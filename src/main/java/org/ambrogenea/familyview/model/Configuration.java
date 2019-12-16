@@ -12,6 +12,7 @@ public class Configuration {
     private int siblingImageWidth;
     private int siblingImageHeight;
     private int siblingVerticalOffset;
+    private int fontSize;
 
     private String adultManImagePath;
     private String adultWomanImagePath;
@@ -27,6 +28,7 @@ public class Configuration {
         siblingImageWidth = 150;
         siblingImageHeight = 120;
         siblingVerticalOffset = 10;
+        fontSize = 13;
         adultManImagePath = this.getClass().getResource("/diagrams/man_diagram.png").getPath();
         adultWomanImagePath = this.getClass().getResource("/diagrams/woman_diagram.png").getPath();
         siblingManImagePath = "";
@@ -65,6 +67,14 @@ public class Configuration {
 
     public void setSiblingImageHeight(int siblingImageHeight) {
         this.siblingImageHeight = siblingImageHeight;
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
     }
 
     public String getAdultManImagePath() {
