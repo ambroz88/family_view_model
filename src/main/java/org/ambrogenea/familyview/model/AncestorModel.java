@@ -120,8 +120,10 @@ public class AncestorModel extends DataModel {
 
     private void addSpouse(AncestorPerson person) {
         if (person != null) {
-            Couple spouse = getSpouseMap().get(person.getSpouseID());
-            person.setSpouseCouple(spouse);
+            for (String coupleID : person.getSpouseID()) {
+                Couple spouse = getSpouseMap().get(coupleID);
+                person.addSpouseCouple(spouse);
+            }
         }
     }
 

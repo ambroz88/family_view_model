@@ -19,10 +19,10 @@ public class Person {
     private String deathDate;
     private String deathPlace;
     private String parentID;
-    private String spouseID;
+    private ArrayList<String> spouseID;
 
     private Couple parents;
-    private Couple spouse;
+    private ArrayList<Couple> spouse;
 
     public Person(String id) {
         this.id = id.replace(Information.MARKER, "");
@@ -47,7 +47,9 @@ public class Person {
                 this.parents = new Couple(person.getParents());
             }
             if (person.getSpouseCouple() != null) {
-                this.spouse = new Couple(person.getSpouseCouple());
+                this.spouse = new ArrayList(person.getSpouseCouples());
+            } else {
+                this.spouse = new ArrayList<>();
             }
         } else {
             this.id = "";
@@ -57,6 +59,8 @@ public class Person {
 
     private void initEmpty() {
         children = new ArrayList<>();
+        spouseID = new ArrayList<>();
+        spouse = new ArrayList<>();
         parents = new Couple();
 
         firstName = "";
@@ -144,12 +148,12 @@ public class Person {
         this.parentID = parentID.replace(Information.MARKER, "");
     }
 
-    public String getSpouseID() {
+    public ArrayList<String> getSpouseID() {
         return spouseID;
     }
 
-    public void setSpouseID(String spouseID) {
-        this.spouseID = spouseID.replace(Information.MARKER, "");
+    public void addSpouseID(String spouseID) {
+        getSpouseID().add(spouseID.replace(Information.MARKER, ""));
     }
 
     public Couple getParents() {
@@ -179,9 +183,21 @@ public class Person {
     public Person getSpouse() {
         if (getSpouseCouple() != null) {
             if (getSex().equals(Information.VALUE_MALE)) {
-                return spouse.getWife();
+                return getSpouseCouple().getWife();
             } else {
-                return spouse.getHusband();
+                return getSpouseCouple().getHusband();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public Person getSpouse(int index) {
+        if (getSpouseCouple(index) != null) {
+            if (getSex().equals(Information.VALUE_MALE)) {
+                return getSpouseCouple(index).getWife();
+            } else {
+                return getSpouseCouple(index).getHusband();
             }
         } else {
             return null;
@@ -189,12 +205,28 @@ public class Person {
     }
 
     public Couple getSpouseCouple() {
+        if (spouse.isEmpty()) {
+            return null;
+        } else {
+            return spouse.get(0);
+        }
+    }
+
+    public Couple getSpouseCouple(int index) {
+        if (spouse.isEmpty() || index >= spouse.size()) {
+            return null;
+        } else {
+            return spouse.get(index);
+        }
+    }
+
+    public ArrayList<Couple> getSpouseCouples() {
         return spouse;
     }
 
-    public void setSpouseCouple(Couple spouse) {
+    public void addSpouseCouple(Couple spouse) {
         if (spouse != null) {
-            this.spouse = new Couple(spouse);
+            this.spouse.add(new Couple(spouse));
         }
     }
 
@@ -234,9 +266,7 @@ public class Person {
             setParentID(info.getValue());
         }
         if (info.getType().equals(Information.TYPE_SPOUSE)) {
-            if (getSpouseID() == null) {
-                setSpouseID(info.getValue());
-            }
+            addSpouseID(info.getValue());
         }
     }
 

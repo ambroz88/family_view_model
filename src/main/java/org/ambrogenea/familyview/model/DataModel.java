@@ -81,15 +81,22 @@ public class DataModel {
 
     private void addPerson(AncestorPerson person) {
         if (person != null) {
-            if (spouseMap.containsKey(person.getSpouseID())) {
-                Couple partner = spouseMap.get(person.getSpouseID());
-                partner.addSpouse(person);
-            } else if (person.getSpouseID() != null) {
-                spouseMap.put(person.getSpouseID(), new Couple(person));
-            }
-
+            addSpouse(person);
             individualMap.put(person.getId(), person);
             recordList.add(person);
+        }
+    }
+
+    private void addSpouse(AncestorPerson person) {
+        if (!person.getSpouseID().isEmpty()) {
+            for (String coupleID : person.getSpouseID()) {
+                if (spouseMap.containsKey(coupleID)) {
+                    Couple partner = spouseMap.get(coupleID);
+                    partner.addSpouse(person);
+                } else {
+                    spouseMap.put(coupleID, new Couple(person));
+                }
+            }
         }
     }
 

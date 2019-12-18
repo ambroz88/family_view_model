@@ -127,7 +127,7 @@ public class AncestorPerson extends Person {
 
     @Override
     public String toString() {
-        return "Person{" + "name: " + getName() + "; parents: " + getParents() + ", spouse: " + getSpouse() + '}';
+        return getName() + " *" + getBirthDate() + "; parents: " + getParents();
     }
 
 }

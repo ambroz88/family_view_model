@@ -122,7 +122,16 @@ public class Couple {
 
     @Override
     public String toString() {
-        return "Father: " + getHusband().getFirstName() + " and Mother: " + getWife().getFirstName();
+        if (getHusband() != null && getWife() == null) {
+            return getHusband().getName();
+        } else if (getHusband() == null && getWife() != null) {
+            return getWife().getName();
+        } else if (isEmpty()) {
+            return "None";
+        } else {
+            return getHusband().getName() + " and " + getWife().getName();
+        }
+
     }
 
 }
