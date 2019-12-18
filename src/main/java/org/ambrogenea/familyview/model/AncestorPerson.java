@@ -27,8 +27,6 @@ public class AncestorPerson extends Person {
             this.ancestorGenerations = person.getAncestorGenerations();
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
-            setFather(person.getFather());
-            setMother(person.getMother());
         } else {
             ancestorGenerations = 0;
             ancestorLine = new ArrayList<>();
@@ -67,13 +65,11 @@ public class AncestorPerson extends Person {
     public void setFather(AncestorPerson father) {
         super.setFather(father);
 
-        if (getMother() == null) {
-            if (father != null) {
-                ancestorGenerations = father.getAncestorGenerations() + 1;
-            }
-        } else {
-            if (father != null && father.getAncestorGenerations() >= getMother().getAncestorGenerations()) {
-                ancestorGenerations = father.getAncestorGenerations() + 1;
+        if (getFather() != null) {
+            if (getMother() == null) {
+                ancestorGenerations = getFather().getAncestorGenerations() + 1;
+            } else if (getMother() != null && getFather().getAncestorGenerations() >= getMother().getAncestorGenerations()) {
+                ancestorGenerations = getFather().getAncestorGenerations() + 1;
             }
         }
     }
@@ -82,13 +78,27 @@ public class AncestorPerson extends Person {
     public void setMother(AncestorPerson mother) {
         super.setMother(mother);
 
-        if (getFather() == null) {
-            if (mother != null) {
-                ancestorGenerations = mother.getAncestorGenerations() + 1;
+        if (getMother() != null) {
+            if (getFather() == null) {
+                ancestorGenerations = getMother().getAncestorGenerations() + 1;
+            } else if (getFather() != null && getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
+                ancestorGenerations = getMother().getAncestorGenerations() + 1;
             }
-        } else {
-            if (mother != null && mother.getAncestorGenerations() >= getFather().getAncestorGenerations()) {
-                ancestorGenerations = mother.getAncestorGenerations() + 1;
+        }
+    }
+
+    @Override
+    public void setParents(Couple parents) {
+        super.setParents(parents);
+        if (parents != null && !parents.isEmpty()) {
+            if (getFather() == null) {
+                ancestorGenerations = getMother().getAncestorGenerations() + 1;
+            } else if (getMother() == null) {
+                ancestorGenerations = getFather().getAncestorGenerations() + 1;
+            } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
+                ancestorGenerations = getMother().getAncestorGenerations() + 1;
+            } else {
+                ancestorGenerations = getFather().getAncestorGenerations() + 1;
             }
         }
     }

@@ -2,6 +2,8 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 
+import org.ambrogenea.familyview.model.utils.Tools;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -22,7 +24,7 @@ public class Person {
     private ArrayList<String> spouseID;
 
     private Couple parents;
-    private ArrayList<Couple> spouse;
+    private ArrayList<Couple> spouses;
 
     public Person(String id) {
         this.id = id.replace(Information.MARKER, "");
@@ -47,9 +49,9 @@ public class Person {
                 this.parents = new Couple(person.getParents());
             }
             if (person.getSpouseCouple() != null) {
-                this.spouse = new ArrayList(person.getSpouseCouples());
+                this.spouses = new ArrayList(person.getSpouseCouples());
             } else {
-                this.spouse = new ArrayList<>();
+                this.spouses = new ArrayList<>();
             }
         } else {
             this.id = "";
@@ -60,7 +62,7 @@ public class Person {
     private void initEmpty() {
         children = new ArrayList<>();
         spouseID = new ArrayList<>();
-        spouse = new ArrayList<>();
+        spouses = new ArrayList<>();
         parents = new Couple();
 
         firstName = "";
@@ -205,28 +207,37 @@ public class Person {
     }
 
     public Couple getSpouseCouple() {
-        if (spouse.isEmpty()) {
+        if (spouses.isEmpty()) {
             return null;
         } else {
-            return spouse.get(0);
+            return spouses.get(0);
         }
     }
 
     public Couple getSpouseCouple(int index) {
-        if (spouse.isEmpty() || index >= spouse.size()) {
+        if (spouses.isEmpty() || index >= spouses.size()) {
             return null;
         } else {
-            return spouse.get(index);
+            return spouses.get(index);
         }
     }
 
     public ArrayList<Couple> getSpouseCouples() {
-        return spouse;
+        return spouses;
     }
 
     public void addSpouseCouple(Couple spouse) {
         if (spouse != null) {
-            this.spouse.add(new Couple(spouse));
+            if (!this.spouses.isEmpty()) {
+                Couple lastCouple = this.spouses.get(spouses.size() - 1);
+                if (Tools.isEarlier(spouse.getMarriageDate(), lastCouple.getMarriageDate())) {
+                    this.spouses.add(this.spouses.size() - 1, new Couple(spouse));
+                } else {
+                    this.spouses.add(new Couple(spouse));
+                }
+            } else {
+                this.spouses.add(new Couple(spouse));
+            }
         }
     }
 
@@ -272,7 +283,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" + "name: " + getName() + "; parents: " + parents + ", spouse: " + spouse + '}';
+        return "Person{" + "name: " + getName() + "; parents: " + parents + ", spouse: " + spouses + '}';
     }
 
 }
