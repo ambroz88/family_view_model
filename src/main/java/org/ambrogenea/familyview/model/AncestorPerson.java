@@ -3,6 +3,8 @@ package org.ambrogenea.familyview.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.ambrogenea.familyview.model.utils.Tools;
+
 /**
  *
  * @author Jiri Ambroz
@@ -15,6 +17,7 @@ public class AncestorPerson extends Person {
     private final ArrayList<Integer> ancestorLine;
     private final ArrayList<Person> youngerSiblings;
     private final ArrayList<Person> olderSiblings;
+    private final ArrayList<Couple> spouses;
     private int ancestorGenerations;
 
     public AncestorPerson(AncestorPerson person) {
@@ -27,9 +30,15 @@ public class AncestorPerson extends Person {
             this.ancestorGenerations = person.getAncestorGenerations();
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
+            if (person.getSpouseCouple() != null) {
+                this.spouses = new ArrayList(person.getSpouseCouples());
+            } else {
+                this.spouses = new ArrayList<>();
+            }
         } else {
             ancestorGenerations = 0;
             ancestorLine = new ArrayList<>();
+            this.spouses = new ArrayList<>();
         }
     }
 
@@ -39,6 +48,7 @@ public class AncestorPerson extends Person {
         ancestorGenerations = 0;
         youngerSiblings = new ArrayList<>();
         olderSiblings = new ArrayList<>();
+        spouses = new ArrayList<>();
         this.setSex(person.getSex());
     }
 
@@ -48,6 +58,7 @@ public class AncestorPerson extends Person {
         ancestorLine = new ArrayList<>();
         youngerSiblings = new ArrayList<>();
         olderSiblings = new ArrayList<>();
+        spouses = new ArrayList<>();
     }
 
     @Override
@@ -133,6 +144,81 @@ public class AncestorPerson extends Person {
 
     public void addOlderSibling(Person olderSibling) {
         this.olderSiblings.add(olderSibling);
+    }
+
+    public Person getSpouse() {
+        if (getSpouseCouple() != null) {
+            if (getSex().equals(Information.VALUE_MALE)) {
+                return getSpouseCouple().getWife();
+            } else {
+                return getSpouseCouple().getHusband();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public Person getSpouse(int index) {
+        if (getSpouseCouple(index) != null) {
+            if (getSex().equals(Information.VALUE_MALE)) {
+                return getSpouseCouple(index).getWife();
+            } else {
+                return getSpouseCouple(index).getHusband();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public Couple getSpouseCouple() {
+        if (spouses.isEmpty()) {
+            return null;
+        } else {
+            return spouses.get(0);
+        }
+    }
+
+    public Couple getSpouseCouple(int index) {
+        if (spouses.isEmpty() || index >= spouses.size()) {
+            return null;
+        } else {
+            return spouses.get(index);
+        }
+    }
+
+    public ArrayList<Couple> getSpouseCouples() {
+        return spouses;
+    }
+
+    public void addSpouseCouple(Couple spouse) {
+        if (spouse != null) {
+            if (!this.spouses.isEmpty()) {
+                Couple lastCouple = this.spouses.get(spouses.size() - 1);
+                if (Tools.isEarlier(spouse.getMarriageDate(), lastCouple.getMarriageDate())) {
+                    this.spouses.add(this.spouses.size() - 1, new Couple(spouse));
+                } else {
+                    this.spouses.add(new Couple(spouse));
+                }
+            } else {
+                this.spouses.add(new Couple(spouse));
+            }
+        }
+    }
+
+    public int getChildrenCount(int wifeNumber) {
+        int count = 0;
+        if (getSpouseCouple(wifeNumber) != null) {
+            count = getSpouseCouple(wifeNumber).getChildrenIndexes().size();
+        }
+        return count;
+    }
+
+    public int getAllChildrenCount() {
+        int count = 0;
+        for (Couple spouse : getSpouseCouples()) {
+            count = count + spouse.getChildrenIndexes().size();
+        }
+        return count;
     }
 
     @Override

@@ -8,25 +8,30 @@ import java.util.ArrayList;
  */
 public class Couple {
 
-    private final ArrayList<String> children;
+    private final ArrayList<String> childrenID;
+    private final ArrayList<Person> children;
+
     private AncestorPerson wife;
     private AncestorPerson husband;
     private String marriageDate;
     private String marriagePlace;
 
     public Couple() {
+        childrenID = new ArrayList<>();
         children = new ArrayList<>();
     }
 
     public Couple(AncestorPerson husband, AncestorPerson wife) {
         this.husband = husband;
         this.wife = wife;
+        childrenID = new ArrayList<>();
         children = new ArrayList<>();
         marriageDate = "";
         marriagePlace = "";
     }
 
     public Couple(AncestorPerson person) {
+        childrenID = new ArrayList<>();
         children = new ArrayList<>();
         addSpouse(person);
         marriageDate = "";
@@ -42,10 +47,12 @@ public class Couple {
             if (couple.getWife() != null) {
                 this.wife = new AncestorPerson(couple.getWife());
             }
-            this.children = couple.getChildrenIndexes();
+            this.childrenID = couple.getChildrenIndexes();
+            this.children = new ArrayList(couple.getChildren());
             this.marriageDate = couple.getMarriageDate();
             this.marriagePlace = couple.getMarriagePlace();
         } else {
+            childrenID = new ArrayList<>();
             children = new ArrayList<>();
             marriageDate = "";
             marriagePlace = "";
@@ -109,11 +116,19 @@ public class Couple {
     }
 
     public ArrayList<String> getChildrenIndexes() {
-        return children;
+        return childrenID;
     }
 
     public void addChildrenIndex(String childID) {
-        this.children.add(childID);
+        this.childrenID.add(childID);
+    }
+
+    public ArrayList<Person> getChildren() {
+        return children;
+    }
+
+    public void addChildren(Person child) {
+        this.children.add(child);
     }
 
     public boolean isEmpty() {

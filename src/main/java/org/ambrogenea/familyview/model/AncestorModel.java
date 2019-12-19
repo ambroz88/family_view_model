@@ -122,7 +122,11 @@ public class AncestorModel extends DataModel {
         if (person != null) {
             for (String coupleID : person.getSpouseID()) {
                 Couple spouse = getSpouseMap().get(coupleID);
-                person.addSpouseCouple(spouse);
+                if (spouse != null) {
+                    spouse = new Couple(spouse);
+                    addChildren(spouse);
+                    person.addSpouseCouple(spouse);
+                }
             }
         }
     }
@@ -136,6 +140,15 @@ public class AncestorModel extends DataModel {
             }
         }
         return parents;
+    }
+
+    private void addChildren(Couple spouse) {
+        for (String index : spouse.getChildrenIndexes()) {
+            Person child = getIndividualMap().get(index);
+            if (child != null) {
+                spouse.addChildren(new Person(child));
+            }
+        }
     }
 
 }

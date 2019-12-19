@@ -2,8 +2,6 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 
-import org.ambrogenea.familyview.model.utils.Tools;
-
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -11,7 +9,6 @@ import org.ambrogenea.familyview.model.utils.Tools;
 public class Person {
 
     private final String id;
-    private ArrayList<Person> children;
 
     private String firstName;
     private String surname;
@@ -24,7 +21,6 @@ public class Person {
     private ArrayList<String> spouseID;
 
     private Couple parents;
-    private ArrayList<Couple> spouses;
 
     public Person(String id) {
         this.id = id.replace(Information.MARKER, "");
@@ -34,7 +30,6 @@ public class Person {
     public Person(Person person) {
         if (person != null) {
             this.id = person.getId();
-            this.children = new ArrayList<>(person.getChildren());
 
             this.firstName = person.getFirstName();
             this.surname = person.getSurname();
@@ -48,11 +43,7 @@ public class Person {
             if (person.getParents() != null) {
                 this.parents = new Couple(person.getParents());
             }
-            if (person.getSpouseCouple() != null) {
-                this.spouses = new ArrayList(person.getSpouseCouples());
-            } else {
-                this.spouses = new ArrayList<>();
-            }
+
         } else {
             this.id = "";
             initEmpty();
@@ -60,9 +51,7 @@ public class Person {
     }
 
     private void initEmpty() {
-        children = new ArrayList<>();
         spouseID = new ArrayList<>();
-        spouses = new ArrayList<>();
         parents = new Couple();
 
         firstName = "";
@@ -182,73 +171,6 @@ public class Person {
         this.parents = new Couple(parents);
     }
 
-    public Person getSpouse() {
-        if (getSpouseCouple() != null) {
-            if (getSex().equals(Information.VALUE_MALE)) {
-                return getSpouseCouple().getWife();
-            } else {
-                return getSpouseCouple().getHusband();
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public Person getSpouse(int index) {
-        if (getSpouseCouple(index) != null) {
-            if (getSex().equals(Information.VALUE_MALE)) {
-                return getSpouseCouple(index).getWife();
-            } else {
-                return getSpouseCouple(index).getHusband();
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public Couple getSpouseCouple() {
-        if (spouses.isEmpty()) {
-            return null;
-        } else {
-            return spouses.get(0);
-        }
-    }
-
-    public Couple getSpouseCouple(int index) {
-        if (spouses.isEmpty() || index >= spouses.size()) {
-            return null;
-        } else {
-            return spouses.get(index);
-        }
-    }
-
-    public ArrayList<Couple> getSpouseCouples() {
-        return spouses;
-    }
-
-    public void addSpouseCouple(Couple spouse) {
-        if (spouse != null) {
-            if (!this.spouses.isEmpty()) {
-                Couple lastCouple = this.spouses.get(spouses.size() - 1);
-                if (Tools.isEarlier(spouse.getMarriageDate(), lastCouple.getMarriageDate())) {
-                    this.spouses.add(this.spouses.size() - 1, new Couple(spouse));
-                } else {
-                    this.spouses.add(new Couple(spouse));
-                }
-            } else {
-                this.spouses.add(new Couple(spouse));
-            }
-        }
-    }
-
-    public ArrayList<Person> getChildren() {
-        return children;
-    }
-
-    public void addChildren(Person child) {
-        this.children.add(child);
-    }
-
     public void setInformation(Information info, String lastType) {
         if (info.getType().equals(Information.TYPE_NAME)) {
             setFirstName(info.getValue());
@@ -283,7 +205,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" + "name: " + getName() + "; parents: " + parents + ", spouse: " + spouses + '}';
+        return getName() + "; parents: " + parents;
     }
 
 }
