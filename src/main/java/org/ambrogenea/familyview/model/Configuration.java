@@ -29,6 +29,7 @@ public class Configuration {
     private boolean showChildren;
     private boolean showSiblingsFamily;
     private boolean showSpousesFamily;
+    private int generationCount;
 
     public Configuration() {
         adultImageWidth = 150;
@@ -50,6 +51,7 @@ public class Configuration {
         showSpouses = false;
         showFathersLineage = true;
         showMothersLineage = false;
+        generationCount = 10;
 
         showSiblingsFamily = true;
         showSpousesFamily = true;
@@ -175,6 +177,14 @@ public class Configuration {
 
     public void setShowSpouses(boolean showSpouses) {
         this.showSpouses = showSpouses;
+    }
+
+    public int getGenerationCount() {
+        return generationCount;
+    }
+
+    public void setGenerationCount(int generationCount) {
+        this.generationCount = generationCount;
     }
 
     public boolean isShowSiblingsFamily() {
