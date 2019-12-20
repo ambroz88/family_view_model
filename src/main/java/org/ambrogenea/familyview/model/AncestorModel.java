@@ -20,19 +20,19 @@ public class AncestorModel extends DataModel {
         return person;
     }
 
-    public AncestorPerson generateFathersParents(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
-        Couple parents = findParents(person);
-
-        person = addManParents(person, parents);
-        return person;
-    }
-
-    public AncestorPerson generateFathersFamily(int rowIndex) {
+    public AncestorPerson generateFatherLineage(int rowIndex) {
         AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
         Couple parents = findParents(person);
 
         person = addManParentsWithSiblings(person, parents);
+        return person;
+    }
+
+    public AncestorPerson generateMotherLineage(int rowIndex) {
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        Couple parents = findParents(person);
+
+        addWomanParentsWithSiblings(person, parents);
         return person;
     }
 
@@ -43,20 +43,6 @@ public class AncestorModel extends DataModel {
         person.setParents(parents);
         addSpouse(person);
         addSiblings(parents, person);
-        return person;
-    }
-
-    private AncestorPerson addManParents(AncestorPerson person, Couple parents) {
-        if (person != null && parents != null && !parents.isEmpty()) {
-            person.setParents(parents);
-
-            if (parents.getHusband() != null) {
-                AncestorPerson father = new AncestorPerson(parents.getHusband());
-                Couple fathersParents = findParents(father);
-                father.addChildrenCode(person.getAncestorLine());
-                person.setFather(addManParents(father, fathersParents));
-            }
-        }
         return person;
     }
 
@@ -91,6 +77,23 @@ public class AncestorModel extends DataModel {
                 Couple fathersParents = findParents(father);
                 father.addChildrenCode(person.getAncestorLine());
                 person.setFather(addManParentsWithSiblings(father, fathersParents));
+            }
+
+            addSiblings(parents, person);
+            addSpouse(person);
+        }
+        return person;
+    }
+
+    private AncestorPerson addWomanParentsWithSiblings(AncestorPerson person, Couple parents) {
+        if (person != null && parents != null && !parents.isEmpty()) {
+            person.setParents(parents);
+
+            if (parents.getWife() != null) {
+                AncestorPerson mother = new AncestorPerson(parents.getWife());
+                Couple mothersParents = findParents(mother);
+                mother.addChildrenCode(person.getAncestorLine());
+                person.setMother(addManParentsWithSiblings(mother, mothersParents));
             }
 
             addSiblings(parents, person);
