@@ -25,6 +25,7 @@ public class Configuration {
     private boolean showSpouses;
     private boolean showSiblingsFamily;
     private boolean showSpousesFamily;
+    private boolean showParents;
     private boolean showChildren;
     private boolean showFathersLineage;
     private boolean showMothersLineage;
@@ -186,6 +187,14 @@ public class Configuration {
 
     public void setShowSpousesFamily(boolean showSpousesFamily) {
         this.showSpousesFamily = showSpousesFamily;
+    }
+
+    public boolean isShowParents() {
+        return showParents;
+    }
+
+    public void setShowParents(boolean showParents) {
+        this.showParents = showParents;
     }
 
     public boolean isShowChildren() {
