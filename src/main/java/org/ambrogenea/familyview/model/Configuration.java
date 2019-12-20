@@ -23,12 +23,12 @@ public class Configuration {
 
     private boolean showSiblings;
     private boolean showSpouses;
-    private boolean showSiblingsFamily;
-    private boolean showSpousesFamily;
-    private boolean showParents;
-    private boolean showChildren;
     private boolean showFathersLineage;
     private boolean showMothersLineage;
+    private boolean showParents;
+    private boolean showChildren;
+    private boolean showSiblingsFamily;
+    private boolean showSpousesFamily;
 
     public Configuration() {
         adultImageWidth = 150;
@@ -47,9 +47,13 @@ public class Configuration {
         girlImagePath = "";
 
         showSiblings = true;
-        showSpouses = true;
+        showSpouses = false;
+        showFathersLineage = true;
+        showMothersLineage = false;
+
         showSiblingsFamily = true;
         showSpousesFamily = true;
+        showParents = true;
         showChildren = true;
     }
 
