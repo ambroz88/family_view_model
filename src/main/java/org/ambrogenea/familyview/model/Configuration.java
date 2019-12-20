@@ -21,6 +21,14 @@ public class Configuration {
     private String boyImagePath;
     private String girlImagePath;
 
+    private boolean showSiblings;
+    private boolean showSpouses;
+    private boolean showSiblingsFamily;
+    private boolean showSpousesFamily;
+    private boolean showChildren;
+    private boolean showFathersLineage;
+    private boolean showMothersLineage;
+
     public Configuration() {
         adultImageWidth = 150;
         adultImageHeight = 140;
@@ -29,12 +37,19 @@ public class Configuration {
         siblingImageHeight = 120;
         siblingVerticalOffset = 10;
         fontSize = 13;
+
         adultManImagePath = this.getClass().getResource("/diagrams/man_diagram.png").getPath();
         adultWomanImagePath = this.getClass().getResource("/diagrams/woman_diagram.png").getPath();
         siblingManImagePath = "";
         siblingWomanImagePath = "";
         boyImagePath = "";
         girlImagePath = "";
+
+        showSiblings = true;
+        showSpouses = true;
+        showSiblingsFamily = true;
+        showSpousesFamily = true;
+        showChildren = true;
     }
 
     public int getAdultImageWidth() {
@@ -139,6 +154,62 @@ public class Configuration {
 
     public void setSiblingVerticalOffset(int siblingVerticalOffset) {
         this.siblingVerticalOffset = siblingVerticalOffset;
+    }
+
+    public boolean isShowSiblings() {
+        return showSiblings;
+    }
+
+    public void setShowSiblings(boolean showSiblings) {
+        this.showSiblings = showSiblings;
+    }
+
+    public boolean isShowSpouses() {
+        return showSpouses;
+    }
+
+    public void setShowSpouses(boolean showSpouses) {
+        this.showSpouses = showSpouses;
+    }
+
+    public boolean isShowSiblingsFamily() {
+        return showSiblingsFamily;
+    }
+
+    public void setShowSiblingsFamily(boolean showSiblingsFamily) {
+        this.showSiblingsFamily = showSiblingsFamily;
+    }
+
+    public boolean isShowSpousesFamily() {
+        return showSpousesFamily;
+    }
+
+    public void setShowSpousesFamily(boolean showSpousesFamily) {
+        this.showSpousesFamily = showSpousesFamily;
+    }
+
+    public boolean isShowChildren() {
+        return showChildren;
+    }
+
+    public void setShowChildren(boolean showChildren) {
+        this.showChildren = showChildren;
+    }
+
+    public boolean isShowFathersLineage() {
+        return showFathersLineage;
+    }
+
+    public void setShowFathersLineage(boolean showFathersLineage) {
+        this.showFathersLineage = showFathersLineage;
+    }
+
+    public boolean isShowMothersLineage() {
+        return showMothersLineage;
+    }
+
+    public void setShowMothersLineage(boolean showMothersLineage) {
+        this.showMothersLineage = showMothersLineage;
     }
 
 }
