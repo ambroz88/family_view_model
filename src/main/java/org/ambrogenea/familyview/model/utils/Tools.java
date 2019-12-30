@@ -15,6 +15,15 @@ public final class Tools {
         return dateParts[dateParts.length - 1];
     }
 
+    public static String translateDateToCzech(String date) {
+        String dateCzech = date.replace("ABT", "asi").replace("BEF", "před").replace("AFT", "po");
+        dateCzech = dateCzech.replace("JAN", "led").replace("FEB", "úno").replace("MAR", "bře");
+        dateCzech = dateCzech.replace("APR", "dub").replace("MAY", "kvě").replace("JUN", "črn");
+        dateCzech = dateCzech.replace("JUL", "črc").replace("AUG", "srp").replace("SEP", "zář");
+        dateCzech = dateCzech.replace("OCT", "říj").replace("NOV", "lis").replace("DEC", "pro");
+        return dateCzech;
+    }
+
     public static String putYearToNewLine(String date) {
         int spaceIndex = date.lastIndexOf(" ");
 

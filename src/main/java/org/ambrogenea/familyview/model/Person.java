@@ -2,6 +2,8 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 
+import org.ambrogenea.familyview.model.utils.Tools;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -100,7 +102,7 @@ public class Person {
     }
 
     public String getBirthDate() {
-        return birthDate;
+        return Tools.translateDateToCzech(birthDate);
     }
 
     public void setBirthDate(String birthDate) {
@@ -116,7 +118,7 @@ public class Person {
     }
 
     public String getDeathDate() {
-        return deathDate;
+        return Tools.translateDateToCzech(deathDate);
     }
 
     public void setDeathDate(String deathDate) {

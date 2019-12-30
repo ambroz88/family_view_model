@@ -2,14 +2,16 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 
+import org.ambrogenea.familyview.model.utils.Tools;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class Couple {
 
-    private final ArrayList<String> childrenID;
-    private final ArrayList<Person> children;
+    private ArrayList<String> childrenID;
+    private ArrayList<Person> children;
 
     private AncestorPerson wife;
     private AncestorPerson husband;
@@ -17,25 +19,18 @@ public class Couple {
     private String marriagePlace;
 
     public Couple() {
-        childrenID = new ArrayList<>();
-        children = new ArrayList<>();
+        initEmpty();
     }
 
     public Couple(AncestorPerson husband, AncestorPerson wife) {
         this.husband = husband;
         this.wife = wife;
-        childrenID = new ArrayList<>();
-        children = new ArrayList<>();
-        marriageDate = "";
-        marriagePlace = "";
+        initEmpty();
     }
 
     public Couple(AncestorPerson person) {
-        childrenID = new ArrayList<>();
-        children = new ArrayList<>();
         addSpouse(person);
-        marriageDate = "";
-        marriagePlace = "";
+        initEmpty();
     }
 
     public Couple(Couple couple) {
@@ -49,14 +44,18 @@ public class Couple {
             }
             this.childrenID = couple.getChildrenIndexes();
             this.children = new ArrayList(couple.getChildren());
-            this.marriageDate = couple.getMarriageDate();
+            this.marriageDate = couple.getMarriageDateEnglish();
             this.marriagePlace = couple.getMarriagePlace();
         } else {
-            childrenID = new ArrayList<>();
-            children = new ArrayList<>();
-            marriageDate = "";
-            marriagePlace = "";
+            initEmpty();
         }
+    }
+
+    private void initEmpty() {
+        childrenID = new ArrayList<>();
+        children = new ArrayList<>();
+        marriageDate = "";
+        marriagePlace = "";
     }
 
     public void addSpouse(AncestorPerson person) {
@@ -76,6 +75,10 @@ public class Couple {
     }
 
     public String getMarriageDate() {
+        return Tools.translateDateToCzech(marriageDate);
+    }
+
+    public String getMarriageDateEnglish() {
         return marriageDate;
     }
 

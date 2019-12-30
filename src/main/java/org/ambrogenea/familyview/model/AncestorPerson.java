@@ -194,7 +194,7 @@ public class AncestorPerson extends Person {
         if (spouse != null) {
             if (!this.spouses.isEmpty()) {
                 Couple lastCouple = this.spouses.get(spouses.size() - 1);
-                if (Tools.isEarlier(spouse.getMarriageDate(), lastCouple.getMarriageDate())) {
+                if (Tools.isEarlier(spouse.getMarriageDateEnglish(), lastCouple.getMarriageDateEnglish())) {
                     this.spouses.add(this.spouses.size() - 1, new Couple(spouse));
                 } else {
                     this.spouses.add(new Couple(spouse));
