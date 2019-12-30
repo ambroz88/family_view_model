@@ -1,5 +1,7 @@
 package org.ambrogenea.familyview.model;
 
+import org.ambrogenea.familyview.model.utils.FileIO;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -40,8 +42,8 @@ public class Configuration {
         siblingVerticalOffset = 10;
         fontSize = 13;
 
-        adultManImagePath = this.getClass().getResource("/diagrams/man_diagram.png").getPath();
-        adultWomanImagePath = this.getClass().getResource("/diagrams/woman_diagram.png").getPath();
+        adultManImagePath = FileIO.loadFileFromResources("/diagrams/man_diagram.png").getPath();
+        adultWomanImagePath = FileIO.loadFileFromResources("/diagrams/woman_diagram.png").getPath();
         siblingManImagePath = "";
         siblingWomanImagePath = "";
         boyImagePath = "";

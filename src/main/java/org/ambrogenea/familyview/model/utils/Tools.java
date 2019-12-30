@@ -10,6 +10,13 @@ import java.util.Date;
  */
 public final class Tools {
 
+    public static String replaceDiacritics(String originalText) {
+        String plainText = originalText.toLowerCase();
+        plainText = plainText.replace("č", "c").replace("ř", "r").replace("ž", "z").replace("š", "s").replace("ě", "e");
+        plainText = plainText.replace("ň", "n").replace("ď", "d").replace("ť", "t");
+        return plainText;
+    }
+
     public static String getYear(String date) {
         String[] dateParts = date.split(" ");
         return dateParts[dateParts.length - 1];
