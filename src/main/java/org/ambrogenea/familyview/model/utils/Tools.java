@@ -38,8 +38,8 @@ public final class Tools {
     }
 
     public static boolean isEarlier(String dateBefore, String dateAfter) {
-        String date1norm = dateBefore.replace("ABT ", "").replace("BEF ", "");
-        String date2norm = dateAfter.replace("ABT ", "").replace("BEF ", "");
+        String date1norm = normalizeDate(dateBefore);
+        String date2norm = normalizeDate(dateAfter);
 
         Date date1 = convertDateString(date1norm);
         Date date2 = convertDateString(date2norm);
@@ -51,7 +51,7 @@ public final class Tools {
     }
 
     public static Date convertDateString(String stringDate) {
-        String dateNorm = stringDate.replace("ABT ", "").replace("BEF ", "");
+        String dateNorm = normalizeDate(stringDate);
 
         SimpleDateFormat format1 = new SimpleDateFormat("dd MMM yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy");
@@ -73,4 +73,9 @@ public final class Tools {
         }
         return date;
     }
+
+    private static String normalizeDate(String stringDate) {
+        return stringDate.replace("ABT ", "").replace("BEF ", "").replace("TO ", "");
+    }
+
 }

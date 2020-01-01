@@ -1,6 +1,7 @@
 package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.ambrogenea.familyview.model.utils.Tools;
 
@@ -102,6 +103,10 @@ public class Person {
     }
 
     public String getBirthDate() {
+        return birthDate;
+    }
+
+    public String getBirthDateCzech() {
         return Tools.translateDateToCzech(birthDate);
     }
 
@@ -118,6 +123,10 @@ public class Person {
     }
 
     public String getDeathDate() {
+        return deathDate;
+    }
+
+    public String getDeathDateCzech() {
         return Tools.translateDateToCzech(deathDate);
     }
 
@@ -171,6 +180,29 @@ public class Person {
 
     public void setParents(Couple parents) {
         this.parents = new Couple(parents);
+    }
+
+    public boolean isChild() {
+        return isYoungerThan(8);
+    }
+
+    public boolean isTeenager() {
+        return isYoungerThan(18);
+    }
+
+    private boolean isYoungerThan(int age) {
+        if (!getBirthDate().isEmpty() && !getDeathDate().isEmpty()) {
+            Date birth = Tools.convertDateString(getBirthDate());
+            Date death = Tools.convertDateString(getDeathDate());
+
+            long ageInMillis = death.getTime() - birth.getTime();
+            double ageInYears = ageInMillis / 1000 / 3600 / 24 / 365;
+
+            if (ageInYears < age) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setInformation(Information info, String lastType) {

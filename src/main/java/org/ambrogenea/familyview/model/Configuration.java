@@ -10,10 +10,12 @@ public class Configuration {
 
     private int adultImageWidth;
     private int adultImageHeight;
-    private int adultVerticalOffset;
+    private int adultTopOffset;
+    private int adultBottomOffset;
     private int siblingImageWidth;
     private int siblingImageHeight;
-    private int siblingVerticalOffset;
+    private int siblingTopOffset;
+    private int siblingBottomOffset;
     private int fontSize;
 
     private String adultManImagePath;
@@ -31,15 +33,19 @@ public class Configuration {
     private boolean showChildren;
     private boolean showSiblingsFamily;
     private boolean showSpousesFamily;
+    private boolean showTemple;
+    private boolean showHeraldry;
     private int generationCount;
 
     public Configuration() {
         adultImageWidth = 150;
         adultImageHeight = 140;
-        adultVerticalOffset = 30;
+        adultTopOffset = 30;
+        adultBottomOffset = 30;
         siblingImageWidth = 150;
         siblingImageHeight = 120;
-        siblingVerticalOffset = 10;
+        siblingBottomOffset = 10;
+        siblingTopOffset = 10;
         fontSize = 13;
 
         adultManImagePath = FileIO.loadFileFromResources("/diagrams/man_diagram.png").getPath();
@@ -53,12 +59,14 @@ public class Configuration {
         showSpouses = false;
         showFathersLineage = true;
         showMothersLineage = false;
+        showHeraldry = true;
         generationCount = 10;
 
         showSiblingsFamily = true;
         showSpousesFamily = true;
         showParents = true;
         showChildren = true;
+        showTemple = false;
     }
 
     public int getAdultImageWidth() {
@@ -149,20 +157,36 @@ public class Configuration {
         this.girlImagePath = girlImagePath;
     }
 
-    public int getAdultVerticalOffset() {
-        return adultVerticalOffset;
+    public int getAdultBottomOffset() {
+        return adultBottomOffset;
     }
 
-    public void setAdultVerticalOffset(int adultVerticalOffset) {
-        this.adultVerticalOffset = adultVerticalOffset;
+    public int getAdultTopOffset() {
+        return adultTopOffset;
     }
 
-    public int getSiblingVerticalOffset() {
-        return siblingVerticalOffset;
+    public void setAdultBottomOffset(int adultVerticalOffset) {
+        this.adultBottomOffset = adultVerticalOffset;
     }
 
-    public void setSiblingVerticalOffset(int siblingVerticalOffset) {
-        this.siblingVerticalOffset = siblingVerticalOffset;
+    public void setAdultTopOffset(int adultVerticalOffset) {
+        this.adultTopOffset = adultVerticalOffset;
+    }
+
+    public int getSiblingBottomOffset() {
+        return siblingBottomOffset;
+    }
+
+    public int getSiblingTopOffset() {
+        return siblingTopOffset;
+    }
+
+    public void setSiblingBottomOffset(int siblingVerticalOffset) {
+        this.siblingBottomOffset = siblingVerticalOffset;
+    }
+
+    public void setSiblingTopOffset(int siblingVerticalOffset) {
+        this.siblingTopOffset = siblingVerticalOffset;
     }
 
     public boolean isShowSiblings() {
@@ -235,6 +259,22 @@ public class Configuration {
 
     public void setShowMothersLineage(boolean showMothersLineage) {
         this.showMothersLineage = showMothersLineage;
+    }
+
+    public boolean isShowTemple() {
+        return showTemple;
+    }
+
+    public void setShowTemple(boolean showTemple) {
+        this.showTemple = showTemple;
+    }
+
+    public boolean isShowHeraldry() {
+        return showHeraldry;
+    }
+
+    public void setShowHeraldry(boolean showHeraldry) {
+        this.showHeraldry = showHeraldry;
     }
 
 }
