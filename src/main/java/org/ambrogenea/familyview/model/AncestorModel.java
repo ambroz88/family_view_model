@@ -77,8 +77,7 @@ public class AncestorModel extends DataModel {
                 Couple fathersParents = findParents(father);
                 father.addChildrenCode(person.getAncestorLine());
                 if (fathersParents == null || fathersParents.isEmpty()) {
-                    addChildren(parents);
-                    father.getSpouseCouples().add(parents);
+                    addSpouse(father);
                 }
                 person.setFather(addManParentsWithSiblings(father, fathersParents));
             }

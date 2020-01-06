@@ -23,7 +23,7 @@ public final class Tools {
     }
 
     public static String translateDateToCzech(String date) {
-        String dateCzech = date.replace("ABT", "asi").replace("BEF", "před").replace("AFT", "po");
+        String dateCzech = date.replace("ABT", "asi").replace("BEF", "před").replace("TO", "před").replace("AFT", "po");
         dateCzech = dateCzech.replace("JAN", "led").replace("FEB", "úno").replace("MAR", "bře");
         dateCzech = dateCzech.replace("APR", "dub").replace("MAY", "kvě").replace("JUN", "črn");
         dateCzech = dateCzech.replace("JUL", "črc").replace("AUG", "srp").replace("SEP", "zář");
