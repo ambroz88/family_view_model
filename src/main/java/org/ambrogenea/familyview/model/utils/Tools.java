@@ -14,6 +14,7 @@ public final class Tools {
         String plainText = originalText.toLowerCase();
         plainText = plainText.replace("č", "c").replace("ř", "r").replace("ž", "z").replace("š", "s").replace("ě", "e");
         plainText = plainText.replace("ň", "n").replace("ď", "d").replace("ť", "t");
+        plainText = plainText.replace("ö", "o");
         return plainText;
     }
 

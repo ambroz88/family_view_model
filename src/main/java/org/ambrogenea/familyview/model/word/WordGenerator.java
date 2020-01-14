@@ -25,8 +25,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 public class WordGenerator {
 
     private static final String COLOR_BLACK = "000000";
+    private static final String TITLE_FONT = "Monotype Corsiva";
     private static final int TITLE_FONT_SIZE = 20;
+
     private static final int IMAGE_TOP_PADDING = 30;
+    private static final int MAX_WIDTH = 24;
+    private static int MAX_HEIGHT = 12;
 
     public static XWPFDocument createWordDocument() {
         XWPFDocument document = new XWPFDocument();
@@ -63,25 +67,44 @@ public class WordGenerator {
         titleRun.setText(titleText);
         titleRun.setColor(COLOR_BLACK);
         titleRun.setBold(true);
-        titleRun.setFontFamily("Monotype Corsiva");
+        titleRun.setFontFamily(TITLE_FONT);
         titleRun.setFontSize(TITLE_FONT_SIZE);
     }
 
     public static void addImageToPage(XWPFDocument document, InputStream imageStream, int imageWidth, int imageHeight) {
         try {
-            int unitsWidth = Units.pointsToPixel(Units.EMU_PER_CENTIMETER * 17);
-            double scale = Units.pixelToEMU(imageWidth) / (double) unitsWidth;
-            int pixelHeight = (int) (imageHeight / scale);
+            int emuHeight = Units.EMU_PER_CENTIMETER * MAX_HEIGHT;
+            int emuMaxWidth = Units.EMU_PER_CENTIMETER * MAX_WIDTH;
+
+            double scale = Units.pixelToEMU(imageHeight) / (double) emuHeight;
+            int pixelWidth = (int) (imageWidth / scale);
+            int emuWidth = Units.pixelToEMU(pixelWidth);
+
+            if (emuWidth > emuMaxWidth) {
+                emuWidth = emuMaxWidth;
+                scale = Units.pixelToEMU(imageWidth) / (double) emuWidth;
+                int pixelHeight = (int) (imageHeight / scale);
+                emuHeight = Units.pixelToEMU(pixelHeight);
+            }
 
             XWPFParagraph image = document.createParagraph();
             image.setAlignment(ParagraphAlignment.CENTER);
             XWPFRun imageRun = image.createRun();
             imageRun.setTextPosition(IMAGE_TOP_PADDING);
-            imageRun.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, "", unitsWidth, Units.pixelToEMU(pixelHeight));
+            imageRun.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, "", emuWidth, emuHeight);
             imageRun.addBreak(BreakType.PAGE);
         } catch (InvalidFormatException | IOException ex) {
             System.out.println("Image was not added to word document: " + ex.getMessage());
         }
     }
 
+    public static void setMaxHeight(int generations) {
+        if (generations == 1) {
+            MAX_HEIGHT = 4;
+        } else if (generations == 2) {
+            MAX_HEIGHT = 8;
+        } else if (generations == 3) {
+            MAX_HEIGHT = 12;
+        }
+    }
 }
