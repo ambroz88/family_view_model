@@ -94,6 +94,14 @@ public class Person {
         return getFirstName() + " " + getSurname();
     }
 
+    public void setName(String name) {
+        int slashPosition = name.indexOf(" /");
+        if (slashPosition != -1) {
+            firstName = name.substring(0, slashPosition);
+            surname = name.substring(slashPosition + 2, name.length() - 1);
+        }
+    }
+
     public String getSex() {
         return sex;
     }
@@ -131,7 +139,9 @@ public class Person {
     }
 
     public void setDeathDate(String deathDate) {
-        this.deathDate = deathDate;
+        if (!"DECEASED".equals(deathDate)) {
+            this.deathDate = deathDate;
+        }
     }
 
     public String getDeathPlace() {
@@ -206,11 +216,14 @@ public class Person {
     }
 
     public void setInformation(Information info, String lastType) {
-        if (info.getType().equals(Information.TYPE_NAME)) {
+        if (info.getType().equals(Information.TYPE_FIRST_NAME)) {
             setFirstName(info.getValue());
         }
         if (info.getType().equals(Information.TYPE_SURNAME)) {
             setSurname(info.getValue());
+        }
+        if (info.getType().equals(Information.TYPE_NAME)) {
+            setName(info.getValue());
         }
         if (info.getType().equals(Information.TYPE_SEX)) {
             setSex(info.getValue());

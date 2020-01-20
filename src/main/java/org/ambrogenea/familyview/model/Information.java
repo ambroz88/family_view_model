@@ -7,7 +7,8 @@ package org.ambrogenea.familyview.model;
 public class Information {
 
     public final static String TYPE_CHILD = "CHIL";
-    public final static String TYPE_NAME = "GIVN";
+    public final static String TYPE_NAME = "NAME";
+    public final static String TYPE_FIRST_NAME = "GIVN";
     public final static String TYPE_SURNAME = "SURN";
     public final static String TYPE_SEX = "SEX";
     public final static String TYPE_BIRTH = "BIRT";
