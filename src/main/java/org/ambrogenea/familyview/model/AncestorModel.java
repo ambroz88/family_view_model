@@ -36,6 +36,15 @@ public class AncestorModel extends DataModel {
         return person;
     }
 
+    public AncestorPerson generateParentsLineage(int rowIndex) {
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        Couple parents = findParents(person);
+
+        addManParentsWithSiblings(person, parents);
+        addWomanParentsWithSiblings(person, parents);
+        return person;
+    }
+
     public AncestorPerson generateCloseFamily(int rowIndex) {
         AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
         Couple parents = findParents(person);
@@ -90,7 +99,11 @@ public class AncestorModel extends DataModel {
 
     private AncestorPerson addWomanParentsWithSiblings(AncestorPerson person, Couple parents) {
         if (person != null && parents != null && !parents.isEmpty()) {
-            person.setParents(parents);
+            person.getParents().setMarriageDate(parents.getMarriageDateEnglish());
+            person.getParents().setMarriagePlace(parents.getMarriagePlace());
+            if (person.getFather() == null) {
+                person.setFather(parents.getHusband());
+            }
 
             if (parents.getWife() != null) {
                 AncestorPerson mother = new AncestorPerson(parents.getWife());
