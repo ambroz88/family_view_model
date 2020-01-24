@@ -61,7 +61,7 @@ public class DataModel {
                 }
             }
 
-            if (!info.getType().equals(Information.TYPE_DATE)) {
+            if (!info.getType().equals(Information.TYPE_DATE) && !info.getType().equals(Information.TYPE_ADDRESS)) {
                 lastType = info.getType();
             }
         }

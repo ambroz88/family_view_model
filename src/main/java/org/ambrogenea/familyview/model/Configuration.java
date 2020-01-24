@@ -34,6 +34,7 @@ public class Configuration {
     private boolean showSiblingsFamily;
     private boolean showSpousesFamily;
     private boolean showTemple;
+    private boolean showResidence;
     private boolean showHeraldry;
     private int generationCount;
 
@@ -46,7 +47,7 @@ public class Configuration {
         siblingImageHeight = 120;
         siblingBottomOffset = 10;
         siblingTopOffset = 10;
-        fontSize = 13;
+        fontSize = 14;
 
         adultManImagePath = FileIO.loadFileFromResources("/diagrams/man_diagram.png").getPath();
         adultWomanImagePath = FileIO.loadFileFromResources("/diagrams/woman_diagram.png").getPath();
@@ -67,6 +68,7 @@ public class Configuration {
         showParents = true;
         showChildren = true;
         showTemple = false;
+        showResidence = false;
     }
 
     public int getAdultImageWidth() {
@@ -275,6 +277,14 @@ public class Configuration {
 
     public void setShowHeraldry(boolean showHeraldry) {
         this.showHeraldry = showHeraldry;
+    }
+
+    public boolean isShowResidence() {
+        return showResidence;
+    }
+
+    public void setShowResidence(boolean showResidence) {
+        this.showResidence = showResidence;
     }
 
 }

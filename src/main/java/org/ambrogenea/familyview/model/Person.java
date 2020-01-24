@@ -22,6 +22,7 @@ public class Person {
     private String deathPlace;
     private String parentID;
     private ArrayList<String> spouseID;
+    private ArrayList<Residence> residenceList;
 
     private Couple parents;
 
@@ -41,6 +42,7 @@ public class Person {
             this.birthPlace = person.getBirthPlace();
             this.deathDate = person.getDeathDate();
             this.deathPlace = person.getDeathPlace();
+            this.residenceList = person.getResidenceList();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
             if (person.getParents() != null) {
@@ -55,6 +57,7 @@ public class Person {
 
     private void initEmpty() {
         spouseID = new ArrayList<>();
+        residenceList = new ArrayList<>();
         parents = new Couple();
 
         firstName = "";
@@ -152,6 +155,18 @@ public class Person {
         this.deathPlace = deathPlace;
     }
 
+    public ArrayList<Residence> getResidenceList() {
+        return residenceList;
+    }
+
+    public Residence getLastResidence() {
+        if (!residenceList.isEmpty()) {
+            return residenceList.get(residenceList.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
     public String getParentID() {
         return parentID;
     }
@@ -218,34 +233,35 @@ public class Person {
     public void setInformation(Information info, String lastType) {
         if (info.getType().equals(Information.TYPE_FIRST_NAME)) {
             setFirstName(info.getValue());
-        }
-        if (info.getType().equals(Information.TYPE_SURNAME)) {
+        } else if (info.getType().equals(Information.TYPE_SURNAME)) {
             setSurname(info.getValue());
-        }
-        if (info.getType().equals(Information.TYPE_NAME)) {
+        } else if (info.getType().equals(Information.TYPE_NAME)) {
             setName(info.getValue());
-        }
-        if (info.getType().equals(Information.TYPE_SEX)) {
+        } else if (info.getType().equals(Information.TYPE_SEX)) {
             setSex(info.getValue());
-        }
-        if (info.getType().equals(Information.TYPE_DATE)) {
+        } else if (info.getType().equals(Information.TYPE_DATE)) {
             if (lastType.equals(Information.TYPE_BIRTH)) {
                 setBirthDate(info.getValue());
             } else if (lastType.equals(Information.TYPE_DEATH)) {
                 setDeathDate(info.getValue());
+            } else if (lastType.equals(Information.TYPE_RESIDENCE)) {
+                getLastResidence().setDate(info.getValue());
             }
-        }
-        if (info.getType().equals(Information.TYPE_PLACE)) {
+        } else if (info.getType().equals(Information.TYPE_PLACE)) {
             if (lastType.equals(Information.TYPE_BIRTH)) {
                 setBirthPlace(info.getValue());
             } else if (lastType.equals(Information.TYPE_DEATH)) {
                 setDeathPlace(info.getValue());
             }
-        }
-        if (info.getType().equals(Information.TYPE_PARENTS)) {
+        } else if (info.getType().equals(Information.TYPE_RESIDENCE)) {
+            getResidenceList().add(new Residence());
+        } else if (info.getType().equals(Information.TYPE_CITY)) {
+            if (lastType.equals(Information.TYPE_RESIDENCE)) {
+                getLastResidence().setCity(info.getValue());
+            }
+        } else if (info.getType().equals(Information.TYPE_PARENTS)) {
             setParentID(info.getValue());
-        }
-        if (info.getType().equals(Information.TYPE_SPOUSE)) {
+        } else if (info.getType().equals(Information.TYPE_SPOUSE)) {
             addSpouseID(info.getValue());
         }
     }

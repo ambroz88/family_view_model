@@ -18,6 +18,9 @@ public class Information {
     public final static String TYPE_MARRIAGE = "MARR";
     public final static String TYPE_SPOUSE = "FAMS";
     public final static String TYPE_PARENTS = "FAMC";
+    public final static String TYPE_RESIDENCE = "RESI";
+    public final static String TYPE_ADDRESS = "ADDR";
+    public final static String TYPE_CITY = "CITY";
 
     public final static String VALUE_INDIVIDUAL = "INDI";
     public final static String VALUE_FAMILY = "FAM";
