@@ -215,19 +215,23 @@ public class Person {
         return isYoungerThan(18);
     }
 
-    private boolean isYoungerThan(int age) {
+    public int getAge() {
+        double ageInYears = -1;
         if (!getBirthDate().isEmpty() && !getDeathDate().isEmpty()) {
             Date birth = Tools.convertDateString(getBirthDate());
             Date death = Tools.convertDateString(getDeathDate());
 
-            long ageInMillis = death.getTime() - birth.getTime();
-            double ageInYears = ageInMillis / 1000 / 3600 / 24 / 365;
-
-            if (ageInYears < age) {
-                return true;
+            if (birth != null && death != null) {
+                long ageInMillis = death.getTime() - birth.getTime();
+                ageInYears = ageInMillis / 1000.0 / 3600.0 / 24.0 / 365.0;
             }
         }
-        return false;
+        return (int) ageInYears;
+    }
+
+    private boolean isYoungerThan(int ageLimit) {
+        int deathAge = getAge();
+        return deathAge < ageLimit && deathAge != -1;
     }
 
     public void setInformation(Information info, String lastType) {

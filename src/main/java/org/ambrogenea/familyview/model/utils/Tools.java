@@ -3,6 +3,7 @@ package org.ambrogenea.familyview.model.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -54,9 +55,9 @@ public final class Tools {
     public static Date convertDateString(String stringDate) {
         String dateNorm = normalizeDate(stringDate);
 
-        SimpleDateFormat format1 = new SimpleDateFormat("dd MMM yyyy");
-        SimpleDateFormat format2 = new SimpleDateFormat("yyyy");
-        SimpleDateFormat format3 = new SimpleDateFormat("MMM yyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        SimpleDateFormat format3 = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
 
         Date date;
         try {

@@ -33,9 +33,10 @@ public class Configuration {
     private boolean showChildren;
     private boolean showSiblingsFamily;
     private boolean showSpousesFamily;
-    private boolean showTemple;
+    private boolean showAge;
     private boolean showResidence;
     private boolean showHeraldry;
+    private boolean showTemple;
     private int generationCount;
 
     public Configuration() {
@@ -67,6 +68,7 @@ public class Configuration {
         showSpousesFamily = true;
         showParents = true;
         showChildren = true;
+        showAge = true;
         showTemple = false;
         showResidence = false;
     }
@@ -261,6 +263,14 @@ public class Configuration {
 
     public void setShowMothersLineage(boolean showMothersLineage) {
         this.showMothersLineage = showMothersLineage;
+    }
+
+    public boolean isShowAge() {
+        return showAge;
+    }
+
+    public void setShowAge(boolean showAge) {
+        this.showAge = showAge;
     }
 
     public boolean isShowTemple() {

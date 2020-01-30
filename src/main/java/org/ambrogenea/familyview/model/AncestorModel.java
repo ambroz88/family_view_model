@@ -33,6 +33,8 @@ public class AncestorModel extends DataModel {
         Couple parents = findParents(person);
 
         addWomanParentsWithSiblings(person, parents);
+        addSiblings(parents, person);
+        addSpouse(person);
         return person;
     }
 
@@ -112,8 +114,6 @@ public class AncestorModel extends DataModel {
                 person.setMother(addManParentsWithSiblings(mother, mothersParents));
             }
 
-            addSiblings(parents, person);
-            addSpouse(person);
         }
         return person;
     }
