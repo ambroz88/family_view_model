@@ -129,6 +129,10 @@ public class Person {
         return birthPlace;
     }
 
+    public String getSimpleBirthPlace() {
+        return birthPlace.split(",")[0];
+    }
+
     public void setBirthPlace(String birthPlace) {
         this.birthPlace = birthPlace;
     }
@@ -149,6 +153,10 @@ public class Person {
 
     public String getDeathPlace() {
         return deathPlace;
+    }
+
+    public String getSimpleDeathPlace() {
+        return deathPlace.split(",")[0];
     }
 
     public void setDeathPlace(String deathPlace) {

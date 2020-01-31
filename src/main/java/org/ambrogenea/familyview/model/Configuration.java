@@ -10,6 +10,8 @@ public class Configuration {
 
     private int adultImageWidth;
     private int adultImageHeight;
+    private int wideMarriageLabel;
+    private int marriageLabelWidth;
     private int adultTopOffset;
     private int adultBottomOffset;
     private int siblingImageWidth;
@@ -25,23 +27,29 @@ public class Configuration {
     private String boyImagePath;
     private String girlImagePath;
 
-    private boolean showSiblings;
-    private boolean showSpouses;
     private boolean showFathersLineage;
     private boolean showMothersLineage;
+    private boolean showSiblings;
+    private boolean showSpouses;
+
     private boolean showParents;
     private boolean showChildren;
     private boolean showSiblingsFamily;
     private boolean showSpousesFamily;
+
     private boolean showAge;
+    private boolean showPlaces;
     private boolean showResidence;
     private boolean showHeraldry;
     private boolean showTemple;
+
     private int generationCount;
 
-    public Configuration() {
+    public Configuration(int marriageLabelWidth) {
         adultImageWidth = 150;
         adultImageHeight = 140;
+        this.marriageLabelWidth = marriageLabelWidth;
+        wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
         adultTopOffset = 30;
         adultBottomOffset = 30;
         siblingImageWidth = 150;
@@ -57,20 +65,26 @@ public class Configuration {
         boyImagePath = "";
         girlImagePath = "";
 
-        showSiblings = true;
-        showSpouses = false;
         showFathersLineage = true;
         showMothersLineage = false;
-        showHeraldry = true;
-        generationCount = 10;
+        showSiblings = true;
+        showSpouses = false;
 
         showSiblingsFamily = true;
         showSpousesFamily = true;
         showParents = true;
         showChildren = true;
+
         showAge = true;
-        showTemple = false;
+        showPlaces = true;
         showResidence = false;
+        showHeraldry = true;
+        showTemple = false;
+        generationCount = 10;
+    }
+
+    public int getWideMarriageLabel() {
+        return wideMarriageLabel;
     }
 
     public int getAdultImageWidth() {
@@ -79,6 +93,7 @@ public class Configuration {
 
     public void setAdultImageWidth(int adultImageWidth) {
         this.adultImageWidth = adultImageWidth;
+        wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
     }
 
     public int getAdultImageHeight() {
@@ -271,6 +286,14 @@ public class Configuration {
 
     public void setShowAge(boolean showAge) {
         this.showAge = showAge;
+    }
+
+    public boolean isShowPlaces() {
+        return showPlaces;
+    }
+
+    public void setShowPlaces(boolean showPlaces) {
+        this.showPlaces = showPlaces;
     }
 
     public boolean isShowTemple() {
