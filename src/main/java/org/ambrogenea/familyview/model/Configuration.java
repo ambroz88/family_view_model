@@ -8,6 +8,8 @@ import org.ambrogenea.familyview.model.utils.FileIO;
  */
 public class Configuration {
 
+    private AncestorModel ancestorModel;
+
     private int adultImageWidth;
     private int adultImageHeight;
     private int wideMarriageLabel;
@@ -81,6 +83,14 @@ public class Configuration {
         showHeraldry = true;
         showTemple = false;
         generationCount = 10;
+    }
+
+    public AncestorModel getAncestorModel() {
+        return ancestorModel;
+    }
+
+    public void setAncestorModel(AncestorModel ancestorModel) {
+        this.ancestorModel = ancestorModel;
     }
 
     public int getWideMarriageLabel() {

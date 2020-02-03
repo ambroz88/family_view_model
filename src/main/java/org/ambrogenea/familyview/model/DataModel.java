@@ -83,6 +83,7 @@ public class DataModel {
         if (person != null) {
             addSpouse(person);
             individualMap.put(person.getId(), person);
+            person.setPosition(recordList.size());
             recordList.add(person);
         }
     }

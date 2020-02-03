@@ -12,6 +12,7 @@ import org.ambrogenea.familyview.model.utils.Tools;
 public class Person {
 
     private final String id;
+    private int position;
 
     private String firstName;
     private String surname;
@@ -34,6 +35,7 @@ public class Person {
     public Person(Person person) {
         if (person != null) {
             this.id = person.getId();
+            this.position = person.getPosition();
 
             this.firstName = person.getFirstName();
             this.surname = person.getSurname();
@@ -59,6 +61,7 @@ public class Person {
         spouseID = new ArrayList<>();
         residenceList = new ArrayList<>();
         parents = new Couple();
+        position = -1;
 
         firstName = "";
         surname = "";
@@ -66,6 +69,14 @@ public class Person {
         birthPlace = "";
         deathDate = "";
         deathPlace = "";
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getId() {
