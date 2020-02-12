@@ -10,6 +10,8 @@ public class Configuration {
 
     private AncestorModel ancestorModel;
 
+    public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
+
     private int adultImageWidth;
     private int adultImageHeight;
     private int wideMarriageLabel;
@@ -47,10 +49,10 @@ public class Configuration {
 
     private int generationCount;
 
-    public Configuration(int marriageLabelWidth) {
+    public Configuration() {
         adultImageWidth = 150;
         adultImageHeight = 140;
-        this.marriageLabelWidth = marriageLabelWidth;
+        marriageLabelWidth = MIN_MARRIAGE_LABEL_WIDTH;
         wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
         adultTopOffset = 30;
         adultBottomOffset = 30;
@@ -97,12 +99,25 @@ public class Configuration {
         return wideMarriageLabel;
     }
 
+    public int getMarriageLabelWidth() {
+        return marriageLabelWidth;
+    }
+
     public int getAdultImageWidth() {
         return adultImageWidth;
     }
 
+    public int getSpouseLabelSpace() {
+        return getAdultImageWidth() + getMarriageLabelWidth();
+    }
+
+    public int getHalfSpouseLabelSpace() {
+        return (getAdultImageWidth() + getMarriageLabelWidth()) / 2;
+    }
+
     public void setAdultImageWidth(int adultImageWidth) {
         this.adultImageWidth = adultImageWidth;
+        marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
         wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
     }
 
