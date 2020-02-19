@@ -14,20 +14,25 @@ public class AncestorPerson extends Person {
     public static final int CODE_MALE = -1;
     public static final int CODE_FEMALE = 1;
 
-    private final ArrayList<Integer> ancestorLine;
-    private final ArrayList<Person> youngerSiblings;
-    private final ArrayList<Person> olderSiblings;
-    private final ArrayList<Couple> spouses;
+    private ArrayList<Integer> ancestorLine;
+    private ArrayList<Person> youngerSiblings;
+    private ArrayList<Person> olderSiblings;
+    private ArrayList<Couple> spouses;
     private int ancestorGenerations;
+    private int menGenerations;
+    private int womenGenerations;
+    private int maxOlderSiblings;
+    private int maxYoungerSiblings;
 
     public AncestorPerson(AncestorPerson person) {
         super(person);
-        youngerSiblings = new ArrayList<>();
-        olderSiblings = new ArrayList<>();
 
         if (person != null) {
+            initSiblings();
             this.ancestorLine = new ArrayList<>(person.getAncestorLine());
             this.ancestorGenerations = person.getAncestorGenerations();
+            this.menGenerations = person.getMenGenerations();
+            this.womenGenerations = person.getWomenGenerations();
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
             if (person.getSpouseCouple() != null) {
@@ -36,29 +41,35 @@ public class AncestorPerson extends Person {
                 this.spouses = new ArrayList<>();
             }
         } else {
-            ancestorGenerations = 0;
-            ancestorLine = new ArrayList<>();
-            this.spouses = new ArrayList<>();
+            initEmpty();
         }
     }
 
     public AncestorPerson(Person person) {
         super(person);
-        ancestorLine = new ArrayList<>();
-        ancestorGenerations = 0;
-        youngerSiblings = new ArrayList<>();
-        olderSiblings = new ArrayList<>();
-        spouses = new ArrayList<>();
+        initEmpty();
         this.setSex(person.getSex());
     }
 
     public AncestorPerson(String id) {
         super(id);
+        initEmpty();
+    }
+
+    private void initEmpty() {
         ancestorGenerations = 0;
+        menGenerations = 0;
+        womenGenerations = 0;
         ancestorLine = new ArrayList<>();
+        spouses = new ArrayList<>();
+        initSiblings();
+    }
+
+    private void initSiblings() {
         youngerSiblings = new ArrayList<>();
         olderSiblings = new ArrayList<>();
-        spouses = new ArrayList<>();
+        maxOlderSiblings = 0;
+        maxYoungerSiblings = 0;
     }
 
     @Override
@@ -77,6 +88,7 @@ public class AncestorPerson extends Person {
         super.setFather(father);
 
         if (getFather() != null) {
+            setMenGenerations(getFather().getMenGenerations());
             if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
             } else if (getMother() != null && getFather().getAncestorGenerations() >= getMother().getAncestorGenerations()) {
@@ -90,6 +102,7 @@ public class AncestorPerson extends Person {
         super.setMother(mother);
 
         if (getMother() != null) {
+            setWomenGenerations(getMother().getWomenGenerations());
             if (getFather() == null) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else if (getFather() != null && getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
@@ -118,6 +131,22 @@ public class AncestorPerson extends Person {
         return ancestorGenerations;
     }
 
+    public int getMenGenerations() {
+        return menGenerations;
+    }
+
+    public void setMenGenerations(int menGenerations) {
+        this.menGenerations = menGenerations + 1;
+    }
+
+    public int getWomenGenerations() {
+        return womenGenerations;
+    }
+
+    public void setWomenGenerations(int womenGenerations) {
+        this.womenGenerations = womenGenerations + 1;
+    }
+
     public ArrayList<Integer> getAncestorLine() {
         return ancestorLine;
     }
@@ -144,6 +173,22 @@ public class AncestorPerson extends Person {
 
     public void addOlderSibling(Person olderSibling) {
         this.olderSiblings.add(olderSibling);
+    }
+
+    public int getMaxOlderSiblings() {
+        return maxOlderSiblings;
+    }
+
+    public void setMaxOlderSiblings(int maxOlderSiblings) {
+        this.maxOlderSiblings = Math.max(maxOlderSiblings, getOlderSiblings().size());
+    }
+
+    public int getMaxYoungerSiblings() {
+        return maxYoungerSiblings;
+    }
+
+    public void setMaxYoungerSiblings(int maxYoungerSiblings) {
+        this.maxYoungerSiblings = Math.max(maxYoungerSiblings, getYoungerSiblings().size());
     }
 
     public Person getSpouse() {

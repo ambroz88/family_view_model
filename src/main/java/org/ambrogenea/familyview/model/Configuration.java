@@ -107,6 +107,10 @@ public class Configuration {
         return adultImageWidth;
     }
 
+    public int getParentImageSpace() {
+        return getAdultImageWidth() - (getAdultImageWidth() / 2 - getMarriageLabelWidth() / 2);
+    }
+
     public int getSpouseLabelSpace() {
         return getAdultImageWidth() + getMarriageLabelWidth();
     }

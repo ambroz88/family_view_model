@@ -22,6 +22,7 @@ public class Person {
     private String deathDate;
     private String deathPlace;
     private String parentID;
+    private boolean living;
     private ArrayList<String> spouseID;
     private ArrayList<Residence> residenceList;
 
@@ -40,6 +41,7 @@ public class Person {
             this.firstName = person.getFirstName();
             this.surname = person.getSurname();
             this.sex = person.getSex();
+            this.living = person.isLiving();
             this.birthDate = person.getBirthDate();
             this.birthPlace = person.getBirthPlace();
             this.deathDate = person.getDeathDate();
@@ -61,6 +63,7 @@ public class Person {
         spouseID = new ArrayList<>();
         residenceList = new ArrayList<>();
         parents = new Couple();
+        living = true;
         position = -1;
 
         firstName = "";
@@ -146,6 +149,14 @@ public class Person {
 
     public void setBirthPlace(String birthPlace) {
         this.birthPlace = birthPlace;
+    }
+
+    public void setLiving(boolean living) {
+        this.living = living;
+    }
+
+    public boolean isLiving() {
+        return living;
     }
 
     public String getDeathDate() {
@@ -262,6 +273,8 @@ public class Person {
             setName(info.getValue());
         } else if (info.getType().equals(Information.TYPE_SEX)) {
             setSex(info.getValue());
+        } else if (info.getType().equals(Information.TYPE_DEATH)) {
+            setLiving(false);
         } else if (info.getType().equals(Information.TYPE_DATE)) {
             if (lastType.equals(Information.TYPE_BIRTH)) {
                 setBirthDate(info.getValue());
@@ -278,6 +291,7 @@ public class Person {
             }
         } else if (info.getType().equals(Information.TYPE_RESIDENCE)) {
             getResidenceList().add(new Residence());
+            getLastResidence().setCity(info.getValue());
         } else if (info.getType().equals(Information.TYPE_CITY)) {
             if (lastType.equals(Information.TYPE_RESIDENCE)) {
                 getLastResidence().setCity(info.getValue());

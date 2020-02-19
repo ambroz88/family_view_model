@@ -83,6 +83,9 @@ public class AncestorModel extends DataModel {
         if (person != null && parents != null && !parents.isEmpty()) {
             person.setParents(parents);
 
+            addSiblings(parents, person);
+            addSpouse(person);
+
             if (parents.getHusband() != null) {
                 AncestorPerson father = new AncestorPerson(parents.getHusband());
                 Couple fathersParents = findParents(father);
@@ -91,10 +94,21 @@ public class AncestorModel extends DataModel {
                     addSpouse(father);
                 }
                 person.setFather(addManParentsWithSiblings(father, fathersParents));
+                person.setMaxOlderSiblings(person.getFather().getMaxOlderSiblings());
+                person.setMaxYoungerSiblings(person.getFather().getMaxYoungerSiblings());
+
+            } else {
+                AncestorPerson mother = new AncestorPerson(parents.getWife());
+                Couple mothersParents = findParents(mother);
+                mother.addChildrenCode(person.getAncestorLine());
+                if (mothersParents == null || mothersParents.isEmpty()) {
+                    addSpouse(mother);
+                }
+                person.setMother(addManParentsWithSiblings(mother, mothersParents));
+                person.setMaxOlderSiblings(person.getMother().getMaxOlderSiblings());
+                person.setMaxYoungerSiblings(person.getMother().getMaxYoungerSiblings());
             }
 
-            addSiblings(parents, person);
-            addSpouse(person);
         }
         return person;
     }
