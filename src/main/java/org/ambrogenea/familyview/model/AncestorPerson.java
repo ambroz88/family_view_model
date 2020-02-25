@@ -19,8 +19,8 @@ public class AncestorPerson extends Person {
     private ArrayList<Person> olderSiblings;
     private ArrayList<Couple> spouses;
     private int ancestorGenerations;
-    private int menGenerations;
-    private int womenGenerations;
+    private double lastParentsCount;
+    private double innerParentsCount;
     private int maxOlderSiblings;
     private int maxYoungerSiblings;
 
@@ -29,10 +29,9 @@ public class AncestorPerson extends Person {
 
         if (person != null) {
             initSiblings();
+            innerParentsCount = person.getInnerParentsCount();
             this.ancestorLine = new ArrayList<>(person.getAncestorLine());
             this.ancestorGenerations = person.getAncestorGenerations();
-            this.menGenerations = person.getMenGenerations();
-            this.womenGenerations = person.getWomenGenerations();
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
             if (person.getSpouseCouple() != null) {
@@ -58,8 +57,8 @@ public class AncestorPerson extends Person {
 
     private void initEmpty() {
         ancestorGenerations = 0;
-        menGenerations = 0;
-        womenGenerations = 0;
+        lastParentsCount = 0;
+        innerParentsCount = 0;
         ancestorLine = new ArrayList<>();
         spouses = new ArrayList<>();
         initSiblings();
@@ -88,7 +87,17 @@ public class AncestorPerson extends Person {
         super.setFather(father);
 
         if (getFather() != null) {
-            setMenGenerations(getFather().getMenGenerations());
+            double fatherParentsCount = getFather().getLastParentsCount();
+            if (fatherParentsCount == 0) {
+                addLastParentsCount(0.5);
+            } else {
+                addLastParentsCount(fatherParentsCount);
+            }
+
+            if (getSex().equals(Information.VALUE_FEMALE)) {
+                innerParentsCount = getFather().getLastParentsCount();
+            }
+
             if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
             } else if (getMother() != null && getFather().getAncestorGenerations() >= getMother().getAncestorGenerations()) {
@@ -102,7 +111,21 @@ public class AncestorPerson extends Person {
         super.setMother(mother);
 
         if (getMother() != null) {
-            setWomenGenerations(getMother().getWomenGenerations());
+            double motherParentsCount = getMother().getLastParentsCount();
+            if (motherParentsCount == 0) {
+                if (getFather() == null) {
+                    addLastParentsCount(1);
+                } else {
+                    addLastParentsCount(0.5);
+                }
+            } else {
+                addLastParentsCount(motherParentsCount);
+            }
+
+            if (getSex().equals(Information.VALUE_MALE)) {
+                innerParentsCount = getMother().getLastParentsCount();
+            }
+
             if (getFather() == null) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else if (getFather() != null && getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
@@ -131,20 +154,23 @@ public class AncestorPerson extends Person {
         return ancestorGenerations;
     }
 
-    public int getMenGenerations() {
-        return menGenerations;
+    public double getLastParentsCount() {
+        return lastParentsCount;
     }
 
-    public void setMenGenerations(int menGenerations) {
-        this.menGenerations = menGenerations + 1;
+    public void addLastParentsCount(double lastParentsCount) {
+        this.lastParentsCount = getLastParentsCount() + lastParentsCount;
     }
 
-    public int getWomenGenerations() {
-        return womenGenerations;
+    public double getInnerParentsCount() {
+        if (innerParentsCount == 0) {
+            return 0.5;
+        }
+        return innerParentsCount;
     }
 
-    public void setWomenGenerations(int womenGenerations) {
-        this.womenGenerations = womenGenerations + 1;
+    public void setInnerParentsCount(double parentsCount) {
+        this.innerParentsCount = parentsCount;
     }
 
     public ArrayList<Integer> getAncestorLine() {

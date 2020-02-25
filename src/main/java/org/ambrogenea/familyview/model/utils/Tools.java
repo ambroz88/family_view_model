@@ -1,9 +1,11 @@
 package org.ambrogenea.familyview.model.utils;
 
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Properties;
 
 /**
  *
@@ -16,6 +18,7 @@ public final class Tools {
         plainText = plainText.replace("č", "c").replace("ř", "r").replace("ž", "z").replace("š", "s").replace("ě", "e");
         plainText = plainText.replace("ň", "n").replace("ď", "d").replace("ť", "t");
         plainText = plainText.replace("ö", "o");
+        plainText = plainText.replace(" ", "");
         return plainText;
     }
 
@@ -74,6 +77,23 @@ public final class Tools {
             }
         }
         return date;
+    }
+
+    public static String cityShortVersion(String placeName) {
+        String filePath;
+        URL fileURL = Tools.class.getResource("/text/CityShortcuts.properties");
+
+        if (fileURL != null) {
+            filePath = fileURL.getPath();
+            Properties prop = FileIO.loadProperties(filePath);
+
+            String normalizeName = placeName.toLowerCase().replace(" ", "");
+            if (prop.containsKey(normalizeName)) {
+                return prop.getProperty(normalizeName);
+            }
+        }
+
+        return placeName;
     }
 
     private static String normalizeDate(String stringDate) {

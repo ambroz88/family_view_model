@@ -43,6 +43,7 @@ public class Configuration {
 
     private boolean showAge;
     private boolean showPlaces;
+    private boolean shortenPlaces;
     private boolean showResidence;
     private boolean showHeraldry;
     private boolean showTemple;
@@ -50,8 +51,8 @@ public class Configuration {
     private int generationCount;
 
     public Configuration() {
-        adultImageWidth = 150;
-        adultImageHeight = 140;
+        adultImageWidth = 170;
+        adultImageHeight = 150;
         marriageLabelWidth = MIN_MARRIAGE_LABEL_WIDTH;
         wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
         adultTopOffset = 30;
@@ -80,7 +81,8 @@ public class Configuration {
         showChildren = true;
 
         showAge = true;
-        showPlaces = true;
+        showPlaces = false;
+        shortenPlaces = false;
         showResidence = false;
         showHeraldry = true;
         showTemple = false;
@@ -119,10 +121,14 @@ public class Configuration {
         return (getAdultImageWidth() + getMarriageLabelWidth()) / 2;
     }
 
+    public int getCoupleWidth() {
+        return 2 * getAdultImageWidth() + getMarriageLabelWidth();
+    }
+
     public void setAdultImageWidth(int adultImageWidth) {
         this.adultImageWidth = adultImageWidth;
         marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
-        wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
+        wideMarriageLabel = 3 * adultImageWidth;
     }
 
     public int getAdultImageHeight() {
@@ -323,6 +329,14 @@ public class Configuration {
 
     public void setShowPlaces(boolean showPlaces) {
         this.showPlaces = showPlaces;
+    }
+
+    public boolean isShortenPlaces() {
+        return shortenPlaces;
+    }
+
+    public void setShortenPlaces(boolean shortenPlaces) {
+        this.shortenPlaces = shortenPlaces;
     }
 
     public boolean isShowTemple() {

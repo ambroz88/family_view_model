@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -59,5 +62,19 @@ public class FileIO {
         }
         System.out.println("File " + fileName + " cannot be open or does not exist in resources.");
         return null;
+    }
+
+    public static Properties loadProperties(String absolutePath) {
+        Properties propertyFile = new Properties();
+
+        try {
+            FileInputStream fis = new FileInputStream(absolutePath);
+            propertyFile.load(fis);
+            fis.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return propertyFile;
     }
 }

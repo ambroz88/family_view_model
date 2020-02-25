@@ -25,19 +25,28 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
  */
 public class WordGenerator {
 
+    public static final String FORMAT_A4 = "A4";
+    public static final String FORMAT_A5 = "A5";
+
     private static final String COLOR_BLACK = "000000";
     private static final String TITLE_FONT = "Monotype Corsiva";
     private static final int TITLE_FONT_SIZE = 20;
     private static final String TEXT_FONT = "Calibri";
     private static final int TEXT_FONT_SIZE = 11;
+    private static String FORMAT = FORMAT_A4;
 
-    private static final int MAX_WIDTH = 19;
-    private static int MAX_HEIGHT = 12;
-    private static int GENERATION_HEIGHT = 4;
+    private static final int MAX_WIDTH_A5 = 19;
+    private static int MAX_HEIGHT_A5 = 12;
+    private static final int GENERATION_HEIGHT_A5 = 4;
 
-    public static XWPFDocument createWordDocument() {
+    private static final int MAX_WIDTH_A4 = 26;
+    private static int MAX_HEIGHT_A4 = 18;
+    private static final int GENERATION_HEIGHT_A4 = 6;
+
+    public static XWPFDocument createWordDocument(String format) {
         XWPFDocument document = new XWPFDocument();
         CTBody body = document.getDocument().getBody();
+        FORMAT = format;
 
         if (!body.isSetSectPr()) {
             body.addNewSectPr();
@@ -50,8 +59,14 @@ public class WordGenerator {
         CTPageSz pageSize = section.getPgSz();
 
         pageSize.setOrient(STPageOrientation.LANDSCAPE);
-        pageSize.setW(BigInteger.valueOf(11900));
-        pageSize.setH(BigInteger.valueOf(8400));
+
+        if (format.equals(FORMAT_A5)) {
+            pageSize.setW(BigInteger.valueOf(11900));
+            pageSize.setH(BigInteger.valueOf(8400));
+        } else if (format.equals(FORMAT_A4)) {
+            pageSize.setW(BigInteger.valueOf(16840));
+            pageSize.setH(BigInteger.valueOf(11900));
+        }
         /* multiply by 20 to put it to above setters
         Letter       612x792
         LetterSmall  612x792
@@ -77,7 +92,7 @@ public class WordGenerator {
         // 1mm = 5,68
         pageMar.setLeft(BigInteger.valueOf(795L));
 //        pageMar.setLeft(BigInteger.valueOf(682L));
-        pageMar.setTop(BigInteger.valueOf(568L));
+        pageMar.setTop(BigInteger.valueOf(795L));
         pageMar.setRight(BigInteger.valueOf(568L));
         pageMar.setBottom(BigInteger.valueOf(568L));
 
@@ -106,8 +121,13 @@ public class WordGenerator {
 
     public static void addImageToPage(XWPFDocument document, InputStream imageStream, int imageWidth, int imageHeight) {
         try {
-            int emuHeight = Units.EMU_PER_CENTIMETER * MAX_HEIGHT;
-            int emuMaxWidth = Units.EMU_PER_CENTIMETER * MAX_WIDTH;
+            int emuHeight = Units.EMU_PER_CENTIMETER * MAX_HEIGHT_A4;
+            int emuMaxWidth = Units.EMU_PER_CENTIMETER * MAX_WIDTH_A4;
+
+            if (FORMAT.equals(FORMAT_A5)) {
+                emuHeight = Units.EMU_PER_CENTIMETER * MAX_HEIGHT_A5;
+                emuMaxWidth = Units.EMU_PER_CENTIMETER * MAX_WIDTH_A5;
+            }
 
             double scale = Units.pixelToEMU(imageHeight) / (double) emuHeight;
             int pixelWidth = (int) (imageWidth / scale);
@@ -136,10 +156,19 @@ public class WordGenerator {
         blankInfo.setAlignment(ParagraphAlignment.CENTER);
         blankInfo.setSpacingBetween(2);
         XWPFRun description = blankInfo.createRun();
-        description.setText("Informace o rodině:  __________________________________________________________________________\n"
-                + "___________________________________________________________________________________________\n"
-                + "___________________________________________________________________________________________\n"
-                + "___________________________________________________________________________________________\n");
+
+        if (FORMAT.equals(FORMAT_A4)) {
+            description.setText("Informace o rodině:  ___________________________________________________________________________________________________\n"
+                    + "____________________________________________________________________________________________________________________\n"
+                    + "____________________________________________________________________________________________________________________\n"
+                    + "____________________________________________________________________________________________________________________\n");
+        } else if (FORMAT.equals(FORMAT_A5)) {
+            description.setText("Informace o rodině:  __________________________________________________________________________\n"
+                    + "___________________________________________________________________________________________\n"
+                    + "___________________________________________________________________________________________\n"
+                    + "___________________________________________________________________________________________\n");
+        }
+
         description.setFontFamily(TEXT_FONT);
         description.setFontSize(TEXT_FONT_SIZE);
         description.addBreak(BreakType.PAGE);
@@ -147,7 +176,11 @@ public class WordGenerator {
 
     public static void setMaxHeight(int generations) {
         if (generations != 0) {
-            MAX_HEIGHT = generations * GENERATION_HEIGHT;
+            if (FORMAT.equals(FORMAT_A5)) {
+                MAX_HEIGHT_A5 = generations * GENERATION_HEIGHT_A5;
+            } else if (FORMAT.equals(FORMAT_A4)) {
+                MAX_HEIGHT_A4 = generations * GENERATION_HEIGHT_A4;
+            }
         }
     }
 }
