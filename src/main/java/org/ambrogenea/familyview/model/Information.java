@@ -15,6 +15,7 @@ public class Information {
     public final static String TYPE_DEATH = "DEAT";
     public final static String TYPE_DATE = "DATE";
     public final static String TYPE_PLACE = "PLAC";
+    public final static String TYPE_OCCUPATION = "OCCU";
     public final static String TYPE_MARRIAGE = "MARR";
     public final static String TYPE_SPOUSE = "FAMS";
     public final static String TYPE_PARENTS = "FAMC";

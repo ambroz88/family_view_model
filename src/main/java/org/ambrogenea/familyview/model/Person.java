@@ -21,6 +21,7 @@ public class Person {
     private String birthPlace;
     private String deathDate;
     private String deathPlace;
+    private String occupation;
     private String parentID;
     private boolean living;
     private ArrayList<String> spouseID;
@@ -46,6 +47,7 @@ public class Person {
             this.birthPlace = person.getBirthPlace();
             this.deathDate = person.getDeathDate();
             this.deathPlace = person.getDeathPlace();
+            this.occupation = person.getOccupation();
             this.residenceList = person.getResidenceList();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
@@ -72,6 +74,7 @@ public class Person {
         birthPlace = "";
         deathDate = "";
         deathPlace = "";
+        occupation = "";
     }
 
     public int getPosition() {
@@ -185,6 +188,14 @@ public class Person {
         this.deathPlace = deathPlace;
     }
 
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
     public ArrayList<Residence> getResidenceList() {
         return residenceList;
     }
@@ -289,6 +300,8 @@ public class Person {
             } else if (lastType.equals(Information.TYPE_DEATH)) {
                 setDeathPlace(info.getValue());
             }
+        } else if (info.getType().equals(Information.TYPE_OCCUPATION)) {
+            setOccupation(info.getValue());
         } else if (info.getType().equals(Information.TYPE_RESIDENCE)) {
             getResidenceList().add(new Residence());
             getLastResidence().setCity(info.getValue());

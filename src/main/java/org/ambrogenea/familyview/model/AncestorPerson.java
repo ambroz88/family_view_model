@@ -142,6 +142,7 @@ public class AncestorPerson extends Person {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
+                setMother(new AncestorPerson("000"));
             } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else {

@@ -44,6 +44,7 @@ public class Configuration {
     private boolean showAge;
     private boolean showPlaces;
     private boolean shortenPlaces;
+    private boolean showOccupation;
     private boolean showResidence;
     private boolean showHeraldry;
     private boolean showTemple;
@@ -83,6 +84,7 @@ public class Configuration {
         showAge = true;
         showPlaces = false;
         shortenPlaces = false;
+        showOccupation = true;
         showResidence = false;
         showHeraldry = true;
         showTemple = false;
@@ -353,6 +355,14 @@ public class Configuration {
 
     public void setShowHeraldry(boolean showHeraldry) {
         this.showHeraldry = showHeraldry;
+    }
+
+    public boolean isShowOccupation() {
+        return showOccupation;
+    }
+
+    public void setShowOccupation(boolean showOccupation) {
+        this.showOccupation = showOccupation;
     }
 
     public boolean isShowResidence() {

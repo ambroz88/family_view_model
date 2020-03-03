@@ -136,8 +136,8 @@ public class AncestorModel extends DataModel {
                 Couple mothersParents = findParents(mother);
                 mother.addChildrenCode(person.getAncestorLine());
                 person.setMother(addManParentsWithSiblings(mother, mothersParents));
-                person.setMaxOlderSiblings(person.getMother().getOlderSiblings().size());
-                person.setMaxYoungerSiblings(person.getMother().getYoungerSiblings().size());
+                person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), person.getMother().getOlderSiblings().size()));
+                person.setMaxYoungerSiblings(Math.max(person.getMaxYoungerSiblings(), person.getMother().getYoungerSiblings().size()));
             }
 
         }
