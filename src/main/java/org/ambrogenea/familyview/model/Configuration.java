@@ -1,5 +1,8 @@
 package org.ambrogenea.familyview.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import org.ambrogenea.familyview.model.utils.FileIO;
 
 /**
@@ -11,6 +14,7 @@ public class Configuration {
     private AncestorModel ancestorModel;
 
     public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
+    private final PropertyChangeSupport prop;
 
     private int adultImageWidth;
     private int adultImageHeight;
@@ -89,6 +93,8 @@ public class Configuration {
         showHeraldry = true;
         showTemple = false;
         generationCount = 10;
+
+        prop = new PropertyChangeSupport(this);
     }
 
     public AncestorModel getAncestorModel() {
@@ -371,6 +377,18 @@ public class Configuration {
 
     public void setShowResidence(boolean showResidence) {
         this.showResidence = showResidence;
+    }
+
+    public void firePropertyChange(String prop, Object oldValue, Object newValue) {
+        this.prop.firePropertyChange(prop, oldValue, newValue);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        prop.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        prop.removePropertyChangeListener(listener);
     }
 
 }

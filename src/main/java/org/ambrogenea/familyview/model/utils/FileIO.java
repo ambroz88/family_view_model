@@ -57,7 +57,6 @@ public class FileIO {
 
         if (fileURL != null) {
             filePath = fileURL.getPath();
-            System.out.println("Image file path: " + filePath);
             return new File(filePath);
         }
         System.out.println("File " + fileName + " cannot be open or does not exist in resources.");
