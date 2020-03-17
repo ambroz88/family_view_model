@@ -13,6 +13,13 @@ public class Configuration {
 
     private AncestorModel ancestorModel;
 
+    public static final String CONFIG_CHANGE = "configChange";
+
+    public static final String DIAGRAM_PERGAMEN = "pergamen";
+    public static final String DIAGRAM_HERALDRY = "heraldry";
+    public static final String DIAGRAM_WAVE = "wave";
+    public static final String DIAGRAM_DOUBLEWAVE = "doublewave";
+
     public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
     private final PropertyChangeSupport prop;
 
@@ -28,12 +35,11 @@ public class Configuration {
     private int siblingBottomOffset;
     private int fontSize;
 
+    private String adultDiagram;
     private String adultManImagePath;
     private String adultWomanImagePath;
     private String siblingManImagePath;
     private String siblingWomanImagePath;
-    private String boyImagePath;
-    private String girlImagePath;
 
     private boolean showFathersLineage;
     private boolean showMothersLineage;
@@ -68,12 +74,11 @@ public class Configuration {
         siblingTopOffset = 10;
         fontSize = 14;
 
-        adultManImagePath = FileIO.loadFileFromResources("/diagrams/man_diagram.png").getPath();
-        adultWomanImagePath = FileIO.loadFileFromResources("/diagrams/woman_diagram.png").getPath();
+        adultDiagram = DIAGRAM_PERGAMEN;
+        adultManImagePath = FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_man.png").getPath();
+        adultWomanImagePath = FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_woman.png").getPath();
         siblingManImagePath = "";
         siblingWomanImagePath = "";
-        boyImagePath = "";
-        girlImagePath = "";
 
         showFathersLineage = true;
         showMothersLineage = false;
@@ -134,9 +139,11 @@ public class Configuration {
     }
 
     public void setAdultImageWidth(int adultImageWidth) {
+        int oldValue = getAdultImageWidth();
         this.adultImageWidth = adultImageWidth;
         marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
         wideMarriageLabel = 3 * adultImageWidth;
+        firePropertyChange(CONFIG_CHANGE, oldValue, adultImageWidth);
     }
 
     public int getAdultImageHeight() {
@@ -144,7 +151,9 @@ public class Configuration {
     }
 
     public void setAdultImageHeight(int adultImageHeight) {
+        int oldValue = getAdultImageHeight();
         this.adultImageHeight = adultImageHeight;
+        firePropertyChange(CONFIG_CHANGE, oldValue, adultImageHeight);
     }
 
     public int getSiblingImageWidth() {
@@ -168,14 +177,28 @@ public class Configuration {
     }
 
     public void setFontSize(int fontSize) {
+        int oldValue = getFontSize();
         this.fontSize = fontSize;
+        firePropertyChange(CONFIG_CHANGE, oldValue, fontSize);
+    }
+
+    public String getAdultDiagram() {
+        return adultDiagram;
+    }
+
+    public void setAdultDiagram(String adultDiagram) {
+        String oldValue = getAdultDiagram();
+        this.adultDiagram = adultDiagram;
+        setAdultManImagePath(FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_man.png").getPath());
+        setAdultWomanImagePath(FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_woman.png").getPath());
+        firePropertyChange(CONFIG_CHANGE, oldValue, adultDiagram);
     }
 
     public String getAdultManImagePath() {
         return adultManImagePath;
     }
 
-    public void setAdultManImagePath(String adultManImagePath) {
+    private void setAdultManImagePath(String adultManImagePath) {
         this.adultManImagePath = adultManImagePath;
     }
 
@@ -183,7 +206,7 @@ public class Configuration {
         return adultWomanImagePath;
     }
 
-    public void setAdultWomanImagePath(String adultWomanImagePath) {
+    private void setAdultWomanImagePath(String adultWomanImagePath) {
         this.adultWomanImagePath = adultWomanImagePath;
     }
 
@@ -203,22 +226,6 @@ public class Configuration {
         this.siblingWomanImagePath = siblingWomanImagePath;
     }
 
-    public String getBoyImagePath() {
-        return boyImagePath;
-    }
-
-    public void setBoyImagePath(String boyImagePath) {
-        this.boyImagePath = boyImagePath;
-    }
-
-    public String getGirlImagePath() {
-        return girlImagePath;
-    }
-
-    public void setGirlImagePath(String girlImagePath) {
-        this.girlImagePath = girlImagePath;
-    }
-
     public int getAdultBottomOffset() {
         return adultBottomOffset;
     }
@@ -228,11 +235,15 @@ public class Configuration {
     }
 
     public void setAdultBottomOffset(int adultVerticalOffset) {
+        int oldValue = getAdultBottomOffset();
         this.adultBottomOffset = adultVerticalOffset;
+        firePropertyChange(CONFIG_CHANGE, oldValue, adultVerticalOffset);
     }
 
     public void setAdultTopOffset(int adultVerticalOffset) {
+        int oldValue = getAdultTopOffset();
         this.adultTopOffset = adultVerticalOffset;
+        firePropertyChange(CONFIG_CHANGE, oldValue, adultVerticalOffset);
     }
 
     public int getSiblingBottomOffset() {
@@ -328,7 +339,9 @@ public class Configuration {
     }
 
     public void setShowAge(boolean showAge) {
+        boolean oldValue = isShowAge();
         this.showAge = showAge;
+        firePropertyChange(CONFIG_CHANGE, oldValue, showAge);
     }
 
     public boolean isShowPlaces() {
@@ -336,7 +349,9 @@ public class Configuration {
     }
 
     public void setShowPlaces(boolean showPlaces) {
+        boolean oldValue = isShowPlaces();
         this.showPlaces = showPlaces;
+        firePropertyChange(CONFIG_CHANGE, oldValue, showPlaces);
     }
 
     public boolean isShortenPlaces() {
@@ -344,7 +359,9 @@ public class Configuration {
     }
 
     public void setShortenPlaces(boolean shortenPlaces) {
+        boolean oldValue = isShortenPlaces();
         this.shortenPlaces = shortenPlaces;
+        firePropertyChange(CONFIG_CHANGE, oldValue, shortenPlaces);
     }
 
     public boolean isShowTemple() {
@@ -352,7 +369,9 @@ public class Configuration {
     }
 
     public void setShowTemple(boolean showTemple) {
+        boolean oldValue = isShowTemple();
         this.showTemple = showTemple;
+        firePropertyChange(CONFIG_CHANGE, oldValue, showTemple);
     }
 
     public boolean isShowHeraldry() {
@@ -368,7 +387,9 @@ public class Configuration {
     }
 
     public void setShowOccupation(boolean showOccupation) {
+        boolean oldValue = isShowOccupation();
         this.showOccupation = showOccupation;
+        firePropertyChange(CONFIG_CHANGE, oldValue, showOccupation);
     }
 
     public boolean isShowResidence() {

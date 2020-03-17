@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.ambrogenea.familyview.model.Information;
+import org.ambrogenea.familyview.model.Person;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -98,6 +101,21 @@ public final class Tools {
 
     private static String normalizeDate(String stringDate) {
         return stringDate.replace("ABT ", "").replace("BEF ", "").replace("TO ", "");
+    }
+
+    public static Person generateSamplePerson() {
+        Person samplePerson = new Person("0000");
+        samplePerson.setFirstName("Vítězslav");
+        samplePerson.setSurname("Konipásek");
+        samplePerson.setSex(Information.VALUE_MALE);
+        samplePerson.setBirthDate("24 AUG 1869");
+        samplePerson.setBirthPlace("České Budějovice");
+        samplePerson.setDeathDate("30 DEC 1924");
+        samplePerson.setDeathPlace("České Budějovice");
+        samplePerson.setOccupation("pekařský mistr");
+        samplePerson.setLiving(false);
+
+        return samplePerson;
     }
 
 }
