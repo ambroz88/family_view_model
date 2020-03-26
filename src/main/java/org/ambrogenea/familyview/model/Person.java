@@ -119,6 +119,13 @@ public class Person {
         if (slashPosition != -1) {
             firstName = name.substring(0, slashPosition);
             surname = name.substring(slashPosition + 2, name.length() - 1);
+        } else {
+            slashPosition = name.indexOf("/");
+            if (slashPosition != -1) {
+                surname = name.substring(slashPosition + 1, name.length() - 1);
+            } else {
+                firstName = name;
+            }
         }
     }
 
