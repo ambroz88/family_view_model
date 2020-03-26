@@ -55,10 +55,12 @@ public class Configuration {
     private boolean showPlaces;
     private boolean shortenPlaces;
     private boolean showOccupation;
+    private boolean showMarriage;
     private boolean showResidence;
     private boolean showHeraldry;
     private boolean showTemple;
 
+    private boolean resetMode;
     private int generationCount;
 
     public Configuration() {
@@ -94,9 +96,12 @@ public class Configuration {
         showPlaces = false;
         shortenPlaces = false;
         showOccupation = true;
+        showMarriage = true;
         showResidence = false;
         showHeraldry = true;
         showTemple = false;
+
+        resetMode = false;
         generationCount = 10;
 
         prop = new PropertyChangeSupport(this);
@@ -374,6 +379,14 @@ public class Configuration {
         firePropertyChange(CONFIG_CHANGE, oldValue, showTemple);
     }
 
+    public boolean isShowMarriage() {
+        return showMarriage;
+    }
+
+    public void setShowMarriage(boolean showMarriage) {
+        this.showMarriage = showMarriage;
+    }
+
     public boolean isShowHeraldry() {
         return showHeraldry;
     }
@@ -398,6 +411,14 @@ public class Configuration {
 
     public void setShowResidence(boolean showResidence) {
         this.showResidence = showResidence;
+    }
+
+    public boolean isResetMode() {
+        return resetMode;
+    }
+
+    public void setResetMode(boolean resetMode) {
+        this.resetMode = resetMode;
     }
 
     public void firePropertyChange(String prop, Object oldValue, Object newValue) {
