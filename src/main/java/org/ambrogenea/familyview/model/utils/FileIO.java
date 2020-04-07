@@ -53,7 +53,7 @@ public class FileIO {
 
     public static File loadFileFromResources(String fileName) {
         String filePath;
-        URL fileURL = FileIO.class.getResource(fileName);
+        URL fileURL = ClassLoader.getSystemResource(fileName);
 
         if (fileURL != null) {
             filePath = fileURL.getPath();
@@ -66,10 +66,8 @@ public class FileIO {
     public static Properties loadProperties(String absolutePath) {
         Properties propertyFile = new Properties();
 
-        try {
-            FileInputStream fis = new FileInputStream(absolutePath);
+        try (FileInputStream fis = new FileInputStream(absolutePath)) {
             propertyFile.load(fis);
-            fis.close();
         } catch (IOException ex) {
             Logger.getLogger(FileIO.class.getName()).log(Level.SEVERE, null, ex);
         }

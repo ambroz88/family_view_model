@@ -3,8 +3,6 @@ package org.ambrogenea.familyview.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import org.ambrogenea.familyview.model.utils.FileIO;
-
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -77,8 +75,8 @@ public class Configuration {
         fontSize = 14;
 
         adultDiagram = DIAGRAM_PERGAMEN;
-        adultManImagePath = FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_man.png").getPath();
-        adultWomanImagePath = FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_woman.png").getPath();
+        adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
+        adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";
         siblingManImagePath = "";
         siblingWomanImagePath = "";
 
@@ -194,8 +192,8 @@ public class Configuration {
     public void setAdultDiagram(String adultDiagram) {
         String oldValue = getAdultDiagram();
         this.adultDiagram = adultDiagram;
-        setAdultManImagePath(FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_man.png").getPath());
-        setAdultWomanImagePath(FileIO.loadFileFromResources("/diagrams/" + adultDiagram + "_woman.png").getPath());
+        setAdultManImagePath("diagrams/" + adultDiagram + "_man.png");
+        setAdultWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
         firePropertyChange(CONFIG_CHANGE, oldValue, adultDiagram);
     }
 
@@ -426,11 +424,11 @@ public class Configuration {
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        prop.addPropertyChangeListener(listener);
+        this.prop.addPropertyChangeListener(listener);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        prop.removePropertyChangeListener(listener);
+        this.prop.removePropertyChangeListener(listener);
     }
 
 }
