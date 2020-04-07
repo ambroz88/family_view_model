@@ -2,6 +2,7 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 
+import org.ambrogenea.familyview.model.enums.Sex;
 import org.ambrogenea.familyview.model.utils.Tools;
 
 /**
@@ -59,9 +60,9 @@ public class Couple {
     }
 
     public void addSpouse(AncestorPerson person) {
-        if (person.getSex().equals(Information.VALUE_MALE)) {
+        if (person.getSex().equals(Sex.MALE)) {
             setHusband(person);
-        } else if (person.getSex().equals(Information.VALUE_FEMALE)) {
+        } else if (person.getSex().equals(Sex.FEMALE)) {
             setWife(person);
         }
     }
@@ -94,8 +95,8 @@ public class Couple {
         this.marriagePlace = place;
     }
 
-    public Person getSpouse(String sex) {
-        if (sex.equals(Information.VALUE_MALE)) {
+    public Person getSpouse(Sex sex) {
+        if (sex.equals(Sex.MALE)) {
             return getWife();
         } else {
             return getHusband();

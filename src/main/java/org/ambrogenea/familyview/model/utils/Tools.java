@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.ambrogenea.familyview.model.Information;
 import org.ambrogenea.familyview.model.Person;
+import org.ambrogenea.familyview.model.enums.Sex;
 
 /**
  *
@@ -107,7 +107,7 @@ public final class Tools {
         Person samplePerson = new Person("0000");
         samplePerson.setFirstName("Vítězslav");
         samplePerson.setSurname("Konipásek");
-        samplePerson.setSex(Information.VALUE_MALE);
+        samplePerson.setSex(Sex.MALE);
         samplePerson.setBirthDate("24 AUG 1869");
         samplePerson.setBirthPlace("České Budějovice");
         samplePerson.setDeathDate("30 DEC 1924");

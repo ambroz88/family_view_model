@@ -3,6 +3,8 @@ package org.ambrogenea.familyview.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.ambrogenea.familyview.model.enums.InfoType;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -13,13 +15,13 @@ public class DataModel {
     private final HashMap<String, Person> individualMap;
     private final ArrayList<Person> recordList;
 
-    private String recordType;
+    private InfoType recordType;
 
     public DataModel() {
         spouseMap = new HashMap<>();
         individualMap = new HashMap<>();
         recordList = new ArrayList<>();
-        recordType = "";
+        recordType = InfoType.NONE;
     }
 
     public DataModel(DataModel model) {
@@ -31,7 +33,7 @@ public class DataModel {
     public void loadGEDCOMLines(ArrayList<String> rows) {
         Information info;
         AncestorPerson person = null;
-        String lastType = "";
+        InfoType lastType = InfoType.INDIVIDUAL;
         Couple couple = new Couple();
 
         for (String row : rows) {
@@ -39,42 +41,42 @@ public class DataModel {
 
             determineRecordType(info);
 
-            if (recordType.equals(Information.VALUE_INDIVIDUAL)) {
+            if (recordType.equals(InfoType.INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
-                    person = new AncestorPerson(info.getType());
+                    person = new AncestorPerson(info.getValue());
                 } else if (person != null) {
                     person.setInformation(info, lastType);
                 }
 
-            } else if (recordType.equals(Information.VALUE_FAMILY)) {
+            } else if (recordType.equals(InfoType.FAMILY)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
                     person = null;
-                    couple = spouseMap.get(info.getType().replace(Information.MARKER, ""));
-                } else if (info.getType().equals(Information.TYPE_CHILD)) {
+                    couple = spouseMap.get(info.getValue().replace(Information.MARKER, ""));
+                } else if (info.getType().equals(InfoType.CHILD)) {
                     couple.addChildrenIndex(info.getValue().replace(Information.MARKER, ""));
-                } else if (info.getType().equals(Information.TYPE_DATE) && lastType.equals(Information.TYPE_MARRIAGE)) {
+                } else if (info.getType().equals(InfoType.DATE) && lastType.equals(InfoType.MARRIAGE)) {
                     couple.setMarriageDate(info.getValue());
-                } else if (info.getType().equals(Information.TYPE_PLACE) && lastType.equals(Information.TYPE_MARRIAGE)) {
+                } else if (info.getType().equals(InfoType.PLACE) && lastType.equals(InfoType.MARRIAGE)) {
                     couple.setMarriagePlace(info.getValue());
                 }
             }
 
-            if (!info.getType().equals(Information.TYPE_DATE) && !info.getType().equals(Information.TYPE_ADDRESS)) {
+            if (!info.getType().equals(InfoType.DATE) && !info.getType().equals(InfoType.ADDRESS)) {
                 lastType = info.getType();
             }
         }
     }
 
     private void determineRecordType(Information info) {
-        if (info.getValue().equals(Information.VALUE_INDIVIDUAL)) {
+        if (info.getType().equals(InfoType.INDIVIDUAL)) {
             if (info.getCode() == 0) {
-                recordType = Information.VALUE_INDIVIDUAL;
+                recordType = InfoType.INDIVIDUAL;
             }
-        } else if (info.getValue().equals(Information.VALUE_FAMILY)) {
+        } else if (info.getType().equals(InfoType.FAMILY)) {
             if (info.getCode() == 0) {
-                recordType = Information.VALUE_FAMILY;
+                recordType = InfoType.FAMILY;
             }
         }
     }

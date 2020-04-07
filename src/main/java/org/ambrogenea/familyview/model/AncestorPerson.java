@@ -3,6 +3,7 @@ package org.ambrogenea.familyview.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.ambrogenea.familyview.model.enums.Sex;
 import org.ambrogenea.familyview.model.utils.Tools;
 
 /**
@@ -72,10 +73,10 @@ public class AncestorPerson extends Person {
     }
 
     @Override
-    public void setSex(String sex) {
+    public void setSex(Sex sex) {
         super.setSex(sex);
         ancestorLine.clear();
-        if (sex.equals(Information.VALUE_MALE)) {
+        if (sex.equals(Sex.MALE)) {
             ancestorLine.add(CODE_MALE);
         } else {
             ancestorLine.add(CODE_FEMALE);
@@ -94,7 +95,7 @@ public class AncestorPerson extends Person {
                 addLastParentsCount(fatherParentsCount);
             }
 
-            if (getSex().equals(Information.VALUE_FEMALE)) {
+            if (getSex().equals(Sex.FEMALE)) {
                 innerParentsCount = getFather().getLastParentsCount();
             }
 
@@ -122,7 +123,7 @@ public class AncestorPerson extends Person {
                 addLastParentsCount(motherParentsCount);
             }
 
-            if (getSex().equals(Information.VALUE_MALE)) {
+            if (getSex().equals(Sex.MALE)) {
                 innerParentsCount = getMother().getLastParentsCount();
             }
 
@@ -143,7 +144,7 @@ public class AncestorPerson extends Person {
             } else if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
                 AncestorPerson mother = new AncestorPerson("000");
-                mother.setSex(Information.VALUE_FEMALE);
+                mother.setSex(Sex.FEMALE);
                 setMother(mother);
             } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
@@ -222,7 +223,7 @@ public class AncestorPerson extends Person {
 
     public Person getSpouse() {
         if (getSpouseCouple() != null) {
-            if (getSex().equals(Information.VALUE_MALE)) {
+            if (getSex().equals(Sex.MALE)) {
                 return getSpouseCouple().getWife();
             } else {
                 return getSpouseCouple().getHusband();
@@ -234,7 +235,7 @@ public class AncestorPerson extends Person {
 
     public Person getSpouse(int index) {
         if (getSpouseCouple(index) != null) {
-            if (getSex().equals(Information.VALUE_MALE)) {
+            if (getSex().equals(Sex.MALE)) {
                 return getSpouseCouple(index).getWife();
             } else {
                 return getSpouseCouple(index).getHusband();

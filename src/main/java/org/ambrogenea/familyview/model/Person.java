@@ -3,6 +3,8 @@ package org.ambrogenea.familyview.model;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.ambrogenea.familyview.model.enums.InfoType;
+import org.ambrogenea.familyview.model.enums.Sex;
 import org.ambrogenea.familyview.model.utils.Tools;
 
 /**
@@ -16,7 +18,7 @@ public class Person {
 
     private String firstName;
     private String surname;
-    private String sex;
+    private Sex sex;
     private String birthDate;
     private String birthPlace;
     private String deathDate;
@@ -129,11 +131,11 @@ public class Person {
         }
     }
 
-    public String getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -282,43 +284,43 @@ public class Person {
         return deathAge < ageLimit && deathAge != -1;
     }
 
-    public void setInformation(Information info, String lastType) {
-        if (info.getType().equals(Information.TYPE_FIRST_NAME)) {
+    public void setInformation(Information info, InfoType lastType) {
+        if (info.getType().equals(InfoType.FIRST_NAME)) {
             setFirstName(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_SURNAME)) {
+        } else if (info.getType().equals(InfoType.SURNAME)) {
             setSurname(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_NAME)) {
+        } else if (info.getType().equals(InfoType.NAME)) {
             setName(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_SEX)) {
-            setSex(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_DEATH)) {
+        } else if (info.getType().equals(InfoType.SEX)) {
+            setSex(Sex.getSex(info.getValue()));
+        } else if (info.getType().equals(InfoType.DEATH)) {
             setLiving(false);
-        } else if (info.getType().equals(Information.TYPE_DATE)) {
-            if (lastType.equals(Information.TYPE_BIRTH)) {
+        } else if (info.getType().equals(InfoType.DATE)) {
+            if (lastType.equals(InfoType.BIRTH)) {
                 setBirthDate(info.getValue());
-            } else if (lastType.equals(Information.TYPE_DEATH)) {
+            } else if (lastType.equals(InfoType.DEATH)) {
                 setDeathDate(info.getValue());
-            } else if (lastType.equals(Information.TYPE_RESIDENCE)) {
+            } else if (lastType.equals(InfoType.RESIDENCE)) {
                 getLastResidence().setDate(info.getValue());
             }
-        } else if (info.getType().equals(Information.TYPE_PLACE)) {
-            if (lastType.equals(Information.TYPE_BIRTH)) {
+        } else if (info.getType().equals(InfoType.PLACE)) {
+            if (lastType.equals(InfoType.BIRTH)) {
                 setBirthPlace(info.getValue());
-            } else if (lastType.equals(Information.TYPE_DEATH)) {
+            } else if (lastType.equals(InfoType.DEATH)) {
                 setDeathPlace(info.getValue());
             }
-        } else if (info.getType().equals(Information.TYPE_OCCUPATION)) {
+        } else if (info.getType().equals(InfoType.OCCUPATION)) {
             setOccupation(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_RESIDENCE)) {
+        } else if (info.getType().equals(InfoType.RESIDENCE)) {
             getResidenceList().add(new Residence());
             getLastResidence().setCity(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_CITY)) {
-            if (lastType.equals(Information.TYPE_RESIDENCE)) {
+        } else if (info.getType().equals(InfoType.CITY)) {
+            if (lastType.equals(InfoType.RESIDENCE)) {
                 getLastResidence().setCity(info.getValue());
             }
-        } else if (info.getType().equals(Information.TYPE_PARENTS)) {
+        } else if (info.getType().equals(InfoType.PARENTS)) {
             setParentID(info.getValue());
-        } else if (info.getType().equals(Information.TYPE_SPOUSE)) {
+        } else if (info.getType().equals(InfoType.SPOUSE)) {
             addSpouseID(info.getValue());
         }
     }
