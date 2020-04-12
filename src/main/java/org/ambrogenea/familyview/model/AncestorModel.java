@@ -178,7 +178,7 @@ public class AncestorModel extends DataModel {
 
     private Couple findParents(Person person) {
         Couple parents = null;
-        if (person != null) {
+        if (person != null && person.getParentID() != null) {
             parents = getSpouseMap().get(person.getParentID());
             if (parents != null) {
                 parents = new Couple(parents);

@@ -1,7 +1,7 @@
 package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.ambrogenea.familyview.model.enums.InfoType;
 
@@ -11,15 +11,15 @@ import org.ambrogenea.familyview.model.enums.InfoType;
  */
 public class DataModel {
 
-    private final HashMap<String, Couple> spouseMap;
-    private final HashMap<String, Person> individualMap;
+    private final TreeMap<String, Couple> spouseMap;
+    private final TreeMap<String, Person> individualMap;
     private final ArrayList<Person> recordList;
 
     private InfoType recordType;
 
     public DataModel() {
-        spouseMap = new HashMap<>();
-        individualMap = new HashMap<>();
+        spouseMap = new TreeMap<>();
+        individualMap = new TreeMap<>();
         recordList = new ArrayList<>();
         recordType = InfoType.NONE;
     }
@@ -114,11 +114,11 @@ public class DataModel {
         return recordList.get(index);
     }
 
-    public HashMap<String, Couple> getSpouseMap() {
+    public TreeMap<String, Couple> getSpouseMap() {
         return spouseMap;
     }
 
-    public HashMap<String, Person> getIndividualMap() {
+    public TreeMap<String, Person> getIndividualMap() {
         return individualMap;
     }
 
