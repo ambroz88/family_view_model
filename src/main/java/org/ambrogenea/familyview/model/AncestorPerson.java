@@ -2,6 +2,7 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 import org.ambrogenea.familyview.model.enums.Sex;
 import org.ambrogenea.familyview.model.utils.Tools;
@@ -16,9 +17,9 @@ public class AncestorPerson extends Person {
     public static final int CODE_FEMALE = 1;
 
     private ArrayList<Integer> ancestorLine;
-    private ArrayList<Person> youngerSiblings;
-    private ArrayList<Person> olderSiblings;
-    private ArrayList<Couple> spouses;
+    private LinkedList<Person> youngerSiblings;
+    private LinkedList<Person> olderSiblings;
+    private LinkedList<Couple> spouses;
     private int ancestorGenerations;
     private double lastParentsCount;
     private double innerParentsCount;
@@ -36,9 +37,9 @@ public class AncestorPerson extends Person {
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
             if (person.getSpouseCouple() != null) {
-                this.spouses = new ArrayList(person.getSpouseCouples());
+                this.spouses = new LinkedList(person.getSpouseCouples());
             } else {
-                this.spouses = new ArrayList<>();
+                this.spouses = new LinkedList<>();
             }
         } else {
             initEmpty();
@@ -61,13 +62,13 @@ public class AncestorPerson extends Person {
         lastParentsCount = 0;
         innerParentsCount = 0;
         ancestorLine = new ArrayList<>();
-        spouses = new ArrayList<>();
+        spouses = new LinkedList<>();
         initSiblings();
     }
 
     private void initSiblings() {
-        youngerSiblings = new ArrayList<>();
-        olderSiblings = new ArrayList<>();
+        youngerSiblings = new LinkedList<>();
+        olderSiblings = new LinkedList<>();
         maxOlderSiblings = 0;
         maxYoungerSiblings = 0;
     }
@@ -189,7 +190,7 @@ public class AncestorPerson extends Person {
         ancestorLine.add(code);
     }
 
-    public ArrayList<Person> getYoungerSiblings() {
+    public LinkedList<Person> getYoungerSiblings() {
         return youngerSiblings;
     }
 
@@ -197,7 +198,7 @@ public class AncestorPerson extends Person {
         this.youngerSiblings.add(youngerSibling);
     }
 
-    public ArrayList<Person> getOlderSiblings() {
+    public LinkedList<Person> getOlderSiblings() {
         return olderSiblings;
     }
 
@@ -261,7 +262,7 @@ public class AncestorPerson extends Person {
         }
     }
 
-    public ArrayList<Couple> getSpouseCouples() {
+    public LinkedList<Couple> getSpouseCouples() {
         return spouses;
     }
 
