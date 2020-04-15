@@ -17,9 +17,10 @@ public class AncestorPerson extends Person {
     public static final int CODE_FEMALE = 1;
 
     private ArrayList<Integer> ancestorLine;
-    private LinkedList<Person> youngerSiblings;
-    private LinkedList<Person> olderSiblings;
+    private LinkedList<AncestorPerson> youngerSiblings;
+    private LinkedList<AncestorPerson> olderSiblings;
     private LinkedList<Couple> spouses;
+    private boolean directLineage;
     private int ancestorGenerations;
     private double lastParentsCount;
     private double innerParentsCount;
@@ -31,6 +32,7 @@ public class AncestorPerson extends Person {
 
         if (person != null) {
             initSiblings();
+            directLineage = person.isDirectLineage();
             innerParentsCount = person.getInnerParentsCount();
             this.ancestorLine = new ArrayList<>(person.getAncestorLine());
             this.ancestorGenerations = person.getAncestorGenerations();
@@ -42,18 +44,21 @@ public class AncestorPerson extends Person {
                 this.spouses = new LinkedList<>();
             }
         } else {
+            directLineage = false;
             initEmpty();
         }
     }
 
-    public AncestorPerson(Person person) {
+    public AncestorPerson(Person person, boolean lineage) {
         super(person);
+        this.directLineage = lineage;
         initEmpty();
         this.setSex(person.getSex());
     }
 
-    public AncestorPerson(String id) {
+    public AncestorPerson(String id, boolean lineage) {
         super(id);
+        this.directLineage = lineage;
         initEmpty();
     }
 
@@ -144,7 +149,7 @@ public class AncestorPerson extends Person {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
-                AncestorPerson mother = new AncestorPerson("000");
+                AncestorPerson mother = new AncestorPerson("000", true);
                 mother.setSex(Sex.FEMALE);
                 setMother(mother);
             } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
@@ -153,6 +158,14 @@ public class AncestorPerson extends Person {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
             }
         }
+    }
+
+    public boolean isDirectLineage() {
+        return directLineage;
+    }
+
+    public void setDirectLineage(boolean directLineage) {
+        this.directLineage = directLineage;
     }
 
     public int getAncestorGenerations() {
@@ -190,19 +203,19 @@ public class AncestorPerson extends Person {
         ancestorLine.add(code);
     }
 
-    public LinkedList<Person> getYoungerSiblings() {
+    public LinkedList<AncestorPerson> getYoungerSiblings() {
         return youngerSiblings;
     }
 
-    public void addYoungerSibling(Person youngerSibling) {
+    public void addYoungerSibling(AncestorPerson youngerSibling) {
         this.youngerSiblings.add(youngerSibling);
     }
 
-    public LinkedList<Person> getOlderSiblings() {
+    public LinkedList<AncestorPerson> getOlderSiblings() {
         return olderSiblings;
     }
 
-    public void addOlderSibling(Person olderSibling) {
+    public void addOlderSibling(AncestorPerson olderSibling) {
         this.olderSiblings.add(olderSibling);
     }
 
@@ -222,7 +235,7 @@ public class AncestorPerson extends Person {
         this.maxYoungerSiblings = Math.max(maxYoungerSiblings, getYoungerSiblings().size());
     }
 
-    public Person getSpouse() {
+    public AncestorPerson getSpouse() {
         if (getSpouseCouple() != null) {
             if (getSex().equals(Sex.MALE)) {
                 return getSpouseCouple().getWife();
@@ -234,7 +247,7 @@ public class AncestorPerson extends Person {
         }
     }
 
-    public Person getSpouse(int index) {
+    public AncestorPerson getSpouse(int index) {
         if (getSpouseCouple(index) != null) {
             if (getSex().equals(Sex.MALE)) {
                 return getSpouseCouple(index).getWife();

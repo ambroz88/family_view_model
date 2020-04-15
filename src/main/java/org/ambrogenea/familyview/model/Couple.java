@@ -12,7 +12,7 @@ import org.ambrogenea.familyview.model.utils.Tools;
 public class Couple {
 
     private ArrayList<String> childrenID;
-    private ArrayList<Person> children;
+    private ArrayList<AncestorPerson> children;
 
     private AncestorPerson wife;
     private AncestorPerson husband;
@@ -95,7 +95,7 @@ public class Couple {
         this.marriagePlace = place;
     }
 
-    public Person getSpouse(Sex sex) {
+    public AncestorPerson getSpouse(Sex sex) {
         if (sex.equals(Sex.MALE)) {
             return getWife();
         } else {
@@ -127,11 +127,11 @@ public class Couple {
         this.childrenID.add(childID);
     }
 
-    public ArrayList<Person> getChildren() {
+    public ArrayList<AncestorPerson> getChildren() {
         return children;
     }
 
-    public void addChildren(Person child) {
+    public void addChildren(AncestorPerson child) {
         this.children.add(child);
     }
 

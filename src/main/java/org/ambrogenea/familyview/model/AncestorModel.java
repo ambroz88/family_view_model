@@ -16,7 +16,7 @@ public class AncestorModel extends DataModel {
     }
 
     public AncestorPerson generateAncestors(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
         Couple parents = findParents(person);
 
         person = addAllParents(person, parents);
@@ -24,7 +24,7 @@ public class AncestorModel extends DataModel {
     }
 
     public AncestorPerson generateFatherLineage(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
         Couple parents = findParents(person);
 
         person = addManParentsWithSiblings(person, parents);
@@ -32,7 +32,7 @@ public class AncestorModel extends DataModel {
     }
 
     public AncestorPerson generateMotherLineage(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
         Couple parents = findParents(person);
 
         addSiblings(parents, person);
@@ -42,7 +42,7 @@ public class AncestorModel extends DataModel {
     }
 
     public AncestorPerson generateParentsLineage(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
         Couple parents = findParents(person);
 
         addManParentsWithSiblings(person, parents);
@@ -51,7 +51,7 @@ public class AncestorModel extends DataModel {
     }
 
     public AncestorPerson generateCloseFamily(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex));
+        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
         Couple parents = findParents(person);
 
         person.setParents(parents);
@@ -148,15 +148,16 @@ public class AncestorModel extends DataModel {
         if (person != null && parents != null) {
             ArrayList<String> children = parents.getChildrenIndexes();
             int position = 0;
+            AncestorPerson sibling;
             while (!children.get(position).equals(person.getId())) {
-                Person sibling = getIndividualMap().get(children.get(position));
+                sibling = new AncestorPerson(getIndividualMap().get(children.get(position)), false);
                 person.addOlderSibling(sibling);
                 position++;
             }
 
             position++;
             while (position < children.size()) {
-                Person sibling = getIndividualMap().get(children.get(position));
+                sibling = new AncestorPerson(getIndividualMap().get(children.get(position)), false);
                 person.addYoungerSibling(sibling);
                 position++;
             }
@@ -191,7 +192,7 @@ public class AncestorModel extends DataModel {
         for (String index : spouse.getChildrenIndexes()) {
             Person child = getIndividualMap().get(index);
             if (child != null) {
-                spouse.addChildren(new Person(child));
+                spouse.addChildren(new AncestorPerson(child, false));
             }
         }
     }

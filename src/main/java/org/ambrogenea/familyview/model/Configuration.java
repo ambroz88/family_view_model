@@ -3,6 +3,8 @@ package org.ambrogenea.familyview.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import org.ambrogenea.familyview.model.enums.PropertyName;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -10,8 +12,6 @@ import java.beans.PropertyChangeSupport;
 public class Configuration {
 
     private AncestorModel ancestorModel;
-
-    public static final String CONFIG_CHANGE = "configChange";
 
     public static final String DIAGRAM_PERGAMEN = "pergamen";
     public static final String DIAGRAM_HERALDRY = "heraldry";
@@ -34,6 +34,7 @@ public class Configuration {
     private int fontSize;
 
     private String adultDiagram;
+    private String siblingDiagram;
     private String adultManImagePath;
     private String adultWomanImagePath;
     private String siblingManImagePath;
@@ -68,17 +69,18 @@ public class Configuration {
         wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
         adultTopOffset = 30;
         adultBottomOffset = 30;
-        siblingImageWidth = 150;
-        siblingImageHeight = 120;
+        siblingImageWidth = 160;
+        siblingImageHeight = 140;
         siblingBottomOffset = 10;
         siblingTopOffset = 10;
         fontSize = 14;
 
-        adultDiagram = DIAGRAM_PERGAMEN;
+        adultDiagram = DIAGRAM_HERALDRY;
+        siblingDiagram = DIAGRAM_PERGAMEN;
         adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
         adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";
-        siblingManImagePath = "";
-        siblingWomanImagePath = "";
+        siblingManImagePath = "diagrams/" + siblingDiagram + "_man.png";
+        siblingWomanImagePath = "diagrams/" + siblingDiagram + "_woman.png";
 
         showFathersLineage = true;
         showMothersLineage = false;
@@ -143,10 +145,12 @@ public class Configuration {
 
     public void setAdultImageWidth(int adultImageWidth) {
         int oldValue = getAdultImageWidth();
-        this.adultImageWidth = adultImageWidth;
-        marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
-        wideMarriageLabel = 3 * adultImageWidth;
-        firePropertyChange(CONFIG_CHANGE, oldValue, adultImageWidth);
+        if (Math.abs(oldValue - adultImageWidth) > 4) {
+            this.adultImageWidth = adultImageWidth;
+            marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
+            wideMarriageLabel = 3 * adultImageWidth;
+            firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
+        }
     }
 
     public int getAdultImageHeight() {
@@ -155,8 +159,10 @@ public class Configuration {
 
     public void setAdultImageHeight(int adultImageHeight) {
         int oldValue = getAdultImageHeight();
-        this.adultImageHeight = adultImageHeight;
-        firePropertyChange(CONFIG_CHANGE, oldValue, adultImageHeight);
+        if (Math.abs(oldValue - adultImageHeight) > 4) {
+            this.adultImageHeight = adultImageHeight;
+            firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageHeight);
+        }
     }
 
     public int getSiblingImageWidth() {
@@ -164,7 +170,11 @@ public class Configuration {
     }
 
     public void setSiblingImageWidth(int siblingImageWidth) {
-        this.siblingImageWidth = siblingImageWidth;
+        int oldValue = getSiblingImageWidth();
+        if (Math.abs(oldValue - siblingImageWidth) > 4) {
+            this.siblingImageWidth = siblingImageWidth;
+            firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageWidth);
+        }
     }
 
     public int getSiblingImageHeight() {
@@ -172,7 +182,11 @@ public class Configuration {
     }
 
     public void setSiblingImageHeight(int siblingImageHeight) {
-        this.siblingImageHeight = siblingImageHeight;
+        int oldValue = getSiblingImageHeight();
+        if (Math.abs(oldValue - siblingImageHeight) > 4) {
+            this.siblingImageHeight = siblingImageHeight;
+            firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageHeight);
+        }
     }
 
     public int getFontSize() {
@@ -182,7 +196,7 @@ public class Configuration {
     public void setFontSize(int fontSize) {
         int oldValue = getFontSize();
         this.fontSize = fontSize;
-        firePropertyChange(CONFIG_CHANGE, oldValue, fontSize);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, fontSize);
     }
 
     public String getAdultDiagram() {
@@ -194,7 +208,19 @@ public class Configuration {
         this.adultDiagram = adultDiagram;
         setAdultManImagePath("diagrams/" + adultDiagram + "_man.png");
         setAdultWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
-        firePropertyChange(CONFIG_CHANGE, oldValue, adultDiagram);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultDiagram);
+    }
+
+    public String getSiblingDiagram() {
+        return siblingDiagram;
+    }
+
+    public void setSiblingDiagram(String siblingDiagram) {
+        String oldValue = getSiblingDiagram();
+        this.siblingDiagram = siblingDiagram;
+        setSiblingManImagePath("diagrams/" + siblingDiagram + "_man.png");
+        setSiblingWomanImagePath("diagrams/" + siblingDiagram + "_woman.png");
+        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingDiagram);
     }
 
     public String getAdultManImagePath() {
@@ -217,7 +243,7 @@ public class Configuration {
         return siblingManImagePath;
     }
 
-    public void setSiblingManImagePath(String siblingManImagePath) {
+    private void setSiblingManImagePath(String siblingManImagePath) {
         this.siblingManImagePath = siblingManImagePath;
     }
 
@@ -225,7 +251,7 @@ public class Configuration {
         return siblingWomanImagePath;
     }
 
-    public void setSiblingWomanImagePath(String siblingWomanImagePath) {
+    private void setSiblingWomanImagePath(String siblingWomanImagePath) {
         this.siblingWomanImagePath = siblingWomanImagePath;
     }
 
@@ -240,13 +266,13 @@ public class Configuration {
     public void setAdultBottomOffset(int adultVerticalOffset) {
         int oldValue = getAdultBottomOffset();
         this.adultBottomOffset = adultVerticalOffset;
-        firePropertyChange(CONFIG_CHANGE, oldValue, adultVerticalOffset);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
     }
 
     public void setAdultTopOffset(int adultVerticalOffset) {
         int oldValue = getAdultTopOffset();
         this.adultTopOffset = adultVerticalOffset;
-        firePropertyChange(CONFIG_CHANGE, oldValue, adultVerticalOffset);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
     }
 
     public int getSiblingBottomOffset() {
@@ -258,11 +284,15 @@ public class Configuration {
     }
 
     public void setSiblingBottomOffset(int siblingVerticalOffset) {
+        int oldValue = getSiblingBottomOffset();
         this.siblingBottomOffset = siblingVerticalOffset;
+        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalOffset);
     }
 
     public void setSiblingTopOffset(int siblingVerticalOffset) {
+        int oldValue = getSiblingTopOffset();
         this.siblingTopOffset = siblingVerticalOffset;
+        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalOffset);
     }
 
     public boolean isShowSiblings() {
@@ -344,7 +374,7 @@ public class Configuration {
     public void setShowAge(boolean showAge) {
         boolean oldValue = isShowAge();
         this.showAge = showAge;
-        firePropertyChange(CONFIG_CHANGE, oldValue, showAge);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showAge);
     }
 
     public boolean isShowPlaces() {
@@ -354,7 +384,7 @@ public class Configuration {
     public void setShowPlaces(boolean showPlaces) {
         boolean oldValue = isShowPlaces();
         this.showPlaces = showPlaces;
-        firePropertyChange(CONFIG_CHANGE, oldValue, showPlaces);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showPlaces);
     }
 
     public boolean isShortenPlaces() {
@@ -364,7 +394,7 @@ public class Configuration {
     public void setShortenPlaces(boolean shortenPlaces) {
         boolean oldValue = isShortenPlaces();
         this.shortenPlaces = shortenPlaces;
-        firePropertyChange(CONFIG_CHANGE, oldValue, shortenPlaces);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, shortenPlaces);
     }
 
     public boolean isShowTemple() {
@@ -374,7 +404,7 @@ public class Configuration {
     public void setShowTemple(boolean showTemple) {
         boolean oldValue = isShowTemple();
         this.showTemple = showTemple;
-        firePropertyChange(CONFIG_CHANGE, oldValue, showTemple);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showTemple);
     }
 
     public boolean isShowMarriage() {
@@ -400,7 +430,7 @@ public class Configuration {
     public void setShowOccupation(boolean showOccupation) {
         boolean oldValue = isShowOccupation();
         this.showOccupation = showOccupation;
-        firePropertyChange(CONFIG_CHANGE, oldValue, showOccupation);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showOccupation);
     }
 
     public boolean isShowResidence() {
@@ -419,8 +449,8 @@ public class Configuration {
         this.resetMode = resetMode;
     }
 
-    public void firePropertyChange(String prop, Object oldValue, Object newValue) {
-        this.prop.firePropertyChange(prop, oldValue, newValue);
+    public void firePropertyChange(PropertyName prop, Object oldValue, Object newValue) {
+        this.prop.firePropertyChange(prop.toString(), oldValue, newValue);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

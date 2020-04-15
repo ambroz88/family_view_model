@@ -44,7 +44,7 @@ public class DataModel {
             if (recordType.equals(InfoType.INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
-                    person = new AncestorPerson(info.getValue());
+                    person = new AncestorPerson(info.getValue(), true);
                 } else if (person != null) {
                     person.setInformation(info, lastType);
                 }
@@ -90,6 +90,10 @@ public class DataModel {
         }
     }
 
+    /**
+     * @deprecated concept of spousemap here is not necessary - substitution in AncestorModel in method addSpouse()
+     * @param person
+     */
     private void addSpouse(AncestorPerson person) {
         if (!person.getSpouseID().isEmpty()) {
             for (String coupleID : person.getSpouseID()) {
