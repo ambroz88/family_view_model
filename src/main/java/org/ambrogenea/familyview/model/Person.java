@@ -13,8 +13,8 @@ import org.ambrogenea.familyview.model.utils.Tools;
  */
 public class Person {
 
-    private final String id;
-    private int position;
+    private final String treeID;
+    private int dbPosition;
 
     private String firstName;
     private String surname;
@@ -24,27 +24,28 @@ public class Person {
     private String deathDate;
     private String deathPlace;
     private String occupation;
-    private String parentID;
     private boolean living;
+    private boolean directLineage;
+    private String parentID;
     private ArrayList<String> spouseID;
     private ArrayList<Residence> residenceList;
+    private Position position;
 
-    private Couple parents;
-
-    public Person(String id) {
-        this.id = id.replace(Information.MARKER, "");
+    public Person(String treeID) {
+        this.treeID = treeID;
         initEmpty();
     }
 
     public Person(Person person) {
         if (person != null) {
-            this.id = person.getId();
-            this.position = person.getPosition();
+            this.treeID = person.getTreeID();
+            this.dbPosition = person.getDbPosition();
 
             this.firstName = person.getFirstName();
             this.surname = person.getSurname();
             this.sex = person.getSex();
             this.living = person.isLiving();
+            this.directLineage = person.isDirectLineage();
             this.birthDate = person.getBirthDate();
             this.birthPlace = person.getBirthPlace();
             this.deathDate = person.getDeathDate();
@@ -53,42 +54,43 @@ public class Person {
             this.residenceList = person.getResidenceList();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
-            if (person.getParents() != null) {
-                this.parents = new Couple(person.getParents());
-            }
+            this.position = person.getPosition();
 
         } else {
-            this.id = "";
+            this.treeID = "";
             initEmpty();
         }
     }
 
     private void initEmpty() {
-        spouseID = new ArrayList<>();
-        residenceList = new ArrayList<>();
-        parents = new Couple();
-        living = true;
-        position = -1;
+        dbPosition = -1;
 
         firstName = "";
         surname = "";
+        sex = Sex.MALE;
         birthDate = "";
         birthPlace = "";
         deathDate = "";
         deathPlace = "";
         occupation = "";
+        living = true;
+
+        parentID = "";
+        spouseID = new ArrayList<>();
+        residenceList = new ArrayList<>();
+        position = new Position();
     }
 
-    public int getPosition() {
-        return position;
+    public String getTreeID() {
+        return treeID;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public int getDbPosition() {
+        return dbPosition;
     }
 
-    public String getId() {
-        return id;
+    public void setDbPosition(int dbPosition) {
+        this.dbPosition = dbPosition;
     }
 
     public String getFirstName() {
@@ -171,6 +173,14 @@ public class Person {
         return living;
     }
 
+    public boolean isDirectLineage() {
+        return directLineage;
+    }
+
+    public void setDirectLineage(boolean directLineage) {
+        this.directLineage = directLineage;
+    }
+
     public String getDeathDate() {
         return deathDate;
     }
@@ -231,30 +241,6 @@ public class Person {
 
     public void addSpouseID(String spouseID) {
         getSpouseID().add(spouseID.replace(Information.MARKER, ""));
-    }
-
-    public Couple getParents() {
-        return parents;
-    }
-
-    public void setFather(AncestorPerson father) {
-        getParents().setHusband(father);
-    }
-
-    public AncestorPerson getFather() {
-        return getParents().getHusband();
-    }
-
-    public void setMother(AncestorPerson mother) {
-        getParents().setWife(mother);
-    }
-
-    public AncestorPerson getMother() {
-        return getParents().getWife();
-    }
-
-    public void setParents(Couple parents) {
-        this.parents = new Couple(parents);
     }
 
     public boolean isChild() {
@@ -325,9 +311,17 @@ public class Person {
         }
     }
 
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
     @Override
     public String toString() {
-        return getName() + "; parents: " + parents;
+        return getName() + "; born: " + getBirthDateCzech();
     }
 
 }

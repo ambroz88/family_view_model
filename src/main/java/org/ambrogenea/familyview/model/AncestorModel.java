@@ -8,171 +8,346 @@ import java.util.ArrayList;
  */
 public class AncestorModel extends DataModel {
 
-    private final int generationLimit;
+    private final Scene scene;
+    private final Configuration config;
+    private int generation;
 
-    public AncestorModel(DataModel model, int generationLimit) {
+    public AncestorModel(DataModel model, Configuration configuration) {
         super(model);
-        this.generationLimit = generationLimit;
+        this.generation = 0;
+        this.config = configuration;
+        this.scene = new Scene();
     }
 
-    public AncestorPerson generateAncestors(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
+    public Scene generateFatherLineage(int rowIndex) {
+        Person person = new Person(getRecordList().get(rowIndex));
+        person.setDirectLineage(true);
+        generation++;
+
         Couple parents = findParents(person);
+        completeRootGeneration(person, parents);
 
-        person = addAllParents(person, parents);
-        return person;
-    }
-
-    public AncestorPerson generateFatherLineage(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
-        Couple parents = findParents(person);
-
-        person = addManParentsWithSiblings(person, parents);
-        return person;
-    }
-
-    public AncestorPerson generateMotherLineage(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
-        Couple parents = findParents(person);
-
-        addSiblings(parents, person);
-        addSpouse(person);
-        addWomanParentsWithSiblings(person, parents);
-        return person;
-    }
-
-    public AncestorPerson generateParentsLineage(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
-        Couple parents = findParents(person);
-
-        addManParentsWithSiblings(person, parents);
-        addWomanParentsWithSiblings(person, parents);
-        return person;
-    }
-
-    public AncestorPerson generateCloseFamily(int rowIndex) {
-        AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
-        Couple parents = findParents(person);
-
-        person.setParents(parents);
-        addSpouse(person);
-        addSiblings(parents, person);
-        return person;
-    }
-
-    private AncestorPerson addAllParents(AncestorPerson person, Couple parents) {
-        if (person != null && parents != null && !parents.isEmpty()) {
-            person.setParents(parents);
-
-            if (person.getAncestorLine().size() < generationLimit) {
-                if (parents.getHusband() != null) {
-                    AncestorPerson father = new AncestorPerson(parents.getHusband());
-                    Couple fathersParents = findParents(father);
-                    father.addChildrenCode(person.getAncestorLine());
-                    person.setFather(addAllParents(father, fathersParents));
-                }
-
-                if (parents.getWife() != null) {
-                    AncestorPerson mother = new AncestorPerson(parents.getWife());
-                    Couple mothersParents = findParents(mother);
-                    mother.addChildrenCode(person.getAncestorLine());
-                    person.setMother(addAllParents(mother, mothersParents));
-                }
-            } else {
-                person.addLastParentsCount(1);
-            }
-
+        if (parents != null && !parents.isEmpty()) {
+            addManParentsWithSiblings(parents);
         }
-        return person;
+
+        return scene;
     }
 
-    private AncestorPerson addManParentsWithSiblings(AncestorPerson person, Couple parents) {
-        if (person != null && parents != null && !parents.isEmpty()) {
-            person.setParents(parents);
+    public Scene generateMotherLineage(int rowIndex) {
+        Person person = new Person(getRecordList().get(rowIndex));
+        person.setDirectLineage(true);
+        generation++;
 
-            addSiblings(parents, person);
+        Couple parents = findParents(person);
+        completeRootGeneration(person, parents);
+
+        if (parents != null && !parents.isEmpty()) {
+            addWomanParentsWithSiblings(parents);
+        }
+        return scene;
+    }
+
+    public Scene generateParentsLineage(int rowIndex) {
+        Person person = new Person(getRecordList().get(rowIndex));
+        person.setDirectLineage(true);
+        generation++;
+
+        Couple parents = findParents(person);
+        completeRootGeneration(person, parents);
+
+        addManParentsWithSiblings(parents);
+
+        generation = 1;
+        addWomanParentsWithSiblings(parents);
+        return scene;
+    }
+
+    public Scene generateCloseFamily(int rowIndex) {
+        Person person = new Person(getRecordList().get(rowIndex));
+        person.setDirectLineage(true);
+        generation++;
+
+        if (config.isShowParents()) {
+            Couple parents = findParents(person);
+            completeRootGeneration(person, parents);
+            addParents(parents);
+        } else {
             addSpouse(person);
+        }
 
-            if (person.getAncestorLine().size() < generationLimit) {
+        return scene;
+    }
 
-                if (parents.getHusband() != null) {
-                    AncestorPerson father = new AncestorPerson(parents.getHusband());
-                    Couple fathersParents = findParents(father);
-                    father.addChildrenCode(person.getAncestorLine());
-                    if (fathersParents == null || fathersParents.isEmpty()) {
-                        addSpouse(father);
-                    }
-                    person.setFather(addManParentsWithSiblings(father, fathersParents));
-                    person.setMaxOlderSiblings(person.getFather().getMaxOlderSiblings());
-                    person.setMaxYoungerSiblings(person.getFather().getMaxYoungerSiblings());
+    private void addParents(Couple parents) {
+        generation++;
+        if (parents.getHusband() != null) {
+            Person father = parents.getHusband();
+            Person mother = parents.getWife();
 
-                } else {
-                    AncestorPerson mother = new AncestorPerson(parents.getWife());
-                    Couple mothersParents = findParents(mother);
-                    mother.addChildrenCode(person.getAncestorLine());
-                    if (mothersParents == null || mothersParents.isEmpty()) {
-                        addSpouse(mother);
-                    }
-                    person.setMother(addManParentsWithSiblings(mother, mothersParents));
-                    person.setMaxOlderSiblings(person.getMother().getMaxOlderSiblings());
-                    person.setMaxYoungerSiblings(person.getMother().getMaxYoungerSiblings());
+            father.getPosition().setAdultOrder(-1);
+            father.getPosition().setGeneration(generation);
+            scene.addPerson(father);
+
+            mother.setDirectLineage(true);
+            mother.setPosition(father.getPosition());
+            mother.getPosition().setAdultOrder(father.getPosition().getAdultOrder() + 1);
+            mother.getPosition().setSpouseGaps(1);
+
+            scene.addPerson(mother);
+            scene.addMarriage(new Marriage(parents.getMarriageDate(), mother.getPosition()));
+
+        } else {
+            Person mother = parents.getWife();
+            mother.getPosition().setAdultOrder(1);
+            mother.getPosition().setGeneration(generation);
+            scene.addPerson(mother);
+        }
+    }
+
+    public Scene generateAncestors(int rowIndex) {
+        Person person = new Person(getRecordList().get(rowIndex));
+        person.setDirectLineage(true);
+        generation++;
+
+        Couple parents = findParents(person);
+
+        if (parents != null && !parents.isEmpty()) {
+            scene.addLine(new Line(person.getPosition(), person.getPosition().getNextGeneration()));
+            addAllParents(parents);
+        }
+        return scene;
+    }
+
+    private void completeRootGeneration(Person person, Couple parents) {
+        if (person != null) {
+            person.getPosition().setAdultOrder(1);
+            person.getPosition().setGeneration(generation);
+
+            if (parents != null && !parents.isEmpty()) {
+
+                scene.addLine(new Line(person.getPosition(), person.getPosition().getNextGeneration()));
+
+                if (config.isShowSiblings()) {
+                    //addOlder
+                }
+
+                if (config.isShowSpouses()) {
+                    addSpouse(person);
+
+                }
+
+                if (config.isShowSiblings()) {
+                    //addYounger
+                }
+
+            } else if (config.isShowSpouses()) {
+                addSpouse(person);
+
+            }
+        }
+    }
+
+    private void addSpouse(Person person) {
+        for (int i = 0; i < person.getSpouseID().size(); i++) {
+            Couple couple = getSpouseMap().get(person.getSpouseID().get(i));
+            if (couple != null) {
+                Person spouse = new Person(couple.getSpouse(person.getSex()));
+                spouse.setDirectLineage(true);
+                spouse.setPosition(person.getPosition());
+                spouse.getPosition().setAdultOrder(person.getPosition().getAdultOrder() + i + 1);
+                spouse.getPosition().setSpouseGaps(i + 1);
+
+                scene.addPerson(spouse);
+                scene.addMarriage(new Marriage(couple.getMarriageDate(), spouse.getPosition()));
+
+                if (config.isShowChildren()) {
+                    addChildren(couple);
+                }
+            }
+        }
+    }
+
+    /**
+     * TODO: finish it
+     *
+     * @param couple
+     */
+    private void addChildren(Couple couple) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void addAllParents(Couple parents) {
+        if (generation < config.getGenerationCount()) {
+            generation++;
+
+            if (parents.getHusband() != null) {
+                Person father = parents.getHusband();
+                Person mother = parents.getWife();
+
+                father.getPosition().setAdultOrder(-1);
+                father.getPosition().setGeneration(generation);
+                scene.addPerson(father);
+
+                mother.setDirectLineage(true);
+                mother.setPosition(father.getPosition());
+                mother.getPosition().setAdultOrder(father.getPosition().getAdultOrder() + 1);
+                mother.getPosition().setSpouseGaps(1);
+
+                scene.addPerson(mother);
+                scene.addMarriage(new Marriage(parents.getMarriageDate(), mother.getPosition()));
+
+                int originalGeneration = generation;
+                Couple fathersParents = findParents(father);
+                if (fathersParents != null && !fathersParents.isEmpty()) {
+                    scene.addLine(new Line(father.getPosition(), father.getPosition().getNextGeneration()));
+                    addAllParents(fathersParents);
+                }
+
+                generation = originalGeneration;
+                Couple mothersParents = findParents(mother);
+                if (mothersParents == null || mothersParents.isEmpty()) {
+                    scene.addLine(new Line(mother.getPosition(), mother.getPosition().getNextGeneration()));
+                    addAllParents(mothersParents);
+                }
+
+            } else {
+                Person mother = parents.getWife();
+                mother.getPosition().setAdultOrder(1);
+                mother.getPosition().setGeneration(generation);
+                scene.addPerson(mother);
+
+                Couple mothersParents = findParents(mother);
+                if (mothersParents == null || mothersParents.isEmpty()) {
+                    scene.addLine(new Line(mother.getPosition(), mother.getPosition().getNextGeneration()));
+                    addAllParents(mothersParents);
+                }
+            }
+
+        }
+
+    }
+
+    private void addManParentsWithSiblings(Couple parents) {
+        if (generation < config.getGenerationCount()) {
+            generation++;
+
+            if (parents.getHusband() != null) {
+                Person father = parents.getHusband();
+                father.getPosition().setAdultOrder(1);
+                father.getPosition().setGeneration(generation);
+                scene.addPerson(father);
+
+                if (config.isShowSiblings()) {
+                    //addOlder
+                }
+
+                Person mother = parents.getWife();
+                mother.setDirectLineage(true);
+                mother.setPosition(father.getPosition());
+                mother.getPosition().setAdultOrder(father.getPosition().getAdultOrder() + 1);
+                mother.getPosition().setSpouseGaps(1);
+
+                scene.addPerson(mother);
+                scene.addMarriage(new Marriage(parents.getMarriageDate(), mother.getPosition()));
+
+                if (config.isShowSiblings()) {
+                    //addYounger
+                }
+
+                Couple fathersParents = findParents(father);
+                if (fathersParents != null && !fathersParents.isEmpty()) {
+                    scene.addLine(new Line(father.getPosition(), father.getPosition().getNextGeneration()));
+                    addManParentsWithSiblings(fathersParents);
+                }
+
+            } else {
+                Person mother = parents.getWife();
+                mother.getPosition().setAdultOrder(1);
+                mother.getPosition().setGeneration(generation);
+                scene.addPerson(mother);
+
+                Couple mothersParents = findParents(mother);
+                if (mothersParents == null || mothersParents.isEmpty()) {
+                    scene.addLine(new Line(mother.getPosition(), mother.getPosition().getNextGeneration()));
+                    addManParentsWithSiblings(mothersParents);
+                }
+
+                if (config.isShowSiblings()) {
+                    //addOlder
+
+                    //addYounger
                 }
 
             }
-        }
-        return person;
-    }
-
-    private AncestorPerson addWomanParentsWithSiblings(AncestorPerson person, Couple parents) {
-        if (person != null && parents != null && !parents.isEmpty()) {
-            person.getParents().setMarriageDate(parents.getMarriageDateEnglish());
-            person.getParents().setMarriagePlace(parents.getMarriagePlace());
-            if (person.getFather() == null) {
-                person.setFather(parents.getHusband());
-            }
-
-            if (parents.getWife() != null) {
-                AncestorPerson mother = new AncestorPerson(parents.getWife());
-                Couple mothersParents = findParents(mother);
-                mother.addChildrenCode(person.getAncestorLine());
-                person.setMother(addManParentsWithSiblings(mother, mothersParents));
-                person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), person.getMother().getOlderSiblings().size()));
-                person.setMaxYoungerSiblings(Math.max(person.getMaxYoungerSiblings(), person.getMother().getYoungerSiblings().size()));
-            }
 
         }
-        return person;
     }
 
-    private void addSiblings(Couple parents, AncestorPerson person) {
+    private void addWomanParentsWithSiblings(Couple parents) {
+        if (generation < config.getGenerationCount()) {
+            generation++;
+
+            if (config.isShowSiblings()) {
+                //addOlder
+            }
+
+            Person mother = parents.getWife();
+            if (parents.getHusband() != null) {
+                Person father = parents.getHusband();
+                father.setDirectLineage(true);
+                father.getPosition().setAdultOrder(1);
+                father.getPosition().setGeneration(generation);
+                mother.setPosition(father.getPosition());
+                mother.getPosition().setSpouseGaps(1);
+                mother.getPosition().setAdultOrder(father.getPosition().getAdultOrder() + 1);
+
+                scene.addPerson(father);
+                scene.addMarriage(new Marriage(parents.getMarriageDate(), father.getPosition()));
+            } else {
+                mother.getPosition().setGeneration(generation);
+                mother.getPosition().setAdultOrder(1);
+            }
+
+            scene.addPerson(mother);
+            if (config.isShowSiblings()) {
+                //addYounger
+            }
+
+            Couple mothersParents = findParents(mother);
+            if (mothersParents != null && !mothersParents.isEmpty()) {
+                scene.addLine(new Line(mother.getPosition(), mother.getPosition().getNextGeneration()));
+                addManParentsWithSiblings(mothersParents);
+            }
+
+        }
+    }
+
+    private void addSiblings(Couple parents, Person person) {
         if (person != null && parents != null) {
             ArrayList<String> children = parents.getChildrenIndexes();
             int position = 0;
-            AncestorPerson sibling;
-            while (!children.get(position).equals(person.getId())) {
-                sibling = new AncestorPerson(getIndividualMap().get(children.get(position)), false);
-                person.addOlderSibling(sibling);
+            Person sibling;
+            while (!children.get(position).equals(person.getTreeID())) {
+                sibling = new Person(getIndividualMap().get(children.get(position)));
+                sibling.setDirectLineage(false);
+                sibling.getPosition().setGeneration(generation);
+                sibling.getPosition().setSiblingOrder(-position);
+                scene.addPerson(sibling);
                 position++;
             }
 
+            int rootPosition = position;
             position++;
             while (position < children.size()) {
-                sibling = new AncestorPerson(getIndividualMap().get(children.get(position)), false);
-                person.addYoungerSibling(sibling);
+                sibling = new Person(getIndividualMap().get(children.get(position)));
+                sibling.setDirectLineage(false);
+                sibling.getPosition().setGeneration(generation);
+                sibling.getPosition().setSiblingOrder(position - rootPosition);
+                sibling.getPosition().setAdultOrder(1 + person.getSpouseID().size());
+                sibling.getPosition().setSpouseGaps(person.getSpouseID().size());
+                scene.addPerson(sibling);
                 position++;
-            }
-        }
-    }
-
-    private void addSpouse(AncestorPerson person) {
-        if (person != null) {
-            for (String coupleID : person.getSpouseID()) {
-                Couple spouse = getSpouseMap().get(coupleID);
-                if (spouse != null) {
-                    spouse = new Couple(spouse);
-                    addChildren(spouse);
-                    person.addSpouseCouple(spouse);
-                }
             }
         }
     }
@@ -186,15 +361,6 @@ public class AncestorModel extends DataModel {
             }
         }
         return parents;
-    }
-
-    private void addChildren(Couple spouse) {
-        for (String index : spouse.getChildrenIndexes()) {
-            Person child = getIndividualMap().get(index);
-            if (child != null) {
-                spouse.addChildren(new AncestorPerson(child, false));
-            }
-        }
     }
 
 }

@@ -12,10 +12,10 @@ import org.ambrogenea.familyview.model.utils.Tools;
 public class Couple {
 
     private ArrayList<String> childrenID;
-    private ArrayList<AncestorPerson> children;
+//    private ArrayList<AncestorPerson> children;
 
-    private AncestorPerson wife;
-    private AncestorPerson husband;
+    private Person wife;
+    private Person husband;
     private String marriageDate;
     private String marriagePlace;
 
@@ -23,13 +23,13 @@ public class Couple {
         initEmpty();
     }
 
-    public Couple(AncestorPerson husband, AncestorPerson wife) {
+    public Couple(Person husband, Person wife) {
         this.husband = husband;
         this.wife = wife;
         initEmpty();
     }
 
-    public Couple(AncestorPerson person) {
+    public Couple(Person person) {
         addSpouse(person);
         initEmpty();
     }
@@ -37,14 +37,13 @@ public class Couple {
     public Couple(Couple couple) {
         if (couple != null) {
             if (couple.getHusband() != null) {
-                this.husband = new AncestorPerson(couple.getHusband());
+                this.husband = couple.getHusband();
             }
 
             if (couple.getWife() != null) {
-                this.wife = new AncestorPerson(couple.getWife());
+                this.wife = couple.getWife();
             }
             this.childrenID = couple.getChildrenIndexes();
-            this.children = new ArrayList(couple.getChildren());
             this.marriageDate = couple.getMarriageDateEnglish();
             this.marriagePlace = couple.getMarriagePlace();
         } else {
@@ -54,25 +53,35 @@ public class Couple {
 
     private void initEmpty() {
         childrenID = new ArrayList<>();
-        children = new ArrayList<>();
         marriageDate = "";
         marriagePlace = "";
     }
 
-    public void addSpouse(AncestorPerson person) {
+    public void addSpouse(Person person) {
         if (person.getSex().equals(Sex.MALE)) {
-            setHusband(person);
+            setHusband(new Person(person));
+            Person emptyWife = new Person("-999");
+            emptyWife.setSex(Sex.FEMALE);
+            setWife(emptyWife);
         } else if (person.getSex().equals(Sex.FEMALE)) {
-            setWife(person);
+            setWife(new Person(person));
         }
     }
 
-    public void setWife(AncestorPerson wife) {
+    public void setWife(Person wife) {
         this.wife = wife;
     }
 
-    public void setHusband(AncestorPerson husband) {
+    public Person getWife() {
+        return wife;
+    }
+
+    public void setHusband(Person husband) {
         this.husband = husband;
+    }
+
+    public Person getHusband() {
+        return husband;
     }
 
     public String getMarriageDate() {
@@ -95,20 +104,12 @@ public class Couple {
         this.marriagePlace = place;
     }
 
-    public AncestorPerson getSpouse(Sex sex) {
+    public Person getSpouse(Sex sex) {
         if (sex.equals(Sex.MALE)) {
             return getWife();
         } else {
             return getHusband();
         }
-    }
-
-    public AncestorPerson getWife() {
-        return wife;
-    }
-
-    public AncestorPerson getHusband() {
-        return husband;
     }
 
     public boolean hasHusband() {
@@ -127,30 +128,8 @@ public class Couple {
         this.childrenID.add(childID);
     }
 
-    public ArrayList<AncestorPerson> getChildren() {
-        return children;
-    }
-
-    public void addChildren(AncestorPerson child) {
-        this.children.add(child);
-    }
-
     public boolean isEmpty() {
         return husband == null && wife == null;
-    }
-
-    @Override
-    public String toString() {
-        if (getHusband() != null && getWife() == null) {
-            return getHusband().getName();
-        } else if (getHusband() == null && getWife() != null) {
-            return getWife().getName();
-        } else if (isEmpty()) {
-            return "None";
-        } else {
-            return getHusband().getName() + " and " + getWife().getName();
-        }
-
     }
 
 }

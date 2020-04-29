@@ -32,7 +32,7 @@ public class DataModel {
 
     public void loadGEDCOMLines(ArrayList<String> rows) {
         Information info;
-        AncestorPerson person = null;
+        Person person = null;
         InfoType lastType = InfoType.INDIVIDUAL;
         Couple couple = new Couple();
 
@@ -44,7 +44,7 @@ public class DataModel {
             if (recordType.equals(InfoType.INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     addPerson(person);
-                    person = new AncestorPerson(info.getValue(), true);
+                    person = new Person(info.getValue());
                 } else if (person != null) {
                     person.setInformation(info, lastType);
                 }
@@ -81,20 +81,16 @@ public class DataModel {
         }
     }
 
-    private void addPerson(AncestorPerson person) {
+    private void addPerson(Person person) {
         if (person != null) {
+            person.setDbPosition(recordList.size());
             addSpouse(person);
-            individualMap.put(person.getId(), person);
-            person.setPosition(recordList.size());
+            individualMap.put(person.getTreeID(), person);
             recordList.add(person);
         }
     }
 
-    /**
-     * @deprecated concept of spousemap here is not necessary - substitution in AncestorModel in method addSpouse()
-     * @param person
-     */
-    private void addSpouse(AncestorPerson person) {
+    private void addSpouse(Person person) {
         if (!person.getSpouseID().isEmpty()) {
             for (String coupleID : person.getSpouseID()) {
                 if (spouseMap.containsKey(coupleID)) {
