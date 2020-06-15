@@ -19,6 +19,8 @@ public class AncestorPerson extends Person {
     private ArrayList<Integer> ancestorLine;
     private LinkedList<AncestorPerson> youngerSiblings;
     private LinkedList<AncestorPerson> olderSiblings;
+    private int maxYoungerSiblingsSpouse;
+    private int maxOlderSiblingsSpouse;
     private LinkedList<Couple> spouses;
     private boolean directLineage;
     private int ancestorGenerations;
@@ -38,6 +40,8 @@ public class AncestorPerson extends Person {
             this.ancestorGenerations = person.getAncestorGenerations();
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
+            maxYoungerSiblingsSpouse = person.getMaxYoungerSiblingsSpouse();
+            maxOlderSiblingsSpouse = person.getMaxOlderSiblingsSpouse();
             if (person.getSpouseCouple() != null) {
                 this.spouses = new LinkedList(person.getSpouseCouples());
             } else {
@@ -74,6 +78,8 @@ public class AncestorPerson extends Person {
     private void initSiblings() {
         youngerSiblings = new LinkedList<>();
         olderSiblings = new LinkedList<>();
+        maxYoungerSiblingsSpouse = 0;
+        maxOlderSiblingsSpouse = 0;
         maxOlderSiblings = 0;
         maxYoungerSiblings = 0;
     }
@@ -217,6 +223,30 @@ public class AncestorPerson extends Person {
 
     public void addOlderSibling(AncestorPerson olderSibling) {
         this.olderSiblings.add(olderSibling);
+    }
+
+    public int getMaxYoungerSiblingsSpouse() {
+        return maxYoungerSiblingsSpouse;
+    }
+
+    public void setMaxYoungerSiblingsSpouse(int maxYoungerSiblingsSpouse) {
+        this.maxYoungerSiblingsSpouse = Math.max(maxYoungerSiblingsSpouse, getMaxYoungerSiblingsSpouse());
+    }
+
+    public void addYoungerSiblingsSpouse() {
+        maxYoungerSiblingsSpouse++;
+    }
+
+    public int getMaxOlderSiblingsSpouse() {
+        return maxOlderSiblingsSpouse;
+    }
+
+    public void setMaxOlderSiblingsSpouse(int maxOlderSiblingsSpouse) {
+        this.maxOlderSiblingsSpouse = Math.max(maxOlderSiblingsSpouse, getMaxOlderSiblingsSpouse());
+    }
+
+    public void addOlderSiblingsSpouse() {
+        maxOlderSiblingsSpouse++;
     }
 
     public int getMaxOlderSiblings() {

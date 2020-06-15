@@ -104,7 +104,9 @@ public class AncestorModel extends DataModel {
                     }
                     person.setFather(addManParentsWithSiblings(father, fathersParents));
                     person.setMaxOlderSiblings(person.getFather().getMaxOlderSiblings());
+                    person.setMaxOlderSiblingsSpouse(person.getFather().getMaxOlderSiblingsSpouse());
                     person.setMaxYoungerSiblings(person.getFather().getMaxYoungerSiblings());
+                    person.setMaxYoungerSiblingsSpouse(person.getFather().getMaxYoungerSiblingsSpouse());
 
                 } else {
                     AncestorPerson mother = new AncestorPerson(parents.getWife());
@@ -115,7 +117,9 @@ public class AncestorModel extends DataModel {
                     }
                     person.setMother(addManParentsWithSiblings(mother, mothersParents));
                     person.setMaxOlderSiblings(person.getMother().getMaxOlderSiblings());
+                    person.setMaxOlderSiblingsSpouse(person.getMother().getMaxOlderSiblingsSpouse());
                     person.setMaxYoungerSiblings(person.getMother().getMaxYoungerSiblings());
+                    person.setMaxYoungerSiblingsSpouse(person.getMother().getMaxYoungerSiblingsSpouse());
                 }
 
             }
@@ -137,7 +141,9 @@ public class AncestorModel extends DataModel {
                 mother.addChildrenCode(person.getAncestorLine());
                 person.setMother(addManParentsWithSiblings(mother, mothersParents));
                 person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), person.getMother().getOlderSiblings().size()));
+                person.setMaxOlderSiblingsSpouse(Math.max(person.getMaxOlderSiblingsSpouse(), person.getMother().getMaxOlderSiblingsSpouse()));
                 person.setMaxYoungerSiblings(Math.max(person.getMaxYoungerSiblings(), person.getMother().getYoungerSiblings().size()));
+                person.setMaxYoungerSiblingsSpouse(Math.max(person.getMaxYoungerSiblingsSpouse(), person.getMother().getMaxYoungerSiblingsSpouse()));
             }
 
         }
@@ -151,14 +157,22 @@ public class AncestorModel extends DataModel {
             AncestorPerson sibling;
             while (!children.get(position).equals(person.getId())) {
                 sibling = new AncestorPerson(getIndividualMap().get(children.get(position)), false);
+                addSpouse(sibling);
                 person.addOlderSibling(sibling);
+                if (sibling.getSpouse() != null) {
+                    person.addOlderSiblingsSpouse();
+                }
                 position++;
             }
 
             position++;
             while (position < children.size()) {
                 sibling = new AncestorPerson(getIndividualMap().get(children.get(position)), false);
+                addSpouse(sibling);
                 person.addYoungerSibling(sibling);
+                if (sibling.getSpouse() != null) {
+                    person.addYoungerSiblingsSpouse();
+                }
                 position++;
             }
         }
@@ -189,10 +203,13 @@ public class AncestorModel extends DataModel {
     }
 
     private void addChildren(Couple spouse) {
+        AncestorPerson childAncestor;
         for (String index : spouse.getChildrenIndexes()) {
             Person child = getIndividualMap().get(index);
             if (child != null) {
-                spouse.addChildren(new AncestorPerson(child, false));
+                childAncestor = new AncestorPerson(child, false);
+                addSpouse(childAncestor);
+                spouse.addChildren(childAncestor);
             }
         }
     }

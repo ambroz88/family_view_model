@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import org.ambrogenea.familyview.model.enums.Diagrams;
+import org.ambrogenea.familyview.model.enums.LabelShape;
 import org.ambrogenea.familyview.model.enums.PropertyName;
 
 /**
@@ -32,6 +33,7 @@ public class Configuration {
 
     private Diagrams adultDiagram;
     private Diagrams siblingDiagram;
+    private LabelShape labelShape;
     private String adultManImagePath;
     private String adultWomanImagePath;
     private String siblingManImagePath;
@@ -41,6 +43,7 @@ public class Configuration {
     private boolean showMothersLineage;
     private boolean showSiblings;
     private boolean showSpouses;
+    private boolean showSiblingSpouses;
 
     private boolean showParents;
     private boolean showChildren;
@@ -60,21 +63,22 @@ public class Configuration {
     private int generationCount;
 
     public Configuration() {
-        adultImageWidth = 170;
-        adultImageHeight = 170;
-        marriageLabelWidth = MIN_MARRIAGE_LABEL_WIDTH;
+        adultImageWidth = 250;
+        adultImageHeight = 200;
+        marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
         wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
-        adultTopOffset = 30;
-        adultBottomOffset = 30;
-        siblingImageWidth = 170;
+        adultTopOffset = 10;
+        adultBottomOffset = 10;
+        siblingImageWidth = 220;
         siblingImageHeight = 170;
-        siblingBottomOffset = 30;
-        siblingTopOffset = 30;
-        adultFontSize = 14;
-        siblingFontSize = 14;
+        siblingBottomOffset = 10;
+        siblingTopOffset = 10;
+        adultFontSize = 18;
+        siblingFontSize = 16;
 
-        adultDiagram = Diagrams.HERALDRY;
-        siblingDiagram = Diagrams.PERGAMEN;
+        adultDiagram = Diagrams.STICKY;
+        siblingDiagram = Diagrams.STICKY;
+        labelShape = LabelShape.OVAL;
         adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
         adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";
         siblingManImagePath = "diagrams/" + siblingDiagram + "_man.png";
@@ -84,6 +88,7 @@ public class Configuration {
         showMothersLineage = false;
         showSiblings = true;
         showSpouses = false;
+        showSiblingSpouses = false;
 
         showSiblingsFamily = true;
         showSpousesFamily = true;
@@ -233,6 +238,14 @@ public class Configuration {
         firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingDiagram);
     }
 
+    public LabelShape getLabelShape() {
+        return labelShape;
+    }
+
+    public void setLabelShape(LabelShape labelShape) {
+        this.labelShape = labelShape;
+    }
+
     public String getAdultManImagePath() {
         return adultManImagePath;
     }
@@ -321,6 +334,14 @@ public class Configuration {
 
     public void setShowSpouses(boolean showSpouses) {
         this.showSpouses = showSpouses;
+    }
+
+    public boolean isShowSiblingSpouses() {
+        return showSiblingSpouses;
+    }
+
+    public void setShowSiblingSpouses(boolean showSiblingSpouses) {
+        this.showSiblingSpouses = showSiblingSpouses;
     }
 
     public int getGenerationCount() {
