@@ -11,7 +11,7 @@ import org.ambrogenea.familyview.model.enums.PropertyName;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class Configuration {
+public final class Configuration {
 
     private AncestorModel ancestorModel;
 
@@ -66,7 +66,7 @@ public class Configuration {
         adultImageWidth = 250;
         adultImageHeight = 200;
         marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
-        wideMarriageLabel = 4 * (adultImageWidth - (adultImageWidth / 2 - marriageLabelWidth / 2));
+        wideMarriageLabel = 3 * getParentImageSpace();
         adultTopOffset = 10;
         adultBottomOffset = 10;
         siblingImageWidth = 220;
@@ -131,7 +131,7 @@ public class Configuration {
     }
 
     public int getParentImageSpace() {
-        return getAdultImageWidth() - (getAdultImageWidth() / 2 - getMarriageLabelWidth() / 2);
+        return getAdultImageWidth() + getMarriageLabelWidth() / 2 - getAdultImageWidth() / 2;
     }
 
     public int getSpouseLabelSpace() {
@@ -151,7 +151,7 @@ public class Configuration {
         if (Math.abs(oldValue - adultImageWidth) > 4) {
             this.adultImageWidth = adultImageWidth;
             marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
-            wideMarriageLabel = 3 * adultImageWidth;
+            wideMarriageLabel = 3 * getParentImageSpace();
             setSiblingImageWidth(adultImageWidth);
             firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
         }

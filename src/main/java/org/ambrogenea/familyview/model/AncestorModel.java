@@ -122,6 +122,11 @@ public class AncestorModel extends DataModel {
                     person.setMaxYoungerSiblingsSpouse(person.getMother().getMaxYoungerSiblingsSpouse());
                 }
 
+            } else {
+                person.setMaxOlderSiblings(person.getFather().getMaxOlderSiblings());
+                person.setMaxOlderSiblingsSpouse(person.getFather().getMaxOlderSiblingsSpouse());
+                person.setMaxYoungerSiblings(person.getFather().getMaxYoungerSiblings());
+                person.setMaxYoungerSiblingsSpouse(person.getFather().getMaxYoungerSiblingsSpouse());
             }
         }
         return person;

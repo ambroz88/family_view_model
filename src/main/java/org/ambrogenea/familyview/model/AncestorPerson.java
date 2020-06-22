@@ -85,7 +85,7 @@ public class AncestorPerson extends Person {
     }
 
     @Override
-    public void setSex(Sex sex) {
+    public final void setSex(Sex sex) {
         super.setSex(sex);
         ancestorLine.clear();
         if (sex.equals(Sex.MALE)) {
