@@ -116,6 +116,11 @@ public class AncestorPerson extends Person {
             } else if (getMother() != null && getFather().getAncestorGenerations() >= getMother().getAncestorGenerations()) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
             }
+
+            setMaxOlderSiblings(getFather().getMaxOlderSiblings());
+            setMaxOlderSiblingsSpouse(getFather().getMaxOlderSiblingsSpouse());
+            setMaxYoungerSiblings(getFather().getMaxYoungerSiblings());
+            setMaxYoungerSiblingsSpouse(getFather().getMaxYoungerSiblingsSpouse());
         }
     }
 
@@ -263,6 +268,20 @@ public class AncestorPerson extends Person {
 
     public void setMaxYoungerSiblings(int maxYoungerSiblings) {
         this.maxYoungerSiblings = Math.max(maxYoungerSiblings, getYoungerSiblings().size());
+    }
+
+    public void moveOlderSiblingsToYounger() {
+        getYoungerSiblings().addAll(0, getOlderSiblings());
+        getOlderSiblings().clear();
+        setMaxYoungerSiblings(getYoungerSiblings().size());
+        setMaxYoungerSiblingsSpouse(getMaxYoungerSiblingsSpouse() + getMaxOlderSiblingsSpouse());
+    }
+
+    public void moveYoungerSiblingsToOlder() {
+        getOlderSiblings().addAll(getYoungerSiblings());
+        getYoungerSiblings().clear();
+        setMaxOlderSiblings(getOlderSiblings().size());
+        setMaxOlderSiblingsSpouse(getMaxOlderSiblingsSpouse() + getMaxYoungerSiblingsSpouse());
     }
 
     public AncestorPerson getSpouse() {

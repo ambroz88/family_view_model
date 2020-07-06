@@ -63,7 +63,7 @@ public class DataModel {
                 }
             }
 
-            if (!info.getType().equals(InfoType.DATE) && !info.getType().equals(InfoType.ADDRESS)) {
+            if (!info.getType().equals(InfoType.DATE) && !info.getType().equals(InfoType.ADDRESS) && info.getCode() == 1) {
                 lastType = info.getType();
             }
         }
