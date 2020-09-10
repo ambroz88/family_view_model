@@ -13,9 +13,10 @@ import org.ambrogenea.familyview.model.enums.PropertyName;
  */
 public final class Configuration {
 
-    private AncestorModel ancestorModel;
-
+    public static final int MIN_MARRIAGE_LABEL_HEIGHT = 30;
     public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
+
+    private AncestorModel ancestorModel;
     private final PropertyChangeSupport prop;
 
     private int adultImageWidth;
@@ -59,13 +60,14 @@ public final class Configuration {
     private boolean showHeraldry;
     private boolean showTemple;
 
+    private boolean showCouplesVertical;
     private boolean resetMode;
     private int generationCount;
 
     public Configuration() {
         adultImageWidth = 250;
         adultImageHeight = 200;
-        marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
+        marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 4 * 3);
         wideMarriageLabel = 3 * getParentImageSpace();
         adultTopOffset = 10;
         adultBottomOffset = 10;
@@ -104,6 +106,7 @@ public final class Configuration {
         showHeraldry = true;
         showTemple = false;
 
+        showCouplesVertical = false;
         resetMode = false;
         generationCount = 10;
 
@@ -126,6 +129,10 @@ public final class Configuration {
         return marriageLabelWidth;
     }
 
+    public int getMarriageLabelHeight() {
+        return Math.max((int) (getAdultImageHeight() * 0.2), MIN_MARRIAGE_LABEL_HEIGHT);
+    }
+
     public int getAdultImageWidth() {
         return adultImageWidth;
     }
@@ -146,6 +153,10 @@ public final class Configuration {
         return 2 * getAdultImageWidth() + getMarriageLabelWidth();
     }
 
+    public int getCoupleWidthVertical() {
+        return 2 * getAdultImageWidth() - (int) (0.25 * getAdultImageWidth());
+    }
+
     public void setAdultImageWidth(int adultImageWidth) {
         int oldValue = getAdultImageWidth();
         if (Math.abs(oldValue - adultImageWidth) > 4) {
@@ -159,6 +170,14 @@ public final class Configuration {
 
     public int getAdultImageHeight() {
         return adultImageHeight;
+    }
+
+    public int getAdultImageHeightAlternative() {
+        int imageHeight = getAdultImageHeight();
+        if (getAdultDiagram().equals(Diagrams.PERGAMEN)) {
+            imageHeight = (int) (imageHeight * 0.8);
+        }
+        return imageHeight;
     }
 
     public void setAdultImageHeight(int adultImageHeight) {
@@ -472,6 +491,14 @@ public final class Configuration {
 
     public void setShowResidence(boolean showResidence) {
         this.showResidence = showResidence;
+    }
+
+    public boolean isShowCouplesVertical() {
+        return showCouplesVertical;
+    }
+
+    public void setShowCouplesVertical(boolean showCouplesVertical) {
+        this.showCouplesVertical = showCouplesVertical;
     }
 
     public boolean isResetMode() {
