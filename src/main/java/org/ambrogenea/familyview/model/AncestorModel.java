@@ -19,6 +19,7 @@ public class AncestorModel extends DataModel {
         AncestorPerson person = new AncestorPerson(getRecordList().get(rowIndex), true);
         Couple parents = findParents(person);
 
+        addSpouse(person);
         person = addAllParents(person, parents);
         return person;
     }
