@@ -153,8 +153,20 @@ public final class Configuration {
         return 2 * getAdultImageWidth() + getMarriageLabelWidth();
     }
 
+    public int getSpouseDistance() {
+        if (isShowCouplesVertical()) {
+            return getMarriageLabelWidth();
+        } else {
+            return getAdultImageWidth() + getMarriageLabelWidth();
+        }
+    }
+
     public int getCoupleWidthVertical() {
         return 2 * getAdultImageWidth() - (int) (0.25 * getAdultImageWidth());
+    }
+
+    public int getCoupleVerticalDifference() {
+        return getAdultImageHeightAlternative() + getMarriageLabelHeight();
     }
 
     public void setAdultImageWidth(int adultImageWidth) {

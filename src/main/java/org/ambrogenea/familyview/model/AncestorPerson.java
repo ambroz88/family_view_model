@@ -230,6 +230,10 @@ public class AncestorPerson extends Person {
         this.olderSiblings.add(olderSibling);
     }
 
+    public int getAllSiblingsCount() {
+        return this.getOlderSiblings().size() + this.getYoungerSiblings().size();
+    }
+
     public int getMaxYoungerSiblingsSpouse() {
         return maxYoungerSiblingsSpouse;
     }
