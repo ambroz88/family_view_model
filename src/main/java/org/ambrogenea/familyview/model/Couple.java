@@ -2,8 +2,8 @@ package org.ambrogenea.familyview.model;
 
 import java.util.ArrayList;
 
-import org.ambrogenea.familyview.model.enums.Sex;
-import org.ambrogenea.familyview.model.utils.Tools;
+import org.ambrogenea.familyview.enums.Sex;
+import org.ambrogenea.familyview.utils.Tools;
 
 /**
  *
@@ -44,7 +44,7 @@ public class Couple {
                 this.wife = new AncestorPerson(couple.getWife());
             }
             this.childrenID = couple.getChildrenIndexes();
-            this.children = new ArrayList(couple.getChildren());
+            this.children = new ArrayList<>(couple.getChildren());
             this.marriageDate = couple.getMarriageDateEnglish();
             this.marriagePlace = couple.getMarriagePlace();
         } else {

@@ -1,6 +1,6 @@
 package org.ambrogenea.familyview.model;
 
-import org.ambrogenea.familyview.model.enums.InfoType;
+import org.ambrogenea.familyview.enums.InfoType;
 
 /**
  *
@@ -17,7 +17,7 @@ public class Information {
     public Information(String information) {
         String[] data = information.split(" ", 3);
         try {
-            code = Integer.valueOf(data[0]);
+            code = Integer.parseInt(data[0]);
         } catch (NumberFormatException e) {
             code = -1;
         }

@@ -3,9 +3,9 @@ package org.ambrogenea.familyview.model;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.ambrogenea.familyview.model.enums.InfoType;
-import org.ambrogenea.familyview.model.enums.Sex;
-import org.ambrogenea.familyview.model.utils.Tools;
+import org.ambrogenea.familyview.enums.InfoType;
+import org.ambrogenea.familyview.enums.Sex;
+import org.ambrogenea.familyview.utils.Tools;
 
 /**
  *

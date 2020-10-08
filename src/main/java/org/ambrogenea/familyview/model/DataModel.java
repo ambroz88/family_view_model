@@ -3,7 +3,7 @@ package org.ambrogenea.familyview.model;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import org.ambrogenea.familyview.model.enums.InfoType;
+import org.ambrogenea.familyview.enums.InfoType;
 
 /**
  *
@@ -28,6 +28,7 @@ public class DataModel {
         this.spouseMap = model.getSpouseMap();
         this.individualMap = model.getIndividualMap();
         this.recordList = model.getRecordList();
+        this.recordType = InfoType.NONE;
     }
 
     public void loadGEDCOMLines(ArrayList<String> rows) {
@@ -92,7 +93,6 @@ public class DataModel {
 
     /**
      * @deprecated concept of spousemap here is not necessary - substitution in AncestorModel in method addSpouse()
-     * @param person
      */
     private void addSpouse(AncestorPerson person) {
         if (!person.getSpouseID().isEmpty()) {

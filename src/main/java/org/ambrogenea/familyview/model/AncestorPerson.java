@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.ambrogenea.familyview.model.enums.Sex;
-import org.ambrogenea.familyview.model.utils.Tools;
+import org.ambrogenea.familyview.enums.Sex;
+import org.ambrogenea.familyview.utils.Tools;
 
 /**
  *
@@ -43,7 +43,7 @@ public class AncestorPerson extends Person {
             maxYoungerSiblingsSpouse = person.getMaxYoungerSiblingsSpouse();
             maxOlderSiblingsSpouse = person.getMaxOlderSiblingsSpouse();
             if (person.getSpouseCouple() != null) {
-                this.spouses = new LinkedList(person.getSpouseCouples());
+                this.spouses = new LinkedList<>(person.getSpouseCouples());
             } else {
                 this.spouses = new LinkedList<>();
             }

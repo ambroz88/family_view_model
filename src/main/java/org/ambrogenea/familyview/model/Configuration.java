@@ -3,9 +3,9 @@ package org.ambrogenea.familyview.model;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import org.ambrogenea.familyview.model.enums.Diagrams;
-import org.ambrogenea.familyview.model.enums.LabelShape;
-import org.ambrogenea.familyview.model.enums.PropertyName;
+import org.ambrogenea.familyview.enums.Diagrams;
+import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.enums.PropertyName;
 
 /**
  *
