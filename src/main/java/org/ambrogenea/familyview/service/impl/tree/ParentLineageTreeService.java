@@ -11,6 +11,7 @@ import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 
 public class ParentLineageTreeService implements TreeService {
+
     private LineageService lineageService;
     private final Configuration configuration;
     private final AncestorPerson rootPerson;
@@ -30,7 +31,7 @@ public class ParentLineageTreeService implements TreeService {
         } else if (rootPerson.getMother() != null) {
             lineageService.drawPerson(rootPosition, rootPerson);
             lineageService.drawSpouseAndSiblings(rootPosition, rootPerson);
-            drawMotherFamily(rootPosition, rootPerson);
+            lineageService.drawMotherFamily(rootPosition, rootPerson);
         }
         return lineageService.getTreeModel();
     }
@@ -40,7 +41,7 @@ public class ParentLineageTreeService implements TreeService {
         Position fatherPosition = new Position(child.getX(), parentsY);
 
         lineageService.drawPerson(fatherPosition, rootPerson.getFather());
-        lineageService.drawFathersFamilyVertical(fatherPosition, rootPerson.getFather());
+        lineageService.drawFathersFamily(fatherPosition, rootPerson.getFather());
 
         int motherX;
         if (configuration.isShowSiblings()) {
@@ -61,7 +62,7 @@ public class ParentLineageTreeService implements TreeService {
 
         Position motherPosition = new Position(motherX, parentsY);
         lineageService.drawPerson(motherPosition, rootPerson.getMother());
-        lineageService.drawFathersFamilyVertical(motherPosition, rootPerson.getMother());
+        lineageService.drawFathersFamily(motherPosition, rootPerson.getMother());
 
         int centerXPosition = (fatherPosition.getX() + motherX) / 2;
         Position childPosition = new Position(centerXPosition, child.getY());
@@ -77,19 +78,6 @@ public class ParentLineageTreeService implements TreeService {
         int labelWidth = motherX - fatherPosition.getX() - configuration.getAdultImageWidth() / 2;
         lineageService.drawLabel(fatherPosition, labelWidth, rootPerson.getParents().getMarriageDate());
         lineageService.drawLine(childPosition, new Position(centerXPosition, fatherPosition.getY() + configuration.getMarriageLabelHeight()), Line.LINEAGE);
-    }
-
-    private void drawMotherFamily(Position child, AncestorPerson person) {
-        int motherY = child.getY() - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
-        Position motherPosition = new Position(child.getX(), motherY);
-
-        lineageService.addVerticalLineToParents(child);
-        lineageService.drawMother(motherPosition, person.getMother(), person.getParents().getMarriageDate());
-
-        if (configuration.isShowSiblings()) {
-            lineageService.drawSiblingsAroundMother(motherPosition, person.getMother());
-        }
-        lineageService.drawFathersFamilyVertical(motherPosition, person.getMother());
     }
 
 }

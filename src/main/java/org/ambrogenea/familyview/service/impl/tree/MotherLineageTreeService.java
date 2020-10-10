@@ -25,10 +25,10 @@ public class MotherLineageTreeService implements TreeService {
     @Override
     public TreeModel generateTreeModel(Position rootPosition) {
         lineageService.drawPerson(rootPosition, rootPerson);
-        lineageService.drawSpouseAndSiblings(rootPosition,rootPerson);
+        lineageService.drawSpouseAndSiblings(rootPosition, rootPerson);
 
         if (rootPerson.getMother() != null) {
-            drawMotherFamily(rootPosition, rootPerson);
+            lineageService.drawMotherFamily(rootPosition, rootPerson);
         }
 
         if (configuration.isShowSpouses() && configuration.isShowChildren()) {
@@ -37,23 +37,4 @@ public class MotherLineageTreeService implements TreeService {
         return lineageService.getTreeModel();
     }
 
-    private void drawMotherFamily(Position rootPositionPosition, AncestorPerson person) {
-        lineageService.addVerticalLineToParents(rootPositionPosition);
-        Position motherPosition = lineageService.drawFather(rootPositionPosition, person.getMother());
-
-        if (person.getFather() != null) {
-            lineageService.drawMother(rootPositionPosition, person.getFather(), person.getParents().getMarriageDate());
-        }
-
-        if (configuration.isShowSiblings()) {
-            lineageService.drawSiblingsAroundMother(motherPosition, person.getMother());
-        }
-
-        if (configuration.isShowHeraldry()) {
-            lineageService.addHeraldry(rootPositionPosition, person.getSimpleBirthPlace());
-        }
-
-        lineageService.drawFathersFamilyVertical(motherPosition, person.getMother());
-    }
-    
 }

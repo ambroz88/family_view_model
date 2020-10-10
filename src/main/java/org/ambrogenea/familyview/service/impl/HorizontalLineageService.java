@@ -1,14 +1,14 @@
 package org.ambrogenea.familyview.service.impl;
 
-import org.ambrogenea.familyview.domain.Line;
+import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.service.LineageService;
 
-public class VerticalLineageService extends VerticalAncestorService implements LineageService {
+public class HorizontalLineageService extends HorizontalAncestorService implements LineageService {
 
-    public VerticalLineageService(Configuration configuration) {
+    public HorizontalLineageService(Configuration configuration) {
         super(configuration);
     }
 
@@ -44,8 +44,10 @@ public class VerticalLineageService extends VerticalAncestorService implements L
 
                 drawFathersFamily(fatherPosition, person.getFather());
             } else {
-                Position motherPosition = drawFather(child, person.getMother());
-                drawLine(child, motherPosition, Line.LINEAGE);
+                Position motherPosition = new Position(child);
+                motherPosition.addY(getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                drawPerson(motherPosition, person.getMother());
+
                 drawFathersFamily(motherPosition, person.getMother());
                 if (getConfiguration().isShowSiblings()) {
                     drawSiblingsAroundMother(motherPosition, person.getMother());
@@ -74,5 +76,4 @@ public class VerticalLineageService extends VerticalAncestorService implements L
 
         drawFathersFamily(motherPosition, person.getMother());
     }
-
 }

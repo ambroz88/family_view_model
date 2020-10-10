@@ -4,16 +4,17 @@ import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.Line;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
+import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.model.Configuration;
-import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
+import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
 import org.ambrogenea.familyview.service.impl.VerticalAncestorService;
 
 public class AllAncestorTreeService implements TreeService {
 
-    private SpecificAncestorService specificAncestorService;
+    private final SpecificAncestorService specificAncestorService;
     private final Configuration configuration;
     private final AncestorPerson rootPerson;
 
@@ -22,6 +23,8 @@ public class AllAncestorTreeService implements TreeService {
         this.rootPerson = rootPerson;
         if (config.isShowCouplesVertical()) {
             specificAncestorService = new VerticalAncestorService(configuration);
+        } else {
+            specificAncestorService = new HorizontalAncestorService(configuration);
         }
     }
 
@@ -201,5 +204,5 @@ public class AllAncestorTreeService implements TreeService {
 
         }
     }
-    
+
 }
