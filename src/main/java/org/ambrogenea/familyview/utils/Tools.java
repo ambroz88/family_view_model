@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.domain.PersonRecord;
 import org.ambrogenea.familyview.enums.Sex;
 
 /**
@@ -103,11 +103,10 @@ public final class Tools {
         return stringDate.replace("ABT ", "").replace("BEF ", "").replace("TO ", "");
     }
 
-    public static AncestorPerson generateSamplePerson() {
-        AncestorPerson samplePerson = new AncestorPerson("0000", true);
+    public static PersonRecord generateSamplePerson() {
+        PersonRecord samplePerson = new PersonRecord(Sex.MALE, true);
         samplePerson.setFirstName("Vítězslav");
         samplePerson.setSurname("Konipásek");
-        samplePerson.setSex(Sex.MALE);
         samplePerson.setBirthDate("24 AUG 1869");
         samplePerson.setBirthPlace("České Budějovice");
         samplePerson.setDeathDate("30 DEC 1924");
@@ -118,11 +117,10 @@ public final class Tools {
         return samplePerson;
     }
 
-    public static AncestorPerson generateSampleChild() {
-        AncestorPerson samplePerson = new AncestorPerson("0000", false);
+    public static PersonRecord generateSampleChild() {
+        PersonRecord samplePerson = new PersonRecord(Sex.FEMALE, false);
         samplePerson.setFirstName("Julie");
         samplePerson.setSurname("Konipásková");
-        samplePerson.setSex(Sex.FEMALE);
         samplePerson.setBirthDate("18 JAN 1901");
         samplePerson.setBirthPlace("České Budějovice");
         samplePerson.setLiving(true);

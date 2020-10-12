@@ -15,7 +15,7 @@ public class FatherLineageTreeService implements TreeService {
     private final Configuration configuration;
     private final AncestorPerson rootPerson;
 
-    public FatherLineageTreeService(AncestorPerson model, Configuration config) {
+    public FatherLineageTreeService(Configuration config, AncestorPerson model) {
         this.configuration = config;
         this.rootPerson = model;
         if (config.isShowCouplesVertical()) {
