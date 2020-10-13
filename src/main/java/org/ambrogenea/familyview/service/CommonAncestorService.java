@@ -1,9 +1,9 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Couple;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
+import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.model.Couple;
 
 public interface CommonAncestorService {
 
@@ -14,8 +14,6 @@ public interface CommonAncestorService {
     void drawYoungerSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
 
     void drawOlderSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
-
-    int drawChildren(Position fatherPosition, Couple couple);
 
     void drawLabel(Position labelPosition, int labelWidth, String text);
 

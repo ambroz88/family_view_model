@@ -5,6 +5,7 @@ import org.ambrogenea.familyview.domain.Line;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.model.Couple;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 
 public class HorizontalAncestorService extends CommonAncestorServiceImpl implements SpecificAncestorService {
@@ -15,8 +16,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 
     @Override
     public Position drawMother(Position childPosition, AncestorPerson mother, String marriageDate) {
-        Position motherPosition = new Position(childPosition);
-        motherPosition.addX(getConfiguration().getHalfSpouseLabelSpace());
+        Position motherPosition = childPosition.addX(getConfiguration().getHalfSpouseLabelSpace());
         motherPosition.addY(-getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
         Position label = new Position(
@@ -31,8 +31,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 
     @Override
     public Position drawFather(Position childPosition, AncestorPerson father) {
-        Position fatherPosition = new Position(childPosition);
-        fatherPosition.addX(-getConfiguration().getHalfSpouseLabelSpace());
+        Position fatherPosition = childPosition.addX(-getConfiguration().getHalfSpouseLabelSpace());
         fatherPosition.addY(-getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
         drawPerson(fatherPosition, father);
@@ -42,8 +41,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     @Override
     public Position drawSpouse(Position rootPersonPosition, AncestorPerson person) {
         if (person.getSpouse() != null) {
-            Position spouse = new Position(rootPersonPosition);
-            spouse.addX(getConfiguration().getMarriageLabelWidth() + getConfiguration().getAdultImageWidth());
+            Position spouse = rootPersonPosition.addX(getConfiguration().getMarriageLabelWidth() + getConfiguration().getAdultImageWidth());
 
             Position label = new Position(
                     rootPersonPosition.getX() + getConfiguration().getAdultImageWidth() / 2,
@@ -67,8 +65,8 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
                     rootPersonPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2);
 
             for (int index = 0; index < person.getSpouseCouples().size(); index++) {
-                spousePosition.addX(spouseDistance);
-                label.addX(spouseDistance);
+                spousePosition = spousePosition.addX(spouseDistance);
+                label = label.addX(spouseDistance);
                 drawPerson(spousePosition, person.getSpouse(index));
                 drawLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple(index).getMarriageDate());
             }
@@ -76,6 +74,48 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
             return spousePosition;
         }
         return rootPersonPosition;
+    }
+
+    @Override
+    public int drawChildren(Position fatherPosition, Couple spouseCouple) {
+        int childrenX = fatherPosition.getX() + getConfiguration().getHalfSpouseLabelSpace();
+        int fatherY = fatherPosition.getY();
+
+        int childrenWidth = 0;
+        if (spouseCouple != null) {
+            int childrenCount = spouseCouple.getChildren().size();
+            if (getConfiguration().isShowChildren() && childrenCount > 0) {
+                int childrenLineY = fatherY + (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
+                Position lineLevel = new Position(childrenX, childrenLineY);
+                drawLine(lineLevel, new Position(childrenX, fatherY), Line.SIBLINGS);
+
+                int childrenY = childrenLineY + (getConfiguration().getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
+                childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
+                int startXPosition = childrenX + getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2;
+
+                Position childrenPosition = new Position(startXPosition, childrenY);
+
+                for (int i = 0; i < childrenCount; i++) {
+                    int childXPosition = startXPosition + i * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
+                    if (i == 0 && childrenCount > 1) {
+                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
+                    } else if (i == childrenCount - 1) {
+                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
+                    } else {
+                        addStraightChildrenLine(childXPosition, childrenY);
+                    }
+                    //TODO: draw spouse of the children
+                    drawPerson(childrenPosition, spouseCouple.getChildren().get(i));
+                    childrenPosition = childrenPosition.addX(getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
+                }
+                childrenWidth = childrenWidth / 2;
+
+                if (getConfiguration().isShowHeraldry()) {
+                    addChildrenHeraldry(new Position(childrenX, childrenY), spouseCouple);
+                }
+            }
+        }
+        return childrenWidth;
     }
 
     @Override
@@ -119,7 +159,6 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     @Override
     public void addVerticalLineToParents(Position child) {
         int endY = child.getY() - getConfiguration().getAdultImageHeight()
-                - getConfiguration().getAdultImageHeightAlternative() / 2
                 - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
         drawLine(child, new Position(child.getX(), endY), Line.LINEAGE);
     }

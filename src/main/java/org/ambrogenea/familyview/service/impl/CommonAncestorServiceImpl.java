@@ -1,18 +1,19 @@
 package org.ambrogenea.familyview.service.impl;
 
-import org.ambrogenea.familyview.constant.Spaces;
-import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
-import org.ambrogenea.familyview.model.Couple;
-import org.ambrogenea.familyview.enums.LabelShape;
-import org.ambrogenea.familyview.domain.*;
-import org.ambrogenea.familyview.utils.Tools;
-import org.ambrogenea.familyview.service.CommonAncestorService;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+
+import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.domain.*;
+import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.model.Couple;
+import org.ambrogenea.familyview.service.CommonAncestorService;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class CommonAncestorServiceImpl implements CommonAncestorService {
 
@@ -77,49 +78,6 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             drawPerson(siblingPosition, sibling);
             drawLine(siblingPosition, lineEnd, Line.SIBLINGS);
         }
-    }
-
-    @Override
-    public int drawChildren(Position fatherPosition, Couple spouseCouple) {
-        int childrenX = fatherPosition.getX();
-        int fatherY = fatherPosition.getY();
-
-        int childrenWidth = 0;
-        if (spouseCouple != null) {
-            int childrenCount = spouseCouple.getChildren().size();
-            if (getConfiguration().isShowChildren() && childrenCount > 0) {
-                int childrenLineY = fatherY + (int) (1.5 * getConfiguration().getAdultImageHeightAlternative()) + getConfiguration().getMarriageLabelHeight() / 2 + Spaces.VERTICAL_GAP;
-                Position lineLevel = new Position(fatherPosition.getX(), childrenLineY);
-                int labelY = fatherY + (getConfiguration().getAdultImageHeightAlternative() + getConfiguration().getMarriageLabelHeight()) / 2;
-                drawLine(lineLevel, new Position(fatherPosition.getX(), labelY), Line.SIBLINGS);
-
-                int childrenY = childrenLineY + (getConfiguration().getSiblingImageHeight() + Spaces.VERTICAL_GAP + getConfiguration().getMarriageLabelHeight()) / 2;
-                childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
-                int startXPosition = childrenX + getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2;
-
-                Position childrenPosition = new Position(startXPosition, childrenY);
-
-                for (int i = 0; i < childrenCount; i++) {
-                    int childXPosition = startXPosition + i * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
-                    if (i == 0 && childrenCount > 1) {
-                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
-                    } else if (i == childrenCount - 1) {
-                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
-                    } else {
-                        addStraightChildrenLine(childXPosition, childrenY);
-                    }
-                    //TODO: draw spouse of the children
-                    drawPerson(childrenPosition, spouseCouple.getChildren().get(i));
-                    childrenPosition.addX(getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
-                }
-                childrenWidth = childrenWidth / 2;
-
-                if (getConfiguration().isShowHeraldry()) {
-                    addChildrenHeraldry(new Position(childrenX, childrenY), spouseCouple);
-                }
-            }
-        }
-        return childrenWidth;
     }
 
     @Override
@@ -219,7 +177,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     protected void addStraightChildrenLine(int startX, int rootSiblingY) {
-        int verticalShift = (configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
+        int verticalShift = (configuration.getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
 
         Line vertical = new Line(startX, rootSiblingY - verticalShift, startX, rootSiblingY);
         vertical.setType(Line.SIBLINGS);
@@ -227,7 +185,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     protected void addRoundChildrenLine(int startX, int rootSiblingY, int rootSiblingX) {
-        int verticalShift = (configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
+        int verticalShift = (configuration.getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
 
         int startAngle;
         int xRadius;
@@ -252,7 +210,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             yRadius = 0;
         }
 
-        addLineAboveSpouse(new Position(startX + xRadius, rootSiblingY), rootSiblingX - startX);
+        addLineAboveChildren(new Position(startX + xRadius, rootSiblingY), rootSiblingX - startX);
         Line vertical = new Line(startX, rootSiblingY - verticalShift + yRadius, startX, rootSiblingY);
         vertical.setType(Line.SIBLINGS);
         treeModel.getLines().add(vertical);
@@ -260,6 +218,13 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     protected void addLineAboveSpouse(Position rootSibling, int spouseGap) {
         int verticalShift = (configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
+        Position linePosition = new Position(rootSibling);
+        linePosition.addY(-verticalShift);
+        drawLine(linePosition, new Position(linePosition.getX() + spouseGap, linePosition.getY()), Line.SIBLINGS);
+    }
+
+    protected void addLineAboveChildren(Position rootSibling, int spouseGap) {
+        int verticalShift = (configuration.getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
         Position linePosition = new Position(rootSibling);
         linePosition.addY(-verticalShift);
         drawLine(linePosition, new Position(linePosition.getX() + spouseGap, linePosition.getY()), Line.SIBLINGS);

@@ -8,11 +8,12 @@ import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.TreeService;
+import org.ambrogenea.familyview.service.impl.HorizontalLineageService;
 import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 
 public class ParentLineageTreeService implements TreeService {
 
-    private LineageService lineageService;
+    private final LineageService lineageService;
     private final Configuration configuration;
     private final AncestorPerson rootPerson;
 
@@ -21,6 +22,8 @@ public class ParentLineageTreeService implements TreeService {
         this.rootPerson = rootPerson;
         if (config.isShowCouplesVertical()) {
             lineageService = new VerticalLineageService(configuration);
+        } else {
+            lineageService = new HorizontalLineageService(configuration);
         }
     }
 
@@ -73,11 +76,11 @@ public class ParentLineageTreeService implements TreeService {
             lineageService.drawChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
         }
 
-        fatherPosition.addX(configuration.getAdultImageWidth() / 2);
-        fatherPosition.addY(-configuration.getMarriageLabelHeight() / 2);
-        int labelWidth = motherX - fatherPosition.getX() - configuration.getAdultImageWidth() / 2;
-        lineageService.drawLabel(fatherPosition, labelWidth, rootPerson.getParents().getMarriageDate());
-        lineageService.drawLine(childPosition, new Position(centerXPosition, fatherPosition.getY() + configuration.getMarriageLabelHeight()), Line.LINEAGE);
+        Position LabelPosition = fatherPosition.addX(configuration.getAdultImageWidth() / 2);
+        LabelPosition.addY(-configuration.getMarriageLabelHeight() / 2);
+        int labelWidth = motherX - LabelPosition.getX() - configuration.getAdultImageWidth() / 2;
+        lineageService.drawLabel(LabelPosition, labelWidth, rootPerson.getParents().getMarriageDate());
+        lineageService.drawLine(childPosition, new Position(centerXPosition, LabelPosition.getY() + configuration.getMarriageLabelHeight()), Line.LINEAGE);
     }
 
 }

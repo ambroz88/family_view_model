@@ -1,7 +1,8 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.domain.Position;
+import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.model.Couple;
 
 public interface SpecificAncestorService extends CommonAncestorService {
 
@@ -12,6 +13,8 @@ public interface SpecificAncestorService extends CommonAncestorService {
     Position drawSpouse(Position rootPersonPosition, AncestorPerson person);
 
     Position drawAllSpouses(Position rootPersonPosition, AncestorPerson person);
+
+    int drawChildren(Position fatherPosition, Couple couple);
 
     void drawSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild);
 

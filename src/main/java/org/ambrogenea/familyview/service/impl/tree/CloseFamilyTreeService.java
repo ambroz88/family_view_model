@@ -7,7 +7,6 @@ import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
-import org.ambrogenea.familyview.service.impl.VerticalAncestorService;
 
 public class CloseFamilyTreeService implements TreeService {
 
@@ -18,11 +17,7 @@ public class CloseFamilyTreeService implements TreeService {
     public CloseFamilyTreeService(Configuration config, AncestorPerson rootPerson) {
         this.configuration = config;
         this.rootPerson = rootPerson;
-        if (config.isShowCouplesVertical()) {
-            ancestorService = new VerticalAncestorService(configuration);
-        } else {
-            ancestorService = new HorizontalAncestorService(configuration);
-        }
+        ancestorService = new HorizontalAncestorService(configuration);
     }
 
     @Override
