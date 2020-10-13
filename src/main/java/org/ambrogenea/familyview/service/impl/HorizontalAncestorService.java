@@ -20,7 +20,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
         motherPosition.addY(-getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
         Position label = new Position(
-                childPosition.getX() - getConfiguration().getHalfSpouseLabelSpace(),
+                childPosition.getX() - getConfiguration().getMarriageLabelWidth() / 2,
                 motherPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
         );
 
@@ -61,8 +61,8 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
             int spouseDistance = getConfiguration().getMarriageLabelWidth() + getConfiguration().getAdultImageWidth();
             Position spousePosition = new Position(rootPersonPosition);
 
-            Position label = new Position(rootPersonPosition.getX() - getConfiguration().getHalfSpouseLabelSpace(),
-                    rootPersonPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2);
+            Position label = rootPersonPosition.addX(-getConfiguration().getAdultImageWidth() / 2 - getConfiguration().getMarriageLabelWidth());
+            label.addY(-getConfiguration().getMarriageLabelHeight() / 2);
 
             for (int index = 0; index < person.getSpouseCouples().size(); index++) {
                 spousePosition = spousePosition.addX(spouseDistance);

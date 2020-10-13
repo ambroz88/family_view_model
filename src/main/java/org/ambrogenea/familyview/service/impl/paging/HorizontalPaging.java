@@ -162,7 +162,7 @@ public class HorizontalPaging implements Paging {
     @Override
     public int calculateLineageY(AncestorPerson person, int pageHeight) {
         int positionY = pageHeight - VERTICAL_GAP / 2 - config.getAdultImageHeight() / 2;
-        if (config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
+        if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
             positionY = positionY - (VERTICAL_GAP + config.getSiblingImageHeight());
         }
         return positionY;
