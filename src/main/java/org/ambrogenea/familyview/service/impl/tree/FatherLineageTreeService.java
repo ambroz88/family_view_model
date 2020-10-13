@@ -28,16 +28,16 @@ public class FatherLineageTreeService implements TreeService {
     @Override
     public TreeModel generateTreeModel(Position rootPosition) {
         lineageService.drawPerson(rootPosition, rootPerson);
-        lineageService.drawSpouseAndSiblings(rootPosition, rootPerson);
+        lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
 
         if (rootPerson.getFather() != null) {
-            lineageService.drawFathersFamily(rootPosition, rootPerson);
+            lineageService.generateFathersFamily(rootPosition, rootPerson);
         } else if (rootPerson.getMother() != null) {
-            lineageService.drawMotherFamily(rootPosition, rootPerson);
+            lineageService.generateMotherFamily(rootPosition, rootPerson);
         }
 
         if (configuration.isShowSpouses() && configuration.isShowChildren()) {
-            lineageService.drawChildren(rootPosition, rootPerson.getSpouseCouple());
+            lineageService.addChildren(rootPosition, rootPerson.getSpouseCouple());
         }
 
         return lineageService.getTreeModel();

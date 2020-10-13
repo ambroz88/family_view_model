@@ -26,8 +26,8 @@ public interface Paging {
 
     int calculateLineageHeight(AncestorPerson person);
 
-    int addFathersSiblingDimension(AncestorPerson person);
+    int calculateFatherSiblingsWidth(AncestorPerson person);
 
-    int addMotherSiblingsWidth(AncestorPerson mother);
+    int calculateMotherSiblingsWidth(AncestorPerson mother);
 
 }

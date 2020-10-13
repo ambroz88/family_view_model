@@ -5,10 +5,10 @@ import org.ambrogenea.familyview.model.AncestorPerson;
 
 public interface LineageService extends SpecificAncestorService {
 
-    void drawSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson);
+    void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson);
 
-    void drawFathersFamily(Position childPosition, AncestorPerson person);
+    void generateFathersFamily(Position childPosition, AncestorPerson person);
 
-    void drawMotherFamily(Position childPosition, AncestorPerson person);
+    void generateMotherFamily(Position childPosition, AncestorPerson person);
 
 }

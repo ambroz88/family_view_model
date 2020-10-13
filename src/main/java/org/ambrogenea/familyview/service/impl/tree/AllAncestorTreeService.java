@@ -44,20 +44,20 @@ public class AllAncestorTreeService implements TreeService {
             }
 
             if (rootPerson.getFather() != null) {
-                Position fatherPosition = specificAncestorService.drawFather(child, rootPerson.getFather());
+                Position fatherPosition = specificAncestorService.addFather(child, rootPerson.getFather());
                 drawParents(rootPerson.getFather(), fatherPosition);
             }
 
-            Position motherPosition = specificAncestorService.drawMother(child, rootPerson.getMother(), rootPerson.getParents().getMarriageDate());
+            Position motherPosition = specificAncestorService.addMother(child, rootPerson.getMother(), rootPerson.getParents().getMarriageDate());
             drawParents(rootPerson.getMother(), motherPosition);
         }
 
         specificAncestorService.drawPerson(child, rootPerson);
 
         if (configuration.isShowSpouses()) {
-            specificAncestorService.drawSpouse(child, rootPerson);
+            specificAncestorService.addSpouse(child, rootPerson);
             if (configuration.isShowChildren()) {
-                specificAncestorService.drawChildren(child, rootPerson.getSpouseCouple());
+                specificAncestorService.addChildren(child, rootPerson.getSpouseCouple());
             }
         }
 
@@ -99,10 +99,10 @@ public class AllAncestorTreeService implements TreeService {
             specificAncestorService.drawLine(new Position(newChildX, parentsY), newChild, Line.LINEAGE);
 
             if (configuration.isShowSpouses()) {
-                specificAncestorService.drawSpouse(newChild, rootPerson);
+                specificAncestorService.addSpouse(newChild, rootPerson);
 
                 if (configuration.isShowChildren()) {
-                    specificAncestorService.drawChildren(newChild, rootPerson.getSpouseCouple());
+                    specificAncestorService.addChildren(newChild, rootPerson.getSpouseCouple());
                 }
             }
         }
@@ -118,10 +118,10 @@ public class AllAncestorTreeService implements TreeService {
                 drawParents(child.getMother(), motherPosition);
                 specificAncestorService.drawLine(motherPosition, childPosition, Line.LINEAGE);
             } else {
-                Position fatherPosition = specificAncestorService.drawFather(childPosition, child.getFather());
+                Position fatherPosition = specificAncestorService.addFather(childPosition, child.getFather());
                 drawParents(child.getFather(), fatherPosition);
 
-                Position motherPosition = specificAncestorService.drawMother(childPosition, child.getMother(), child.getParents().getMarriageDate());
+                Position motherPosition = specificAncestorService.addMother(childPosition, child.getMother(), child.getParents().getMarriageDate());
                 drawParents(child.getMother(), motherPosition);
 
                 fatherPosition.addY(configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight() / 2);

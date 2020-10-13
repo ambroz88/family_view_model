@@ -33,8 +33,8 @@ public class ParentLineageTreeService implements TreeService {
             drawParentsLineage(rootPosition);
         } else if (rootPerson.getMother() != null) {
             lineageService.drawPerson(rootPosition, rootPerson);
-            lineageService.drawSpouseAndSiblings(rootPosition, rootPerson);
-            lineageService.drawMotherFamily(rootPosition, rootPerson);
+            lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
+            lineageService.generateMotherFamily(rootPosition, rootPerson);
         }
         return lineageService.getTreeModel();
     }
@@ -44,7 +44,7 @@ public class ParentLineageTreeService implements TreeService {
         Position fatherPosition = new Position(child.getX(), parentsY);
 
         lineageService.drawPerson(fatherPosition, rootPerson.getFather());
-        lineageService.drawFathersFamily(fatherPosition, rootPerson.getFather());
+        lineageService.generateFathersFamily(fatherPosition, rootPerson.getFather());
 
         int motherX;
         if (configuration.isShowSiblings()) {
@@ -65,15 +65,15 @@ public class ParentLineageTreeService implements TreeService {
 
         Position motherPosition = new Position(motherX, parentsY);
         lineageService.drawPerson(motherPosition, rootPerson.getMother());
-        lineageService.drawFathersFamily(motherPosition, rootPerson.getMother());
+        lineageService.generateFathersFamily(motherPosition, rootPerson.getMother());
 
         int centerXPosition = (fatherPosition.getX() + motherX) / 2;
         Position childPosition = new Position(centerXPosition, child.getY());
         lineageService.drawPerson(childPosition, rootPerson);
-        lineageService.drawSpouseAndSiblings(childPosition, rootPerson);
+        lineageService.generateSpouseAndSiblings(childPosition, rootPerson);
 
         if (configuration.isShowSpouses() && configuration.isShowChildren()) {
-            lineageService.drawChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
+            lineageService.addChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
         }
 
         Position LabelPosition = fatherPosition.addX(configuration.getAdultImageWidth() / 2);

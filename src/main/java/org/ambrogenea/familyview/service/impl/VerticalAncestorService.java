@@ -15,7 +15,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public Position drawMother(Position childPosition, AncestorPerson mother, String marriageDate) {
+    public Position addMother(Position childPosition, AncestorPerson mother, String marriageDate) {
         Position motherPosition = childPosition.addX(getConfiguration().getMarriageLabelWidth());
         motherPosition.addY(-getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
@@ -29,7 +29,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public Position drawFather(Position childPosition, AncestorPerson father) {
+    public Position addFather(Position childPosition, AncestorPerson father) {
         int fatherY = childPosition.getY() - getConfiguration().getAdultImageHeightAlternative()
                 - getConfiguration().getAdultImageHeight()
                 - getConfiguration().getMarriageLabelHeight() - Spaces.VERTICAL_GAP;
@@ -39,7 +39,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public Position drawSpouse(Position rootPersonPosition, AncestorPerson person) {
+    public Position addSpouse(Position rootPersonPosition, AncestorPerson person) {
         if (person.getSpouse() != null) {
             Position spouse = rootPersonPosition.addX(getConfiguration().getMarriageLabelWidth());
             spouse.addY(getConfiguration().getMarriageLabelHeight() + getConfiguration().getAdultImageHeightAlternative());
@@ -55,7 +55,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public Position drawAllSpouses(Position rootPersonPosition, AncestorPerson person) {
+    public Position addAllSpouses(Position rootPersonPosition, AncestorPerson person) {
         if (person.getSpouse() != null) {
             int spouseDistance = getConfiguration().getAdultImageWidth()
                     + getConfiguration().getMarriageLabelWidth() / 3 + Spaces.SIBLINGS_GAP;
@@ -80,7 +80,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public int drawChildren(Position fatherPosition, Couple spouseCouple) {
+    public int addChildren(Position fatherPosition, Couple spouseCouple) {
         int childrenX = fatherPosition.getX();
         int fatherY = fatherPosition.getY();
 
@@ -124,7 +124,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public void drawSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild) {
+    public void addSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild) {
         int spouseGap = 0;
         if (rootChild.getSpouse() != null) {
             spouseGap = (int) (getConfiguration().getAdultImageWidth() / 2 + getConfiguration().getAdultImageWidth() * 0.25);
@@ -143,7 +143,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public void drawSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX) {
+    public void addSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX) {
         int spouseGap;
         if (!rootChild.getSpouseID().isEmpty() && lastSpouseX == 0) {
             spouseGap = rootSibling.getX() + (getConfiguration().getAdultImageWidth() + getConfiguration().getMarriageLabelWidth()) * rootChild.getSpouseCouples().size();

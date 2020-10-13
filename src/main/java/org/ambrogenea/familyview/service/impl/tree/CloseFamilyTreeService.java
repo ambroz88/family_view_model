@@ -25,8 +25,8 @@ public class CloseFamilyTreeService implements TreeService {
         ancestorService.drawPerson(rootPosition, rootPerson);
 
         if (configuration.isShowParents()) {
-            ancestorService.drawFather(rootPosition, rootPerson);
-            ancestorService.drawMother(rootPosition, rootPerson, rootPerson.getParents().getMarriageDate());
+            ancestorService.addFather(rootPosition, rootPerson);
+            ancestorService.addMother(rootPosition, rootPerson, rootPerson.getParents().getMarriageDate());
             if (configuration.isShowHeraldry() && !rootPerson.getParents().isEmpty()) {
                 ancestorService.addHeraldry(rootPosition, rootPerson.getSimpleBirthPlace());
             }
@@ -37,19 +37,19 @@ public class CloseFamilyTreeService implements TreeService {
                 if (configuration.isShowChildren()) {
 //                    int lastSpousePosition = ancestorService.drawAllSpousesWithKids(rootPosition, rootPerson);
 //                    ancestorService.drawSiblingsAroundWives(rootPosition, rootPerson, lastSpousePosition);
-                    ancestorService.drawSpouse(rootPosition, rootPerson);
-                    ancestorService.drawSiblingsAroundMother(rootPosition, rootPerson);
-                    ancestorService.drawChildren(rootPosition, rootPerson.getSpouseCouple());
+                    ancestorService.addSpouse(rootPosition, rootPerson);
+                    ancestorService.addSiblingsAroundMother(rootPosition, rootPerson);
+                    ancestorService.addChildren(rootPosition, rootPerson.getSpouseCouple());
                 } else {
-                    Position lastSpouse = ancestorService.drawAllSpouses(rootPosition, rootPerson);
-                    ancestorService.drawSiblingsAroundWives(rootPosition, rootPerson, lastSpouse.getX());
+                    Position lastSpouse = ancestorService.addAllSpouses(rootPosition, rootPerson);
+                    ancestorService.addSiblingsAroundWives(rootPosition, rootPerson, lastSpouse.getX());
                 }
             } else if (configuration.isShowChildren()) {
 //                ancestorService.drawAllSpousesWithKids(rootPosition, rootPerson);
-                ancestorService.drawAllSpouses(rootPosition, rootPerson);
-                ancestorService.drawChildren(rootPosition, rootPerson.getSpouseCouple());
+                ancestorService.addAllSpouses(rootPosition, rootPerson);
+                ancestorService.addChildren(rootPosition, rootPerson.getSpouseCouple());
             } else {
-                ancestorService.drawAllSpouses(rootPosition, rootPerson);
+                ancestorService.addAllSpouses(rootPosition, rootPerson);
             }
         } else if (configuration.isShowSiblingsFamily()) {
             ancestorService.drawSiblings(rootPosition, rootPerson);

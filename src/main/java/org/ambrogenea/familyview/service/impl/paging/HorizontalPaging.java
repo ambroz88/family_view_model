@@ -36,13 +36,13 @@ public class HorizontalPaging implements Paging {
         pageWidth = pageWidth + config.getWideMarriageLabel() + config.getAdultImageWidth();
 
         if (config.isShowSiblings()) {
-            pageWidth = pageWidth + addFathersSiblingDimension(person);
+            pageWidth = pageWidth + calculateFatherSiblingsWidth(person);
 
             if (person.getMother().getMaxOlderSiblings() > 0) {
                 //mother parent lineage width
                 pageWidth = pageWidth + config.getParentImageSpace() * (Math.min(person.getMother().getAncestorGenerations(), config.getGenerationCount()) - 1) + config.getCoupleWidth() - config.getParentImageSpace() + SIBLINGS_GAP;
             }
-            pageWidth = pageWidth + addMotherSiblingsWidth(person.getMother());
+            pageWidth = pageWidth + calculateMotherSiblingsWidth(person.getMother());
         }
 
         return pageWidth;
@@ -75,7 +75,7 @@ public class HorizontalPaging implements Paging {
         }
 
         if (config.isShowSiblings()) {
-            pageWidth = pageWidth + addFathersSiblingDimension(person);
+            pageWidth = pageWidth + calculateFatherSiblingsWidth(person);
         }
 
         if (config.isShowResidence()) {
@@ -109,7 +109,7 @@ public class HorizontalPaging implements Paging {
         pageWidth = pageWidth - config.getAdultImageWidth() - config.getMarriageLabelWidth() + config.getParentImageSpace();
 
         if (config.isShowSiblings()) {
-            pageWidth = pageWidth + addMotherSiblingsWidth(person.getMother());
+            pageWidth = pageWidth + calculateMotherSiblingsWidth(person.getMother());
         }
 
         if (config.isShowResidence()) {
@@ -120,7 +120,7 @@ public class HorizontalPaging implements Paging {
     }
 
     @Override
-    public int addFathersSiblingDimension(AncestorPerson person) {
+    public int calculateFatherSiblingsWidth(AncestorPerson person) {
         int siblingWidth = 0;
         if (person.getMaxOlderSiblings() > 0) {
             siblingWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getMaxOlderSiblings() - config.getParentImageSpace() + SIBLINGS_GAP;
@@ -140,7 +140,7 @@ public class HorizontalPaging implements Paging {
     }
 
     @Override
-    public int addMotherSiblingsWidth(AncestorPerson mother) {
+    public int calculateMotherSiblingsWidth(AncestorPerson mother) {
         int siblingWidth = 0;
         if (mother.getMaxOlderSiblings() > 0) {
             siblingWidth = siblingWidth + (config.getSiblingImageWidth() + HORIZONTAL_GAP) * mother.getMaxOlderSiblings() - config.getParentImageSpace() + SIBLINGS_GAP;
