@@ -40,8 +40,7 @@ public final class Configuration {
     private String siblingManImagePath;
     private String siblingWomanImagePath;
 
-    private boolean showFathersLineage;
-    private boolean showMothersLineage;
+    private boolean showParentLineage;
     private boolean showSiblings;
     private boolean showSpouses;
     private boolean showSiblingSpouses;
@@ -86,10 +85,9 @@ public final class Configuration {
         siblingManImagePath = "diagrams/" + siblingDiagram + "_man.png";
         siblingWomanImagePath = "diagrams/" + siblingDiagram + "_woman.png";
 
-        showFathersLineage = true;
-        showMothersLineage = false;
+        showParentLineage = false;
         showSiblings = true;
-        showSpouses = false;
+        showSpouses = true;
         showSiblingSpouses = false;
 
         showSiblingsFamily = true;
@@ -415,20 +413,12 @@ public final class Configuration {
         this.showChildren = showChildren;
     }
 
-    public boolean isShowFathersLineage() {
-        return showFathersLineage;
+    public boolean isShowParentLineage() {
+        return showParentLineage;
     }
 
-    public void setShowFathersLineage(boolean showFathersLineage) {
-        this.showFathersLineage = showFathersLineage;
-    }
-
-    public boolean isShowMothersLineage() {
-        return showMothersLineage;
-    }
-
-    public void setShowMothersLineage(boolean showMothersLineage) {
-        this.showMothersLineage = showMothersLineage;
+    public void setShowParentLineage(boolean showParentLineage) {
+        this.showParentLineage = showParentLineage;
     }
 
     public boolean isShowAge() {

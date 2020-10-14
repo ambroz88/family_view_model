@@ -11,22 +11,15 @@ import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 
 public class MotherLineageTreeService implements TreeService {
 
-    private final LineageService lineageService;
-    private final Configuration configuration;
-    private final AncestorPerson rootPerson;
-
-    public MotherLineageTreeService(Configuration config, AncestorPerson rootPerson) {
-        this.configuration = config;
-        this.rootPerson = rootPerson;
-        if (config.isShowCouplesVertical()) {
+    @Override
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+        LineageService lineageService;
+        if (configuration.isShowCouplesVertical()) {
             lineageService = new VerticalLineageService(configuration);
         } else {
             lineageService = new HorizontalLineageService(configuration);
         }
-    }
 
-    @Override
-    public TreeModel generateTreeModel(Position rootPosition) {
         lineageService.drawPerson(rootPosition, rootPerson);
         lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
 
@@ -34,9 +27,13 @@ public class MotherLineageTreeService implements TreeService {
             lineageService.generateMotherFamily(rootPosition, rootPerson);
         }
 
-        if (configuration.isShowSpouses() && configuration.isShowChildren()) {
-            lineageService.addChildren(rootPosition, rootPerson.getSpouseCouple());
+        if (configuration.isShowSpouses()) {
+            lineageService.addSpouse(rootPosition, rootPerson);
+            if (configuration.isShowChildren()) {
+                lineageService.addChildren(rootPosition, rootPerson.getSpouseCouple());
+            }
         }
+
         return lineageService.getTreeModel();
     }
 

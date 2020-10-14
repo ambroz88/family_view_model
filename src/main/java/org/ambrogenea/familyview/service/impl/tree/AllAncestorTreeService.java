@@ -14,28 +14,24 @@ import org.ambrogenea.familyview.service.impl.VerticalAncestorService;
 
 public class AllAncestorTreeService implements TreeService {
 
-    private final SpecificAncestorService specificAncestorService;
-    private final Configuration configuration;
-    private final AncestorPerson rootPerson;
+    private SpecificAncestorService specificAncestorService;
+    private Configuration configuration;
 
-    public AllAncestorTreeService(Configuration config, AncestorPerson rootPerson) {
-        this.configuration = config;
-        this.rootPerson = rootPerson;
-        if (config.isShowCouplesVertical()) {
+    @Override
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+        this.configuration = configuration;
+        if (configuration.isShowCouplesVertical()) {
             specificAncestorService = new VerticalAncestorService(configuration);
         } else {
             specificAncestorService = new HorizontalAncestorService(configuration);
         }
-    }
 
-    @Override
-    public TreeModel generateTreeModel(Position rootPosition) {
-        drawFirstParents(rootPosition);
-//        drawFirstParentsVertical(rootPosition);
+        drawFirstParents(rootPerson, rootPosition);
+//        drawFirstParentsVertical(rootPerson, rootPosition);
         return specificAncestorService.getTreeModel();
     }
 
-    private void drawFirstParentsVertical(Position child) {
+    private void drawFirstParentsVertical(AncestorPerson rootPerson, Position child) {
         if (rootPerson.getMother() != null) {
 
             specificAncestorService.addVerticalLineToParents(child);
@@ -63,7 +59,7 @@ public class AllAncestorTreeService implements TreeService {
 
     }
 
-    private void drawFirstParents(Position child) {
+    private void drawFirstParents(AncestorPerson rootPerson, Position child) {
         if (rootPerson.getMother() != null) {
             int parentsY = child.getY() - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
 

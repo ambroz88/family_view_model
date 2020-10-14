@@ -13,33 +13,30 @@ import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 
 public class ParentLineageTreeService implements TreeService {
 
-    private final LineageService lineageService;
-    private final Configuration configuration;
-    private final AncestorPerson rootPerson;
+    private LineageService lineageService;
+    private Configuration configuration;
 
-    public ParentLineageTreeService(Configuration config, AncestorPerson rootPerson) {
-        this.configuration = config;
-        this.rootPerson = rootPerson;
-        if (config.isShowCouplesVertical()) {
+    @Override
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+        this.configuration = configuration;
+        if (configuration.isShowCouplesVertical()) {
             lineageService = new VerticalLineageService(configuration);
         } else {
             lineageService = new HorizontalLineageService(configuration);
         }
-    }
 
-    @Override
-    public TreeModel generateTreeModel(Position rootPosition) {
         if (rootPerson.getFather() != null) {
-            drawParentsLineage(rootPosition);
+            drawParentsLineage(rootPerson, rootPosition);
         } else if (rootPerson.getMother() != null) {
             lineageService.drawPerson(rootPosition, rootPerson);
             lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
             lineageService.generateMotherFamily(rootPosition, rootPerson);
         }
+
         return lineageService.getTreeModel();
     }
 
-    private void drawParentsLineage(Position child) {
+    private void drawParentsLineage(AncestorPerson rootPerson, Position child) {
         int parentsY = child.getY() - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
         Position fatherPosition = new Position(child.getX(), parentsY);
 
@@ -72,8 +69,11 @@ public class ParentLineageTreeService implements TreeService {
         lineageService.drawPerson(childPosition, rootPerson);
         lineageService.generateSpouseAndSiblings(childPosition, rootPerson);
 
-        if (configuration.isShowSpouses() && configuration.isShowChildren()) {
-            lineageService.addChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
+        if (configuration.isShowSpouses()) {
+            lineageService.addSpouse(childPosition, rootPerson);
+            if (configuration.isShowChildren()) {
+                lineageService.addChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
+            }
         }
 
         Position LabelPosition = fatherPosition.addX(configuration.getAdultImageWidth() / 2);

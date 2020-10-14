@@ -10,18 +10,9 @@ import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
 
 public class CloseFamilyTreeService implements TreeService {
 
-    private final SpecificAncestorService ancestorService;
-    private final Configuration configuration;
-    private final AncestorPerson rootPerson;
-
-    public CloseFamilyTreeService(Configuration config, AncestorPerson rootPerson) {
-        this.configuration = config;
-        this.rootPerson = rootPerson;
-        ancestorService = new HorizontalAncestorService(configuration);
-    }
-
     @Override
-    public TreeModel generateTreeModel(Position rootPosition) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+        SpecificAncestorService ancestorService = new HorizontalAncestorService(configuration);
         ancestorService.drawPerson(rootPosition, rootPerson);
 
         if (configuration.isShowParents()) {

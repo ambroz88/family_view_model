@@ -63,7 +63,7 @@ public class VerticalPaging implements Paging {
         if (config.isShowSiblings()) {
             if (person.getMaxOlderSiblings() > 0) {
                 int olderSiblingsCount;
-                if (config.isShowFathersLineage() && config.isShowMothersLineage()) {
+                if (config.isShowParentLineage()) {
                     olderSiblingsCount = Math.max(person.getMaxOlderSiblings(), person.getFather().getAllSiblingsCount());
                 } else {
                     olderSiblingsCount = person.getMaxOlderSiblings();
@@ -135,15 +135,7 @@ public class VerticalPaging implements Paging {
     public int calculateFatherSiblingsWidth(AncestorPerson person) {
         int siblingWidth = 0;
         if (person.getMaxOlderSiblings() > 0) {
-            int olderSiblingsCount;
-            if (config.isShowFathersLineage() && config.isShowMothersLineage()) {
-                olderSiblingsCount = Math.max(person.getMaxOlderSiblings(), person.getFather().getAllSiblingsCount());
-            } else {
-                olderSiblingsCount = person.getMaxOlderSiblings();
-            }
-
-            siblingWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * olderSiblingsCount + SIBLINGS_GAP;
-
+            siblingWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getMaxOlderSiblings() + SIBLINGS_GAP;
             if (config.isShowSiblingSpouses()) {
                 siblingWidth = siblingWidth + person.getMaxOlderSiblingsSpouse() * (config.getMarriageLabelWidth() + config.getSiblingImageWidth());
             }
