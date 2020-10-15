@@ -23,14 +23,14 @@ public class CloseFamilyTreeService implements TreeService {
             }
         }
 
-        if (configuration.isShowSpousesFamily()) {
-            if (configuration.isShowSiblingsFamily()) {
+        if (configuration.isShowSpouses()) {
+            if (configuration.isShowSiblings()) {
                 if (configuration.isShowChildren()) {
 //                    int lastSpousePosition = ancestorService.drawAllSpousesWithKids(rootPosition, rootPerson);
 //                    ancestorService.drawSiblingsAroundWives(rootPosition, rootPerson, lastSpousePosition);
                     ancestorService.addSpouse(rootPosition, rootPerson);
                     ancestorService.addSiblingsAroundMother(rootPosition, rootPerson);
-                    ancestorService.addChildren(rootPosition, rootPerson.getSpouseCouple());
+                    ancestorService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
                 } else {
                     Position lastSpouse = ancestorService.addAllSpouses(rootPosition, rootPerson);
                     ancestorService.addSiblingsAroundWives(rootPosition, rootPerson, lastSpouse.getX());
@@ -38,11 +38,11 @@ public class CloseFamilyTreeService implements TreeService {
             } else if (configuration.isShowChildren()) {
 //                ancestorService.drawAllSpousesWithKids(rootPosition, rootPerson);
                 ancestorService.addAllSpouses(rootPosition, rootPerson);
-                ancestorService.addChildren(rootPosition, rootPerson.getSpouseCouple());
+                ancestorService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
             } else {
                 ancestorService.addAllSpouses(rootPosition, rootPerson);
             }
-        } else if (configuration.isShowSiblingsFamily()) {
+        } else if (configuration.isShowSiblings()) {
             ancestorService.drawSiblings(rootPosition, rootPerson);
         }
 

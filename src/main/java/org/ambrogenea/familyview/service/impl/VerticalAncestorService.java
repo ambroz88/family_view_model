@@ -80,45 +80,23 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public int addChildren(Position fatherPosition, Couple spouseCouple) {
-        int childrenX = fatherPosition.getX();
-        int fatherY = fatherPosition.getY();
-
+    public int generateChildren(Position fatherPosition, Couple spouseCouple) {
         int childrenWidth = 0;
         if (spouseCouple != null) {
-            int childrenCount = spouseCouple.getChildren().size();
-            if (getConfiguration().isShowChildren() && childrenCount > 0) {
-                int childrenLineY = fatherY + getConfiguration().getAdultImageHeightAlternative() + getConfiguration().getMarriageLabelHeight()
-                        + (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
-                Position lineLevel = new Position(fatherPosition.getX(), childrenLineY);
-                int labelY = fatherY + (getConfiguration().getAdultImageHeightAlternative() + getConfiguration().getMarriageLabelHeight()) / 2;
-                drawLine(lineLevel, new Position(fatherPosition.getX(), labelY), Line.SIBLINGS);
 
-                int childrenY = childrenLineY + (getConfiguration().getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
-                childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
-                int startXPosition = childrenX + getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2;
+            if (getConfiguration().isShowChildren() && !spouseCouple.getChildren().isEmpty()) {
+                Position marriagePosition = new Position(fatherPosition);
+                marriagePosition.addY((getConfiguration().getAdultImageHeightAlternative() + getConfiguration().getMarriageLabelHeight()) / 2);
 
-                Position childrenPosition = new Position(startXPosition, childrenY);
+                Position heraldryPosition = new Position(fatherPosition);
+                heraldryPosition.addY(getConfiguration().getAdultImageHeightAlternative() + getConfiguration().getMarriageLabelHeight()
+                        + (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
 
-                for (int i = 0; i < childrenCount; i++) {
-                    int childXPosition = startXPosition + i * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
-                    if (i == 0 && childrenCount > 1) {
-                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
-                    } else if (i == childrenCount - 1) {
-                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
-                    } else {
-                        addStraightChildrenLine(childXPosition, childrenY);
-                    }
-                    //TODO: draw spouse of the children
-                    drawPerson(childrenPosition, spouseCouple.getChildren().get(i));
-                    childrenPosition = childrenPosition.addX(getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
-                }
-                childrenWidth = childrenWidth / 2;
+                drawLine(heraldryPosition, marriagePosition, Line.SIBLINGS);
 
-                if (getConfiguration().isShowHeraldry()) {
-                    addChildrenHeraldry(new Position(childrenX, childrenY), spouseCouple);
-                }
+                childrenWidth = addChildren(heraldryPosition, spouseCouple);
             }
+
         }
         return childrenWidth;
     }
@@ -146,7 +124,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     public void addSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX) {
         int spouseGap;
         if (!rootChild.getSpouseID().isEmpty() && lastSpouseX == 0) {
-            spouseGap = rootSibling.getX() + (getConfiguration().getAdultImageWidth() + getConfiguration().getMarriageLabelWidth()) * rootChild.getSpouseCouples().size();
+            spouseGap = (getConfiguration().getAdultImageWidth() + getConfiguration().getMarriageLabelWidth()) * rootChild.getSpouseCouples().size();
         } else {
             spouseGap = lastSpouseX;
         }

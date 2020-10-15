@@ -54,7 +54,11 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             siblingPosition = new Position(startX, rootSiblingPosition.getY());
 
             drawPerson(siblingPosition, sibling);
-            drawLine(siblingPosition, lineEnd, Line.SIBLINGS);
+            if (i == 0) {
+                drawLine(siblingPosition, lineEnd, Line.SIBLINGS);
+            } else {
+                addStraightChildrenLine(siblingPosition);
+            }
         }
     }
 
@@ -76,7 +80,11 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             siblingPosition = new Position(startX, rootSiblingPosition.getY());
 
             drawPerson(siblingPosition, sibling);
-            drawLine(siblingPosition, lineEnd, Line.SIBLINGS);
+            if (i == youngerSiblingsCount - 1) {
+                drawLine(siblingPosition, lineEnd, Line.SIBLINGS);
+            } else {
+                addStraightChildrenLine(siblingPosition);
+            }
         }
     }
 
@@ -99,8 +107,8 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             Line vertical;
             if (getConfiguration().getLabelShape().equals(LabelShape.RECTANGLE)) {
 
-                horizontal = new Line(start.getX(), start.getY(), end.getX(), start.getY());
-                vertical = new Line(end.getX(), start.getY(), end.getX(), end.getY());
+                horizontal = new Line(start.getX(), end.getY(), end.getX(), end.getY());
+                vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY());
                 treeModel.getLines().add(horizontal);
                 treeModel.getLines().add(vertical);
 
@@ -108,22 +116,20 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
                 Arc arc;
                 if (start.getX() < end.getX()) {
+                    horizontal = new Line(start.getX() + Arc.RADIUS, end.getY(), end.getX(), end.getY());
                     if (start.getY() < end.getY()) {//ancestors
-                        horizontal = new Line(start.getX() + Arc.RADIUS, end.getY(), end.getX(), end.getY());
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
                         arc = new Arc(new Position(start.getX(), end.getY() - 2 * Arc.RADIUS), 180);
                     } else {//children
-                        horizontal = new Line(start.getX() + Arc.RADIUS, end.getY(), end.getX(), end.getY());
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
                         arc = new Arc(new Position(start.getX(), end.getY()), 90);
                     }
                 } else {
+                    horizontal = new Line(start.getX() - Arc.RADIUS, end.getY(), end.getX(), end.getY());
                     if (start.getY() < end.getY()) {
-                        horizontal = new Line(start.getX() - Arc.RADIUS, end.getY(), end.getX(), end.getY());
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
                         arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY() - 2 * Arc.RADIUS), -90);
                     } else {
-                        horizontal = new Line(start.getX() - Arc.RADIUS, end.getY(), end.getX(), end.getY());
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
                         arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY()), 0);
                     }
@@ -162,6 +168,39 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     @Override
+    public int addChildren(Position heraldryPosition, Couple spouseCouple) {
+        int childrenCount = spouseCouple.getChildren().size();
+        int childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
+
+        Position childrenPosition = heraldryPosition.addX(getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2);
+        childrenPosition.addY((getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
+
+        if (getConfiguration().isShowHeraldry()) {
+            addChildrenHeraldry(new Position(heraldryPosition.getX(), childrenPosition.getY()), spouseCouple);
+        }
+
+        for (int i = 0; i < childrenCount; i++) {
+            if (i == 0 || i == childrenCount - 1) {
+                drawLine(childrenPosition, heraldryPosition, Line.SIBLINGS);
+            } else {
+                addStraightChildrenLine(childrenPosition);
+            }
+            //TODO: draw spouse of the children
+            drawPerson(childrenPosition, spouseCouple.getChildren().get(i));
+            childrenPosition = childrenPosition.addX(getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
+        }
+
+        return childrenWidth / 2;
+    }
+
+    @Override
+    public void addStraightChildrenLine(Position siblingPosition) {
+        Position endLine = new Position(siblingPosition);
+        endLine.addY(-(configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
+        drawLine(siblingPosition, endLine, Line.SIBLINGS);
+    }
+
+    @Override
     public void addChildrenHeraldry(Position childPosition, Couple spouseCouple) {
         String birthPlace = spouseCouple.getChildren().get(0).getSimpleBirthPlace();
         addHeraldry(childPosition, birthPlace);
@@ -174,46 +213,6 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     public Configuration getConfiguration() {
         return configuration;
-    }
-
-    protected void addStraightChildrenLine(int startX, int rootSiblingY) {
-        int verticalShift = (configuration.getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
-
-        Line vertical = new Line(startX, rootSiblingY - verticalShift, startX, rootSiblingY);
-        vertical.setType(Line.SIBLINGS);
-        treeModel.getLines().add(vertical);
-    }
-
-    protected void addRoundChildrenLine(int startX, int rootSiblingY, int rootSiblingX) {
-        int verticalShift = (configuration.getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
-
-        int startAngle;
-        int xRadius;
-        int yRadius;
-        Arc arc;
-        if (startX < rootSiblingX) {
-            //older siblings
-            yRadius = Arc.RADIUS;
-            xRadius = Arc.RADIUS;
-            startAngle = 90;
-            arc = new Arc(new Position(startX, rootSiblingY - verticalShift), startAngle);
-            treeModel.getArcs().add(arc);
-        } else if (startX > rootSiblingX) {
-            //younger siblings
-            yRadius = Arc.RADIUS;
-            xRadius = -Arc.RADIUS;
-            startAngle = 0;
-            arc = new Arc(new Position(startX - 2 * Arc.RADIUS, rootSiblingY - verticalShift), startAngle);
-            treeModel.getArcs().add(arc);
-        } else {
-            xRadius = 0;
-            yRadius = 0;
-        }
-
-        addLineAboveChildren(new Position(startX + xRadius, rootSiblingY), rootSiblingX - startX);
-        Line vertical = new Line(startX, rootSiblingY - verticalShift + yRadius, startX, rootSiblingY);
-        vertical.setType(Line.SIBLINGS);
-        treeModel.getLines().add(vertical);
     }
 
     protected void addLineAboveSpouse(Position rootSibling, int spouseGap) {

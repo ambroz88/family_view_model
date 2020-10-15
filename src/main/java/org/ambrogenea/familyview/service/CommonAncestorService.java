@@ -23,5 +23,9 @@ public interface CommonAncestorService {
 
     void addChildrenHeraldry(Position childPosition, Couple spouseCouple);
 
+    int addChildren(Position heraldryPosition, Couple spouseCouple);
+
+    void addStraightChildrenLine(Position childPosition);
+
     TreeModel getTreeModel();
 }

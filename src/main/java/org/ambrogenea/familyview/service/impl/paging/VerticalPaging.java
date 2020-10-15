@@ -172,9 +172,12 @@ public class VerticalPaging implements Paging {
 
     @Override
     public int calculateLineageY(AncestorPerson person, int pageHeight) {
-        int positionY = pageHeight - VERTICAL_GAP / 2 - (int) (1.5 * config.getAdultImageHeightAlternative()) - config.getMarriageLabelHeight();
-        if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
-            positionY = positionY - (VERTICAL_GAP + config.getSiblingImageHeight());
+        int positionY = pageHeight - (VERTICAL_GAP + config.getAdultImageHeight()) / 2;
+        if (config.isShowSpouses() && person.getSpouseCouple() != null) {
+            positionY = positionY - config.getAdultImageHeightAlternative() - config.getMarriageLabelHeight();
+            if (config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
+                positionY = positionY - (VERTICAL_GAP + config.getSiblingImageHeight());
+            }
         }
         return positionY;
     }

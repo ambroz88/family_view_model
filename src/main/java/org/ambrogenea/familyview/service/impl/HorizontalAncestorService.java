@@ -77,43 +77,21 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     }
 
     @Override
-    public int addChildren(Position fatherPosition, Couple spouseCouple) {
-        int childrenX = fatherPosition.getX() + getConfiguration().getHalfSpouseLabelSpace();
-        int fatherY = fatherPosition.getY();
-
+    public int generateChildren(Position fatherPosition, Couple spouseCouple) {
         int childrenWidth = 0;
         if (spouseCouple != null) {
-            int childrenCount = spouseCouple.getChildren().size();
-            if (getConfiguration().isShowChildren() && childrenCount > 0) {
-                int childrenLineY = fatherY + (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
-                Position lineLevel = new Position(childrenX, childrenLineY);
-                drawLine(lineLevel, new Position(childrenX, fatherY), Line.SIBLINGS);
 
-                int childrenY = childrenLineY + (getConfiguration().getSiblingImageHeight() + Spaces.VERTICAL_GAP) / 2;
-                childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
-                int startXPosition = childrenX + getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2;
+            if (getConfiguration().isShowChildren() && !spouseCouple.getChildren().isEmpty()) {
+                Position coupleCenterPosition = fatherPosition.addX(getConfiguration().getHalfSpouseLabelSpace());
 
-                Position childrenPosition = new Position(startXPosition, childrenY);
+                Position heraldryPosition = new Position(coupleCenterPosition);
+                heraldryPosition.addY((getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
 
-                for (int i = 0; i < childrenCount; i++) {
-                    int childXPosition = startXPosition + i * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
-                    if (i == 0 && childrenCount > 1) {
-                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
-                    } else if (i == childrenCount - 1) {
-                        addRoundChildrenLine(childXPosition, childrenY, childrenX);
-                    } else {
-                        addStraightChildrenLine(childXPosition, childrenY);
-                    }
-                    //TODO: draw spouse of the children
-                    drawPerson(childrenPosition, spouseCouple.getChildren().get(i));
-                    childrenPosition = childrenPosition.addX(getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP);
-                }
-                childrenWidth = childrenWidth / 2;
+                drawLine(heraldryPosition, coupleCenterPosition, Line.SIBLINGS);
 
-                if (getConfiguration().isShowHeraldry()) {
-                    addChildrenHeraldry(new Position(childrenX, childrenY), spouseCouple);
-                }
+                childrenWidth = addChildren(heraldryPosition, spouseCouple);
             }
+
         }
         return childrenWidth;
     }
@@ -143,7 +121,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     public void addSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX) {
         int spouseGap;
         if (!rootChild.getSpouseID().isEmpty() && lastSpouseX == 0) {
-            spouseGap = rootSibling.getX() + getConfiguration().getSpouseLabelSpace() * rootChild.getSpouseCouples().size();
+            spouseGap = getConfiguration().getSpouseLabelSpace() * rootChild.getSpouseCouples().size();
         } else {
             spouseGap = lastSpouseX;
         }

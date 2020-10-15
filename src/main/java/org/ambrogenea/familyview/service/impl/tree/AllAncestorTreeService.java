@@ -53,7 +53,7 @@ public class AllAncestorTreeService implements TreeService {
         if (configuration.isShowSpouses()) {
             specificAncestorService.addSpouse(child, rootPerson);
             if (configuration.isShowChildren()) {
-                specificAncestorService.addChildren(child, rootPerson.getSpouseCouple());
+                specificAncestorService.generateChildren(child, rootPerson.getSpouseCouple());
             }
         }
 

@@ -48,7 +48,7 @@ public class CloseFamilyPageSetup implements PageSetup {
         int childrenLeftSpace = 0;
         int minimalLeftSpace = config.getAdultImageWidth() / 2 + HORIZONTAL_GAP;
 
-        if (config.isShowSiblingsFamily()) {
+        if (config.isShowSiblings()) {
             siblingsLeftSpace = personModel.getOlderSiblings().size() * (config.getSiblingImageWidth() + HORIZONTAL_GAP) + config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
         }
         if (config.isShowChildren()) {
@@ -92,11 +92,11 @@ public class CloseFamilyPageSetup implements PageSetup {
             parentsHalfWidth = config.getMarriageLabelWidth() / 2 + config.getAdultImageWidth() + HORIZONTAL_GAP;
         }
 
-        if (config.isShowSiblingsFamily()) {
+        if (config.isShowSiblings()) {
             siblingsLeftWidth = siblingsLeftWidth + personModel.getOlderSiblings().size() * (config.getSiblingImageWidth() + HORIZONTAL_GAP) + HORIZONTAL_GAP;
             siblingsRightWidth = siblingsRightWidth + personModel.getYoungerSiblings().size() * (config.getSiblingImageWidth() + HORIZONTAL_GAP) + HORIZONTAL_GAP;
         }
-        if (config.isShowSpousesFamily()) {
+        if (config.isShowSpouses()) {
             int spouseRightIncrease;
             for (int i = 0; i < personModel.getSpouseCouples().size(); i++) {
                 spouseRightIncrease = config.getSpouseLabelSpace();

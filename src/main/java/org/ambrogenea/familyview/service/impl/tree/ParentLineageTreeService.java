@@ -72,7 +72,7 @@ public class ParentLineageTreeService implements TreeService {
         if (configuration.isShowSpouses()) {
             lineageService.addSpouse(childPosition, rootPerson);
             if (configuration.isShowChildren()) {
-                lineageService.addChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
+                lineageService.generateChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
             }
         }
 

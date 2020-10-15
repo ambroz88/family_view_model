@@ -47,8 +47,6 @@ public final class Configuration {
 
     private boolean showParents;
     private boolean showChildren;
-    private boolean showSiblingsFamily;
-    private boolean showSpousesFamily;
 
     private boolean showAge;
     private boolean showPlaces;
@@ -90,8 +88,6 @@ public final class Configuration {
         showSpouses = true;
         showSiblingSpouses = false;
 
-        showSiblingsFamily = true;
-        showSpousesFamily = true;
         showParents = true;
         showChildren = true;
 
@@ -379,22 +375,6 @@ public final class Configuration {
 
     public void setGenerationCount(int generationCount) {
         this.generationCount = generationCount;
-    }
-
-    public boolean isShowSiblingsFamily() {
-        return showSiblingsFamily;
-    }
-
-    public void setShowSiblingsFamily(boolean showSiblingsFamily) {
-        this.showSiblingsFamily = showSiblingsFamily;
-    }
-
-    public boolean isShowSpousesFamily() {
-        return showSpousesFamily;
-    }
-
-    public void setShowSpousesFamily(boolean showSpousesFamily) {
-        this.showSpousesFamily = showSpousesFamily;
     }
 
     public boolean isShowParents() {
