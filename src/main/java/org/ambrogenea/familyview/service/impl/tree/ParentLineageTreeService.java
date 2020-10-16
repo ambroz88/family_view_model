@@ -5,7 +5,7 @@ import org.ambrogenea.familyview.domain.Line;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalLineageService;
@@ -14,10 +14,10 @@ import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 public class ParentLineageTreeService implements TreeService {
 
     private LineageService lineageService;
-    private Configuration configuration;
+    private ConfigurationService configuration;
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, ConfigurationService configuration) {
         this.configuration = configuration;
         if (configuration.isShowCouplesVertical()) {
             lineageService = new VerticalLineageService(configuration);

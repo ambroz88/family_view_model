@@ -3,7 +3,7 @@ package org.ambrogenea.familyview.service.impl.paging;
 import static org.ambrogenea.familyview.constant.Spaces.*;
 
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.Paging;
 
 /**
@@ -12,9 +12,9 @@ import org.ambrogenea.familyview.service.Paging;
  */
 public class HorizontalPaging implements Paging {
 
-    public final Configuration config;
+    public final ConfigurationService config;
 
-    public HorizontalPaging(Configuration configuration) {
+    public HorizontalPaging(ConfigurationService configuration) {
         config = configuration;
     }
 

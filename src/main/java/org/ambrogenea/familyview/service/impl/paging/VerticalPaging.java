@@ -4,7 +4,7 @@ import static org.ambrogenea.familyview.constant.Spaces.*;
 
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.Paging;
 
 /**
@@ -13,9 +13,9 @@ import org.ambrogenea.familyview.service.Paging;
  */
 public class VerticalPaging implements Paging {
 
-    public final Configuration config;
+    public final ConfigurationService config;
 
-    public VerticalPaging(Configuration configuration) {
+    public VerticalPaging(ConfigurationService configuration) {
         config = configuration;
     }
 

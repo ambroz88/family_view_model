@@ -1,16 +1,16 @@
 package org.ambrogenea.familyview.service.impl;
 
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.Line;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.model.Couple;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 
 public class VerticalAncestorService extends CommonAncestorServiceImpl implements SpecificAncestorService {
 
-    public VerticalAncestorService(Configuration configuration) {
+    public VerticalAncestorService(ConfigurationService configuration) {
         super(configuration);
     }
 

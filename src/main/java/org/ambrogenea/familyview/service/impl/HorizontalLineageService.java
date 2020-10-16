@@ -1,14 +1,14 @@
 package org.ambrogenea.familyview.service.impl;
 
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.service.LineageService;
 
 public class HorizontalLineageService extends HorizontalAncestorService implements LineageService {
 
-    public HorizontalLineageService(Configuration configuration) {
+    public HorizontalLineageService(ConfigurationService configuration) {
         super(configuration);
     }
 

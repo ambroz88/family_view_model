@@ -7,18 +7,18 @@ import static org.ambrogenea.familyview.constant.Spaces.VERTICAL_GAP;
 
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 
 public class CloseFamilyPageSetup implements PageSetup {
 
-    private final Configuration config;
+    private final ConfigurationService config;
 
     private final Position startPosition;
     private final int pictureWidth;
     private final int pictureHeight;
 
-    public CloseFamilyPageSetup(Configuration config, AncestorPerson person) {
+    public CloseFamilyPageSetup(ConfigurationService config, AncestorPerson person) {
         this.config = config;
         pictureWidth = calculatePageWidth(person);
         pictureHeight = calculatePageHeight(person);

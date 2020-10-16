@@ -3,7 +3,7 @@ package org.ambrogenea.familyview.service.impl.tree;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
@@ -11,7 +11,7 @@ import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
 public class CloseFamilyTreeService implements TreeService {
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, ConfigurationService configuration) {
         SpecificAncestorService ancestorService = new HorizontalAncestorService(configuration);
         ancestorService.drawPerson(rootPosition, rootPerson);
 

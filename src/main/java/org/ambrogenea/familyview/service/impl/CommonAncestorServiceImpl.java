@@ -1,5 +1,7 @@
 package org.ambrogenea.familyview.service.impl;
 
+import org.ambrogenea.familyview.service.ConfigurationService;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,17 +12,16 @@ import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.*;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.model.Couple;
 import org.ambrogenea.familyview.service.CommonAncestorService;
 import org.ambrogenea.familyview.utils.Tools;
 
 public class CommonAncestorServiceImpl implements CommonAncestorService {
 
-    protected final Configuration configuration;
+    protected final ConfigurationService configuration;
     protected final TreeModel treeModel;
 
-    public CommonAncestorServiceImpl(Configuration configuration) {
+    public CommonAncestorServiceImpl(ConfigurationService configuration) {
         this.configuration = configuration;
         this.treeModel = new TreeModel();
     }
@@ -211,7 +212,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         return treeModel;
     }
 
-    public Configuration getConfiguration() {
+    public ConfigurationService getConfiguration() {
         return configuration;
     }
 

@@ -1,14 +1,14 @@
 package org.ambrogenea.familyview.service.impl;
 
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.domain.Line;
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
 import org.ambrogenea.familyview.service.LineageService;
 
 public class VerticalLineageService extends VerticalAncestorService implements LineageService {
 
-    public VerticalLineageService(Configuration configuration) {
+    public VerticalLineageService(ConfigurationService configuration) {
         super(configuration);
     }
 

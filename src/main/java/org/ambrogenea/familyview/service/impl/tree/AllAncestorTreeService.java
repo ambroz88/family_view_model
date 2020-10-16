@@ -6,7 +6,7 @@ import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
@@ -15,10 +15,10 @@ import org.ambrogenea.familyview.service.impl.VerticalAncestorService;
 public class AllAncestorTreeService implements TreeService {
 
     private SpecificAncestorService specificAncestorService;
-    private Configuration configuration;
+    private ConfigurationService configuration;
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, Configuration configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, ConfigurationService configuration) {
         this.configuration = configuration;
         if (configuration.isShowCouplesVertical()) {
             specificAncestorService = new VerticalAncestorService(configuration);

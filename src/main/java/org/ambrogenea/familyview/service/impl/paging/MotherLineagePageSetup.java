@@ -2,7 +2,7 @@ package org.ambrogenea.familyview.service.impl.paging;
 
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.Paging;
 
@@ -14,7 +14,7 @@ public class MotherLineagePageSetup implements PageSetup {
 
     private final Paging paging;
 
-    public MotherLineagePageSetup(Configuration config, AncestorPerson person) {
+    public MotherLineagePageSetup(ConfigurationService config, AncestorPerson person) {
         if (config.isShowCouplesVertical()) {
             paging = new VerticalPaging(config);
         } else {

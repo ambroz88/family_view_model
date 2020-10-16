@@ -1,11 +1,7 @@
 package org.ambrogenea.familyview.model;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
-import org.ambrogenea.familyview.enums.PropertyName;
 
 /**
  *
@@ -17,7 +13,6 @@ public final class Configuration {
     public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
 
     private AncestorModel ancestorModel;
-    private final PropertyChangeSupport prop;
 
     private int adultImageWidth;
     private int adultImageHeight;
@@ -41,31 +36,29 @@ public final class Configuration {
     private String siblingWomanImagePath;
 
     private boolean showParentLineage;
+    private boolean showCouplesVertical;
     private boolean showSiblings;
     private boolean showSpouses;
     private boolean showSiblingSpouses;
-
     private boolean showParents;
     private boolean showChildren;
+    private boolean showHeraldry;
+    private boolean showMarriage;
+    private boolean resetMode;
+    private int generationCount;
 
     private boolean showAge;
     private boolean showPlaces;
     private boolean shortenPlaces;
     private boolean showOccupation;
-    private boolean showMarriage;
     private boolean showResidence;
-    private boolean showHeraldry;
     private boolean showTemple;
-
-    private boolean showCouplesVertical;
-    private boolean resetMode;
-    private int generationCount;
 
     public Configuration() {
         adultImageWidth = 250;
         adultImageHeight = 200;
         marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 4 * 3);
-        wideMarriageLabel = 3 * getParentImageSpace();
+        wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
         adultTopOffset = 10;
         adultBottomOffset = 10;
         siblingImageWidth = 220;
@@ -103,8 +96,6 @@ public final class Configuration {
         showCouplesVertical = false;
         resetMode = false;
         generationCount = 10;
-
-        prop = new PropertyChangeSupport(this);
     }
 
     public AncestorModel getAncestorModel() {
@@ -115,84 +106,52 @@ public final class Configuration {
         this.ancestorModel = ancestorModel;
     }
 
-    public int getWideMarriageLabel() {
-        return wideMarriageLabel;
-    }
-
-    public int getMarriageLabelWidth() {
-        return marriageLabelWidth;
-    }
-
-    public int getMarriageLabelHeight() {
-        return Math.max((int) (getAdultImageHeight() * 0.2), MIN_MARRIAGE_LABEL_HEIGHT);
-    }
-
     public int getAdultImageWidth() {
         return adultImageWidth;
     }
 
-    public int getParentImageSpace() {
-        return getAdultImageWidth() + getMarriageLabelWidth() / 2 - getAdultImageWidth() / 2;
-    }
-
-    public int getSpouseLabelSpace() {
-        return getAdultImageWidth() + getMarriageLabelWidth();
-    }
-
-    public int getHalfSpouseLabelSpace() {
-        return (getAdultImageWidth() + getMarriageLabelWidth()) / 2;
-    }
-
-    public int getCoupleWidth() {
-        return 2 * getAdultImageWidth() + getMarriageLabelWidth();
-    }
-
-    public int getSpouseDistance() {
-        if (isShowCouplesVertical()) {
-            return getMarriageLabelWidth();
-        } else {
-            return getAdultImageWidth() + getMarriageLabelWidth();
-        }
-    }
-
-    public int getCoupleWidthVertical() {
-        return 2 * getAdultImageWidth() - (int) (0.25 * getAdultImageWidth());
-    }
-
-    public int getCoupleVerticalDifference() {
-        return getAdultImageHeightAlternative() + getMarriageLabelHeight();
-    }
-
     public void setAdultImageWidth(int adultImageWidth) {
-        int oldValue = getAdultImageWidth();
-        if (Math.abs(oldValue - adultImageWidth) > 4) {
-            this.adultImageWidth = adultImageWidth;
-            marriageLabelWidth = Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2);
-            wideMarriageLabel = 3 * getParentImageSpace();
-            setSiblingImageWidth(adultImageWidth);
-            firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
-        }
+        this.adultImageWidth = adultImageWidth;
     }
 
     public int getAdultImageHeight() {
         return adultImageHeight;
     }
 
-    public int getAdultImageHeightAlternative() {
-        int imageHeight = getAdultImageHeight();
-        if (getAdultDiagram().equals(Diagrams.PERGAMEN)) {
-            imageHeight = (int) (imageHeight * 0.8);
-        }
-        return imageHeight;
+    public void setAdultImageHeight(int adultImageHeight) {
+        this.adultImageHeight = adultImageHeight;
     }
 
-    public void setAdultImageHeight(int adultImageHeight) {
-        int oldValue = getAdultImageHeight();
-        if (Math.abs(oldValue - adultImageHeight) > 4) {
-            this.adultImageHeight = adultImageHeight;
-            setSiblingImageHeight(adultImageHeight);
-            firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageHeight);
-        }
+    public int getWideMarriageLabel() {
+        return wideMarriageLabel;
+    }
+
+    public void setWideMarriageLabel(int wideMarriageLabel) {
+        this.wideMarriageLabel = wideMarriageLabel;
+    }
+
+    public int getMarriageLabelWidth() {
+        return marriageLabelWidth;
+    }
+
+    public void setMarriageLabelWidth(int marriageLabelWidth) {
+        this.marriageLabelWidth = marriageLabelWidth;
+    }
+
+    public int getAdultTopOffset() {
+        return adultTopOffset;
+    }
+
+    public void setAdultTopOffset(int adultTopOffset) {
+        this.adultTopOffset = adultTopOffset;
+    }
+
+    public int getAdultBottomOffset() {
+        return adultBottomOffset;
+    }
+
+    public void setAdultBottomOffset(int adultBottomOffset) {
+        this.adultBottomOffset = adultBottomOffset;
     }
 
     public int getSiblingImageWidth() {
@@ -200,11 +159,7 @@ public final class Configuration {
     }
 
     public void setSiblingImageWidth(int siblingImageWidth) {
-        int oldValue = getSiblingImageWidth();
-        if (Math.abs(oldValue - siblingImageWidth) > 4) {
-            this.siblingImageWidth = siblingImageWidth;
-            firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageWidth);
-        }
+        this.siblingImageWidth = siblingImageWidth;
     }
 
     public int getSiblingImageHeight() {
@@ -212,11 +167,23 @@ public final class Configuration {
     }
 
     public void setSiblingImageHeight(int siblingImageHeight) {
-        int oldValue = getSiblingImageHeight();
-        if (Math.abs(oldValue - siblingImageHeight) > 4) {
-            this.siblingImageHeight = siblingImageHeight;
-            firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageHeight);
-        }
+        this.siblingImageHeight = siblingImageHeight;
+    }
+
+    public int getSiblingTopOffset() {
+        return siblingTopOffset;
+    }
+
+    public void setSiblingTopOffset(int siblingTopOffset) {
+        this.siblingTopOffset = siblingTopOffset;
+    }
+
+    public int getSiblingBottomOffset() {
+        return siblingBottomOffset;
+    }
+
+    public void setSiblingBottomOffset(int siblingBottomOffset) {
+        this.siblingBottomOffset = siblingBottomOffset;
     }
 
     public int getAdultFontSize() {
@@ -224,9 +191,7 @@ public final class Configuration {
     }
 
     public void setAdultFontSize(int adultFontSize) {
-        int oldValue = getAdultFontSize();
         this.adultFontSize = adultFontSize;
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultFontSize);
     }
 
     public int getSiblingFontSize() {
@@ -234,9 +199,7 @@ public final class Configuration {
     }
 
     public void setSiblingFontSize(int siblingFontSize) {
-        int oldValue = getSiblingFontSize();
         this.siblingFontSize = siblingFontSize;
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingFontSize);
     }
 
     public Diagrams getAdultDiagram() {
@@ -244,11 +207,7 @@ public final class Configuration {
     }
 
     public void setAdultDiagram(Diagrams adultDiagram) {
-        Diagrams oldValue = getAdultDiagram();
         this.adultDiagram = adultDiagram;
-        setAdultManImagePath("diagrams/" + adultDiagram + "_man.png");
-        setAdultWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultDiagram);
     }
 
     public Diagrams getSiblingDiagram() {
@@ -256,11 +215,7 @@ public final class Configuration {
     }
 
     public void setSiblingDiagram(Diagrams siblingDiagram) {
-        Diagrams oldValue = getSiblingDiagram();
         this.siblingDiagram = siblingDiagram;
-        setSiblingManImagePath("diagrams/" + siblingDiagram + "_man.png");
-        setSiblingWomanImagePath("diagrams/" + siblingDiagram + "_woman.png");
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingDiagram);
     }
 
     public LabelShape getLabelShape() {
@@ -275,7 +230,7 @@ public final class Configuration {
         return adultManImagePath;
     }
 
-    private void setAdultManImagePath(String adultManImagePath) {
+    public void setAdultManImagePath(String adultManImagePath) {
         this.adultManImagePath = adultManImagePath;
     }
 
@@ -283,7 +238,7 @@ public final class Configuration {
         return adultWomanImagePath;
     }
 
-    private void setAdultWomanImagePath(String adultWomanImagePath) {
+    public void setAdultWomanImagePath(String adultWomanImagePath) {
         this.adultWomanImagePath = adultWomanImagePath;
     }
 
@@ -291,7 +246,7 @@ public final class Configuration {
         return siblingManImagePath;
     }
 
-    private void setSiblingManImagePath(String siblingManImagePath) {
+    public void setSiblingManImagePath(String siblingManImagePath) {
         this.siblingManImagePath = siblingManImagePath;
     }
 
@@ -299,50 +254,24 @@ public final class Configuration {
         return siblingWomanImagePath;
     }
 
-    private void setSiblingWomanImagePath(String siblingWomanImagePath) {
+    public void setSiblingWomanImagePath(String siblingWomanImagePath) {
         this.siblingWomanImagePath = siblingWomanImagePath;
     }
 
-    public int getAdultBottomOffset() {
-        return adultBottomOffset;
+    public boolean isShowParentLineage() {
+        return showParentLineage;
     }
 
-    public int getAdultTopOffset() {
-        return adultTopOffset;
+    public void setShowParentLineage(boolean showParentLineage) {
+        this.showParentLineage = showParentLineage;
     }
 
-    public void setAdultBottomOffset(int adultVerticalOffset) {
-        int oldValue = getAdultBottomOffset();
-        this.adultBottomOffset = adultVerticalOffset;
-        setSiblingBottomOffset(adultVerticalOffset);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
+    public boolean isShowCouplesVertical() {
+        return showCouplesVertical;
     }
 
-    public void setAdultTopOffset(int adultVerticalOffset) {
-        int oldValue = getAdultTopOffset();
-        this.adultTopOffset = adultVerticalOffset;
-        setSiblingBottomOffset(adultVerticalOffset);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
-    }
-
-    public int getSiblingBottomOffset() {
-        return siblingBottomOffset;
-    }
-
-    public int getSiblingTopOffset() {
-        return siblingTopOffset;
-    }
-
-    public void setSiblingBottomOffset(int siblingVerticalOffset) {
-        int oldValue = getSiblingBottomOffset();
-        this.siblingBottomOffset = siblingVerticalOffset;
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalOffset);
-    }
-
-    public void setSiblingTopOffset(int siblingVerticalOffset) {
-        int oldValue = getSiblingTopOffset();
-        this.siblingTopOffset = siblingVerticalOffset;
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalOffset);
+    public void setShowCouplesVertical(boolean showCouplesVertical) {
+        this.showCouplesVertical = showCouplesVertical;
     }
 
     public boolean isShowSiblings() {
@@ -369,14 +298,6 @@ public final class Configuration {
         this.showSiblingSpouses = showSiblingSpouses;
     }
 
-    public int getGenerationCount() {
-        return generationCount;
-    }
-
-    public void setGenerationCount(int generationCount) {
-        this.generationCount = generationCount;
-    }
-
     public boolean isShowParents() {
         return showParents;
     }
@@ -393,52 +314,12 @@ public final class Configuration {
         this.showChildren = showChildren;
     }
 
-    public boolean isShowParentLineage() {
-        return showParentLineage;
+    public boolean isShowHeraldry() {
+        return showHeraldry;
     }
 
-    public void setShowParentLineage(boolean showParentLineage) {
-        this.showParentLineage = showParentLineage;
-    }
-
-    public boolean isShowAge() {
-        return showAge;
-    }
-
-    public void setShowAge(boolean showAge) {
-        boolean oldValue = isShowAge();
-        this.showAge = showAge;
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showAge);
-    }
-
-    public boolean isShowPlaces() {
-        return showPlaces;
-    }
-
-    public void setShowPlaces(boolean showPlaces) {
-        boolean oldValue = isShowPlaces();
-        this.showPlaces = showPlaces;
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showPlaces);
-    }
-
-    public boolean isShortenPlaces() {
-        return shortenPlaces;
-    }
-
-    public void setShortenPlaces(boolean shortenPlaces) {
-        boolean oldValue = isShortenPlaces();
-        this.shortenPlaces = shortenPlaces;
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, shortenPlaces);
-    }
-
-    public boolean isShowTemple() {
-        return showTemple;
-    }
-
-    public void setShowTemple(boolean showTemple) {
-        boolean oldValue = isShowTemple();
-        this.showTemple = showTemple;
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showTemple);
+    public void setShowHeraldry(boolean showHeraldry) {
+        this.showHeraldry = showHeraldry;
     }
 
     public boolean isShowMarriage() {
@@ -449,12 +330,44 @@ public final class Configuration {
         this.showMarriage = showMarriage;
     }
 
-    public boolean isShowHeraldry() {
-        return showHeraldry;
+    public boolean isResetMode() {
+        return resetMode;
     }
 
-    public void setShowHeraldry(boolean showHeraldry) {
-        this.showHeraldry = showHeraldry;
+    public void setResetMode(boolean resetMode) {
+        this.resetMode = resetMode;
+    }
+
+    public int getGenerationCount() {
+        return generationCount;
+    }
+
+    public void setGenerationCount(int generationCount) {
+        this.generationCount = generationCount;
+    }
+
+    public boolean isShowAge() {
+        return showAge;
+    }
+
+    public void setShowAge(boolean showAge) {
+        this.showAge = showAge;
+    }
+
+    public boolean isShowPlaces() {
+        return showPlaces;
+    }
+
+    public void setShowPlaces(boolean showPlaces) {
+        this.showPlaces = showPlaces;
+    }
+
+    public boolean isShortenPlaces() {
+        return shortenPlaces;
+    }
+
+    public void setShortenPlaces(boolean shortenPlaces) {
+        this.shortenPlaces = shortenPlaces;
     }
 
     public boolean isShowOccupation() {
@@ -462,9 +375,7 @@ public final class Configuration {
     }
 
     public void setShowOccupation(boolean showOccupation) {
-        boolean oldValue = isShowOccupation();
         this.showOccupation = showOccupation;
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showOccupation);
     }
 
     public boolean isShowResidence() {
@@ -475,32 +386,12 @@ public final class Configuration {
         this.showResidence = showResidence;
     }
 
-    public boolean isShowCouplesVertical() {
-        return showCouplesVertical;
+    public boolean isShowTemple() {
+        return showTemple;
     }
 
-    public void setShowCouplesVertical(boolean showCouplesVertical) {
-        this.showCouplesVertical = showCouplesVertical;
-    }
-
-    public boolean isResetMode() {
-        return resetMode;
-    }
-
-    public void setResetMode(boolean resetMode) {
-        this.resetMode = resetMode;
-    }
-
-    public void firePropertyChange(PropertyName prop, Object oldValue, Object newValue) {
-        this.prop.firePropertyChange(prop.toString(), oldValue, newValue);
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.prop.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.prop.removePropertyChangeListener(listener);
+    public void setShowTemple(boolean showTemple) {
+        this.showTemple = showTemple;
     }
 
 }
