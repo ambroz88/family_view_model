@@ -13,167 +13,164 @@ import org.ambrogenea.familyview.model.AncestorModel;
  */
 public interface ConfigurationService {
 
-    public static final int MIN_MARRIAGE_LABEL_HEIGHT = 30;
-    public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
+    AncestorModel getAncestorModel();
 
-    public AncestorModel getAncestorModel();
+    void setAncestorModel(AncestorModel ancestorModel);
 
-    public void setAncestorModel(AncestorModel ancestorModel);
+    int getWideMarriageLabel();
 
-    public int getWideMarriageLabel();
+    int getMarriageLabelWidth();
 
-    public int getMarriageLabelWidth();
+    int getMarriageLabelHeight();
 
-    public int getMarriageLabelHeight();
+    int getAdultImageWidth();
 
-    public int getAdultImageWidth();
+    int getParentImageSpace();
 
-    public int getParentImageSpace();
+    int getSpouseLabelSpace();
 
-    public int getSpouseLabelSpace();
+    int getHalfSpouseLabelSpace();
 
-    public int getHalfSpouseLabelSpace();
+    int getCoupleWidth();
 
-    public int getCoupleWidth();
+    int getSpouseDistance();
 
-    public int getSpouseDistance();
+    int getCoupleWidthVertical();
 
-    public int getCoupleWidthVertical();
+    int getCoupleVerticalDifference();
 
-    public int getCoupleVerticalDifference();
+    void setAdultImageWidth(int adultImageWidth);
 
-    public void setAdultImageWidth(int adultImageWidth);
+    int getAdultImageHeight();
 
-    public int getAdultImageHeight();
+    int getAdultImageHeightAlternative();
 
-    public int getAdultImageHeightAlternative();
+    void setAdultImageHeight(int adultImageHeight);
 
-    public void setAdultImageHeight(int adultImageHeight);
+    int getSiblingImageWidth();
 
-    public int getSiblingImageWidth();
+    void setSiblingImageWidth(int siblingImageWidth);
 
-    public void setSiblingImageWidth(int siblingImageWidth);
+    int getSiblingImageHeight();
 
-    public int getSiblingImageHeight();
+    void setSiblingImageHeight(int siblingImageHeight);
 
-    public void setSiblingImageHeight(int siblingImageHeight);
+    int getAdultFontSize();
 
-    public int getAdultFontSize();
+    void setAdultFontSize(int adultFontSize);
 
-    public void setAdultFontSize(int adultFontSize);
+    int getSiblingFontSize();
 
-    public int getSiblingFontSize();
+    void setSiblingFontSize(int siblingFontSize);
 
-    public void setSiblingFontSize(int siblingFontSize);
+    Diagrams getAdultDiagram();
 
-    public Diagrams getAdultDiagram();
+    void setAdultDiagram(Diagrams adultDiagram);
 
-    public void setAdultDiagram(Diagrams adultDiagram);
+    Diagrams getSiblingDiagram();
 
-    public Diagrams getSiblingDiagram();
+    void setSiblingDiagram(Diagrams siblingDiagram);
 
-    public void setSiblingDiagram(Diagrams siblingDiagram);
+    LabelShape getLabelShape();
 
-    public LabelShape getLabelShape();
+    void setLabelShape(LabelShape labelShape);
 
-    public void setLabelShape(LabelShape labelShape);
+    String getAdultManImagePath();
 
-    public String getAdultManImagePath();
+    String getAdultWomanImagePath();
 
-    public String getAdultWomanImagePath();
+    String getSiblingManImagePath();
 
-    public String getSiblingManImagePath();
+    String getSiblingWomanImagePath();
 
-    public String getSiblingWomanImagePath();
+    int getAdultBottomOffset();
 
-    public int getAdultBottomOffset();
+    int getAdultTopOffset();
 
-    public int getAdultTopOffset();
+    void setAdultBottomOffset(int adultVerticalOffset);
 
-    public void setAdultBottomOffset(int adultVerticalOffset);
+    void setAdultTopOffset(int adultVerticalOffset);
 
-    public void setAdultTopOffset(int adultVerticalOffset);
+    int getSiblingBottomOffset();
 
-    public int getSiblingBottomOffset();
+    int getSiblingTopOffset();
 
-    public int getSiblingTopOffset();
+    void setSiblingBottomOffset(int siblingVerticalOffset);
 
-    public void setSiblingBottomOffset(int siblingVerticalOffset);
+    void setSiblingTopOffset(int siblingVerticalOffset);
 
-    public void setSiblingTopOffset(int siblingVerticalOffset);
+    boolean isShowSiblings();
 
-    public boolean isShowSiblings();
+    void setShowSiblings(boolean showSiblings);
 
-    public void setShowSiblings(boolean showSiblings);
+    boolean isShowSpouses();
 
-    public boolean isShowSpouses();
+    void setShowSpouses(boolean showSpouses);
 
-    public void setShowSpouses(boolean showSpouses);
+    boolean isShowSiblingSpouses();
 
-    public boolean isShowSiblingSpouses();
+    void setShowSiblingSpouses(boolean showSiblingSpouses);
 
-    public void setShowSiblingSpouses(boolean showSiblingSpouses);
+    int getGenerationCount();
 
-    public int getGenerationCount();
+    void setGenerationCount(int generationCount);
 
-    public void setGenerationCount(int generationCount);
+    boolean isShowParents();
 
-    public boolean isShowParents();
+    void setShowParents(boolean showParents);
 
-    public void setShowParents(boolean showParents);
+    boolean isShowChildren();
 
-    public boolean isShowChildren();
+    void setShowChildren(boolean showChildren);
 
-    public void setShowChildren(boolean showChildren);
+    boolean isShowParentLineage();
 
-    public boolean isShowParentLineage();
+    void setShowParentLineage(boolean showParentLineage);
 
-    public void setShowParentLineage(boolean showParentLineage);
+    boolean isShowAge();
 
-    public boolean isShowAge();
+    void setShowAge(boolean showAge);
 
-    public void setShowAge(boolean showAge);
+    boolean isShowPlaces();
 
-    public boolean isShowPlaces();
+    void setShowPlaces(boolean showPlaces);
 
-    public void setShowPlaces(boolean showPlaces);
+    boolean isShortenPlaces();
 
-    public boolean isShortenPlaces();
+    void setShortenPlaces(boolean shortenPlaces);
 
-    public void setShortenPlaces(boolean shortenPlaces);
+    boolean isShowTemple();
 
-    public boolean isShowTemple();
+    void setShowTemple(boolean showTemple);
 
-    public void setShowTemple(boolean showTemple);
+    boolean isShowMarriage();
 
-    public boolean isShowMarriage();
+    void setShowMarriage(boolean showMarriage);
 
-    public void setShowMarriage(boolean showMarriage);
+    boolean isShowHeraldry();
 
-    public boolean isShowHeraldry();
+    void setShowHeraldry(boolean showHeraldry);
 
-    public void setShowHeraldry(boolean showHeraldry);
+    boolean isShowOccupation();
 
-    public boolean isShowOccupation();
+    void setShowOccupation(boolean showOccupation);
 
-    public void setShowOccupation(boolean showOccupation);
+    boolean isShowResidence();
 
-    public boolean isShowResidence();
+    void setShowResidence(boolean showResidence);
 
-    public void setShowResidence(boolean showResidence);
+    boolean isShowCouplesVertical();
 
-    public boolean isShowCouplesVertical();
+    void setShowCouplesVertical(boolean showCouplesVertical);
 
-    public void setShowCouplesVertical(boolean showCouplesVertical);
+    boolean isResetMode();
 
-    public boolean isResetMode();
+    void setResetMode(boolean resetMode);
 
-    public void setResetMode(boolean resetMode);
+    void firePropertyChange(PropertyName prop, Object oldValue, Object newValue);
 
-    public void firePropertyChange(PropertyName prop, Object oldValue, Object newValue);
+    void addPropertyChangeListener(PropertyChangeListener listener);
 
-    public void addPropertyChangeListener(PropertyChangeListener listener);
-
-    public void removePropertyChangeListener(PropertyChangeListener listener);
+    void removePropertyChangeListener(PropertyChangeListener listener);
 
 }

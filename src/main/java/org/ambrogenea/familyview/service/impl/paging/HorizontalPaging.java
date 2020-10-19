@@ -7,7 +7,6 @@ import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.Paging;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class HorizontalPaging implements Paging {
@@ -21,8 +20,8 @@ public class HorizontalPaging implements Paging {
     @Override
     public int calculateAllAncestorsX(AncestorPerson person) {
         return (int) ((config.getCoupleWidth() + SIBLINGS_GAP)
-                * (person.getFather().getLastParentsCount() - person.getFather().getInnerParentsCount()
-                + (person.getFather().getInnerParentsCount() + person.getMother().getInnerParentsCount()) / 2));
+            * (person.getFather().getLastParentsCount() - person.getFather().getInnerParentsCount()
+            + (person.getFather().getInnerParentsCount() + person.getMother().getInnerParentsCount()) / 2));
     }
 
     @Override
@@ -56,7 +55,27 @@ public class HorizontalPaging implements Paging {
         } else {
             ancestorGeneration = person.getMother().getAncestorGenerations() + 1;
         }
-        return config.getParentImageSpace() * Math.min(ancestorGeneration, config.getGenerationCount()) + config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
+
+        int childrenShift = 0;
+        int siblingsShift = 0;
+        int positionX = config.getParentImageSpace() * Math.min(ancestorGeneration, config.getGenerationCount()) + config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
+
+        if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
+            int childrenWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0);
+            childrenShift = childrenWidth / 2 - positionX;
+        }
+
+        if (config.isShowSiblings()) {
+            if (person.getMaxOlderSiblings() > 0) {
+                siblingsShift = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getMaxOlderSiblings() - config.getParentImageSpace() + HORIZONTAL_GAP;
+
+                if (config.isShowSiblingSpouses()) {
+                    siblingsShift = siblingsShift + person.getMaxOlderSiblingsSpouse() * (config.getMarriageLabelWidth() + config.getSiblingImageWidth());
+                }
+            }
+        }
+
+        return positionX + Math.max(siblingsShift, childrenShift);
     }
 
     @Override
@@ -70,12 +89,24 @@ public class HorizontalPaging implements Paging {
 
         int pageWidth = config.getParentImageSpace() * Math.min(ancestorGeneration, config.getGenerationCount()) + config.getCoupleWidth() - config.getParentImageSpace() + 2 * SIBLINGS_GAP;
 
-        if (config.isShowSpouses()) {
-            pageWidth = pageWidth + config.getParentImageSpace();
-        }
-
         if (config.isShowSiblings()) {
             pageWidth = pageWidth + calculateFatherSiblingsWidth(person);
+        }
+
+        if (config.isShowSpouses() && person.getSpouseCouple() != null) {
+            pageWidth = pageWidth + config.getParentImageSpace();
+
+            int extraSpouseCount = person.getSpouseCouples().size() - 1;
+            if (extraSpouseCount > 0) {
+                pageWidth = pageWidth + config.getSpouseLabelSpace() * extraSpouseCount;
+            }
+
+            if (config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
+                int childrenWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0);
+                if (childrenWidth > pageWidth) {
+                    pageWidth = childrenWidth;
+                }
+            }
         }
 
         if (config.isShowResidence()) {

@@ -1,14 +1,15 @@
 package org.ambrogenea.familyview.service.impl;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
+import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
 import org.ambrogenea.familyview.model.AncestorModel;
 import org.ambrogenea.familyview.model.Configuration;
-import org.ambrogenea.familyview.service.*;
+import org.ambrogenea.familyview.service.ConfigurationService;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  *
@@ -46,7 +47,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public int getMarriageLabelHeight() {
-        return Math.max((int) (getAdultImageHeight() * 0.2), MIN_MARRIAGE_LABEL_HEIGHT);
+        return Math.max((int) (getAdultImageHeight() * 0.2), Spaces.MIN_MARRIAGE_LABEL_HEIGHT);
     }
 
     @Override
@@ -98,7 +99,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getAdultImageWidth();
         if (Math.abs(oldValue - adultImageWidth) > 4) {
             configuration.setAdultImageWidth(adultImageWidth);
-            configuration.setMarriageLabelWidth(Math.max(MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2));
+            configuration.setMarriageLabelWidth(Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2));
             configuration.setWideMarriageLabel(3 * getParentImageSpace());
             setSiblingImageWidth(adultImageWidth);
             firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);

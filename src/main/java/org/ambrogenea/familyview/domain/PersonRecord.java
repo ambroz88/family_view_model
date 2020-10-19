@@ -1,12 +1,13 @@
 package org.ambrogenea.familyview.domain;
 
+import org.ambrogenea.familyview.enums.Sex;
+import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.model.Residence;
+import org.ambrogenea.familyview.utils.Tools;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.utils.Tools;
 
 public class PersonRecord {
 
@@ -14,7 +15,7 @@ public class PersonRecord {
     private final Sex sex;
     private final int dbPosition;
     private final boolean directLineage;
-    private final List<ResidenceModel> residences;
+    private final ArrayList<Residence> residences;
 
     private String firstName;
     private String surname;
@@ -61,7 +62,7 @@ public class PersonRecord {
         living = person.isLiving();
         directLineage = person.isDirectLineage();
         dbPosition = person.getPosition();
-        residences = new ArrayList(person.getResidenceList());
+        residences = new ArrayList<>(person.getResidenceList());
     }
 
     public String getId() {
@@ -132,7 +133,7 @@ public class PersonRecord {
         return dbPosition;
     }
 
-    public List<ResidenceModel> getResidences() {
+    public List<Residence> getResidences() {
         return residences;
     }
 

@@ -1,10 +1,7 @@
 package org.ambrogenea.familyview.domain;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
 
 public class TreeModel {
 
@@ -13,8 +10,6 @@ public class TreeModel {
     protected final Set<PersonRecord> persons;
     protected final Set<Marriage> marriages;
     protected final Set<ImageModel> images;
-    protected final TreeMap<String, Color> cityRegister;
-    protected final ArrayList<ResidenceModel> residences;
 
     public TreeModel() {
         persons = new HashSet<>();
@@ -22,8 +17,6 @@ public class TreeModel {
         lines = new HashSet<>();
         arcs = new HashSet<>();
         images = new HashSet<>();
-        residences = new ArrayList<>();
-        cityRegister = new TreeMap<>();
     }
 
     public Set<Line> getLines() {
@@ -50,11 +43,4 @@ public class TreeModel {
         return images;
     }
 
-    public TreeMap<String, Color> getCityRegister() {
-        return cityRegister;
-    }
-
-    public ArrayList<ResidenceModel> getResidences() {
-        return residences;
-    }
 }

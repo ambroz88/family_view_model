@@ -119,19 +119,14 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 
     @Override
     public void addSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX) {
-        int spouseGap;
-        if (!rootChild.getSpouseID().isEmpty() && lastSpouseX == 0) {
-            spouseGap = getConfiguration().getSpouseLabelSpace() * rootChild.getSpouseCouples().size();
-        } else {
-            spouseGap = lastSpouseX;
-        }
+        int spouseGap = lastSpouseX - rootSibling.getX();
 
         if (!rootChild.getYoungerSiblings().isEmpty()) {
             addLineAboveSpouse(rootSibling, spouseGap);
         }
 
         drawOlderSiblings(rootSibling, rootChild);
-        drawYoungerSiblings(new Position(spouseGap, rootSibling.getY()), rootChild);
+        drawYoungerSiblings(new Position(lastSpouseX, rootSibling.getY()), rootChild);
     }
 
     @Override

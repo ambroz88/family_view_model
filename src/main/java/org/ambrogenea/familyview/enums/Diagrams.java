@@ -16,8 +16,6 @@ public enum Diagrams {
 
     public static Diagrams fromString(String name) {
         switch (name) {
-            case PERGAMEN_STRING:
-                return PERGAMEN;
             case HERALDRY_STRING:
                 return HERALDRY;
             case STICKY_NOTES_STRING:
