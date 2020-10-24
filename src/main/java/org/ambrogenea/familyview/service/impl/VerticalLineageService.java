@@ -15,7 +15,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
     @Override
     public void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson) {
         if (getConfiguration().isShowSpouses()) {
-            Position lastSpouse = addAllSpouses(rootPersonPosition, rootPerson);
+            Position lastSpouse = addRootSpouses(rootPersonPosition, rootPerson);
             if (getConfiguration().isShowSiblings()) {
                 addSiblingsAroundWives(rootPersonPosition, rootPerson, lastSpouse.getX());
             }

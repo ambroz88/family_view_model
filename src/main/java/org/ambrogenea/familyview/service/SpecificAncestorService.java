@@ -2,7 +2,6 @@ package org.ambrogenea.familyview.service;
 
 import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Couple;
 
 public interface SpecificAncestorService extends CommonAncestorService {
 
@@ -10,11 +9,11 @@ public interface SpecificAncestorService extends CommonAncestorService {
 
     Position addFather(Position childPosition, AncestorPerson father);
 
+    void addGrandParents(AncestorPerson child, Position childPosition);
+
+    void addAllParents(Position childPosition, AncestorPerson child);
+
     Position addSpouse(Position rootPersonPosition, AncestorPerson person);
-
-    Position addAllSpouses(Position rootPersonPosition, AncestorPerson person);
-
-    int generateChildren(Position fatherPosition, Couple couple);
 
     void addSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild);
 

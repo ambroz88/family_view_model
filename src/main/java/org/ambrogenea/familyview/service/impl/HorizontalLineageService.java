@@ -15,7 +15,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
     @Override
     public void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson) {
         if (getConfiguration().isShowSpouses()) {
-            Position lastSpouse = addAllSpouses(rootPersonPosition, rootPerson);
+            Position lastSpouse = addRootSpouses(rootPersonPosition, rootPerson);
             if (getConfiguration().isShowSiblings()) {
                 addSiblingsAroundWives(rootPersonPosition, rootPerson, lastSpouse.getX());
             }
@@ -44,8 +44,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
 
                 generateFathersFamily(fatherPosition, person.getFather());
             } else {
-                Position motherPosition = new Position(child);
-                motherPosition.addY(getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                Position motherPosition = child.addXAndY(0, getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
                 drawPerson(motherPosition, person.getMother());
 
                 generateFathersFamily(motherPosition, person.getMother());

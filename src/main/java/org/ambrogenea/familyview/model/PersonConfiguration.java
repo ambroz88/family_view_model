@@ -42,18 +42,18 @@ public class PersonConfiguration {
     private boolean showTemple;
 
     public PersonConfiguration() {
-        adultImageWidth = 250;
-        adultImageHeight = 200;
+        adultImageWidth = 180;
+        adultImageHeight = 130;
         marriageLabelWidth = Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 4 * 3);
         wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
         adultTopOffset = 10;
         adultBottomOffset = 10;
-        siblingImageWidth = 220;
-        siblingImageHeight = 170;
+        siblingImageWidth = 170;
+        siblingImageHeight = 120;
         siblingBottomOffset = 10;
         siblingTopOffset = 10;
-        adultFontSize = 18;
-        siblingFontSize = 16;
+        adultFontSize = 14;
+        siblingFontSize = 13;
 
         adultDiagram = Diagrams.STICKY;
         siblingDiagram = Diagrams.STICKY;

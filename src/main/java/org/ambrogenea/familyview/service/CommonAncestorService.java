@@ -23,7 +23,11 @@ public interface CommonAncestorService {
 
     void addChildrenHeraldry(Position childPosition, Couple spouseCouple);
 
-    int addChildren(Position heraldryPosition, Couple spouseCouple);
+    int generateChildren(Position fatherPosition, Couple spouseCouple);
+
+    Position addParents(Position childPosition, AncestorPerson person);
+
+    Position addRootSpouses(Position rootPersonPosition, AncestorPerson person);
 
     void addStraightChildrenLine(Position childPosition);
 

@@ -32,15 +32,15 @@ public class CloseFamilyTreeService implements TreeService {
                     ancestorService.addSiblingsAroundMother(rootPosition, rootPerson);
                     ancestorService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
                 } else {
-                    Position lastSpouse = ancestorService.addAllSpouses(rootPosition, rootPerson);
+                    Position lastSpouse = ancestorService.addRootSpouses(rootPosition, rootPerson);
                     ancestorService.addSiblingsAroundWives(rootPosition, rootPerson, lastSpouse.getX());
                 }
             } else if (configuration.isShowChildren()) {
 //                ancestorService.drawAllSpousesWithKids(rootPosition, rootPerson);
-                ancestorService.addAllSpouses(rootPosition, rootPerson);
+                ancestorService.addRootSpouses(rootPosition, rootPerson);
                 ancestorService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
             } else {
-                ancestorService.addAllSpouses(rootPosition, rootPerson);
+                ancestorService.addRootSpouses(rootPosition, rootPerson);
             }
         } else if (configuration.isShowSiblings()) {
             ancestorService.drawSiblings(rootPosition, rootPerson);

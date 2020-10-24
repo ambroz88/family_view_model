@@ -56,7 +56,7 @@ public class ParentLineageTreeService implements TreeService {
             if (rootPerson.getFather().getFather() == null && rootPerson.getFather().getMother() == null) {
                 motherX = child.getX() + configuration.getAdultImageWidth() + configuration.getMarriageLabelWidth();
             } else {
-                motherX = child.getX() + configuration.getAdultImageWidth() + configuration.getCoupleWidthVertical();
+                motherX = child.getX() + configuration.getAdultImageWidth() + configuration.getCoupleWidth();
             }
         }
 
@@ -70,14 +70,13 @@ public class ParentLineageTreeService implements TreeService {
         lineageService.generateSpouseAndSiblings(childPosition, rootPerson);
 
         if (configuration.isShowSpouses()) {
-            lineageService.addSpouse(childPosition, rootPerson);
+            lineageService.addRootSpouses(childPosition, rootPerson);
             if (configuration.isShowChildren()) {
                 lineageService.generateChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
             }
         }
 
-        Position LabelPosition = fatherPosition.addX(configuration.getAdultImageWidth() / 2);
-        LabelPosition.addY(-configuration.getMarriageLabelHeight() / 2);
+        Position LabelPosition = fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2,-configuration.getMarriageLabelHeight() / 2);
         int labelWidth = motherX - LabelPosition.getX() - configuration.getAdultImageWidth() / 2;
         lineageService.drawLabel(LabelPosition, labelWidth, rootPerson.getParents().getMarriageDate());
         lineageService.drawLine(childPosition, new Position(centerXPosition, LabelPosition.getY() + configuration.getMarriageLabelHeight()), Line.LINEAGE);

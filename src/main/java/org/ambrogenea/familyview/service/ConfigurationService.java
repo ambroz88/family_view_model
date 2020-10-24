@@ -35,8 +35,6 @@ public interface ConfigurationService {
 
     int getSpouseDistance();
 
-    int getCoupleWidthVertical();
-
     int getCoupleVerticalDifference();
 
     void setAdultImageWidth(int adultImageWidth);

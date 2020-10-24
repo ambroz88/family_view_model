@@ -19,9 +19,7 @@ public class HorizontalPaging implements Paging {
 
     @Override
     public int calculateAllAncestorsX(AncestorPerson person) {
-        return (int) ((config.getCoupleWidth() + SIBLINGS_GAP)
-            * (person.getFather().getLastParentsCount() - person.getFather().getInnerParentsCount()
-            + (person.getFather().getInnerParentsCount() + person.getMother().getInnerParentsCount()) / 2));
+        return (int) ((config.getCoupleWidth() + SIBLINGS_GAP) * person.getFather().getLastParentsCount());
     }
 
     @Override
@@ -193,7 +191,8 @@ public class HorizontalPaging implements Paging {
     @Override
     public int calculateLineageY(AncestorPerson person, int pageHeight) {
         int positionY = pageHeight - VERTICAL_GAP / 2 - config.getAdultImageHeight() / 2;
-        if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
+        if (config.isShowSpouses() && person.getSpouseCouple() != null &&
+            config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
             positionY = positionY - (VERTICAL_GAP + config.getSiblingImageHeight());
         }
         return positionY;

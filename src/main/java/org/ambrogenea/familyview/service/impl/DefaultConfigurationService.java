@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class DefaultConfigurationService implements ConfigurationService {
@@ -72,7 +71,11 @@ public final class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public int getCoupleWidth() {
-        return 2 * getAdultImageWidth() + getMarriageLabelWidth();
+        if (isShowCouplesVertical()) {
+            return 2 * getAdultImageWidth() - (int) (0.25 * getAdultImageWidth());
+        } else {
+            return 2 * getAdultImageWidth() + getMarriageLabelWidth();
+        }
     }
 
     @Override
@@ -82,11 +85,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
         } else {
             return getAdultImageWidth() + getMarriageLabelWidth();
         }
-    }
-
-    @Override
-    public int getCoupleWidthVertical() {
-        return 2 * getAdultImageWidth() - (int) (0.25 * getAdultImageWidth());
     }
 
     @Override
