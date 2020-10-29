@@ -1,15 +1,16 @@
-package org.ambrogenea.familyview.model;
+package org.ambrogenea.familyview.configuration;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.model.FamilyData;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class PersonConfiguration {
 
-    private AncestorModel ancestorModel;
+    private FamilyData familyData;
 
     private int adultImageWidth;
     private int adultImageHeight;
@@ -72,12 +73,12 @@ public class PersonConfiguration {
         showTemple = false;
     }
 
-    public AncestorModel getAncestorModel() {
-        return ancestorModel;
+    public FamilyData getFamilyData() {
+        return familyData;
     }
 
-    public void setAncestorModel(AncestorModel ancestorModel) {
-        this.ancestorModel = ancestorModel;
+    public void setFamilyData(FamilyData familyData) {
+        this.familyData = familyData;
     }
 
     public int getAdultImageWidth() {

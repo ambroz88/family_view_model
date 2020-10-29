@@ -7,17 +7,19 @@ import org.ambrogenea.familyview.model.Couple;
 
 public interface CommonAncestorService {
 
-    void drawPerson(Position center, AncestorPerson person);
+    void addPerson(Position center, AncestorPerson person);
 
-    void drawSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
+    void addRootPerson(Position center, AncestorPerson person);
 
-    void drawYoungerSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
+    void addSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
 
-    void drawOlderSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
+    void addYoungerSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
 
-    void drawLabel(Position labelPosition, int labelWidth, String text);
+    void addOlderSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
 
-    void drawLine(Position start, Position end, int lineType);
+    void addLabel(Position labelPosition, int labelWidth, String text);
+
+    void addLine(Position start, Position end, int lineType);
 
     void addHeraldry(Position childPosition, String simpleBirthPlace);
 

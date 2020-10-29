@@ -23,8 +23,8 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
             motherPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
         );
 
-        drawLabel(label, getConfiguration().getMarriageLabelWidth(), marriageDate);
-        drawPerson(motherPosition, mother);
+        addLabel(label, getConfiguration().getMarriageLabelWidth(), marriageDate);
+        addPerson(motherPosition, mother);
         return motherPosition;
     }
 
@@ -33,7 +33,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
         Position fatherPosition = childPosition.addXAndY(-getConfiguration().getHalfSpouseLabelSpace(),
             -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
-        drawPerson(fatherPosition, father);
+        addPerson(fatherPosition, father);
         return fatherPosition;
     }
 
@@ -66,10 +66,10 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
                     motherPosition = childPosition.addXAndY(halfParentWidth, verticalShift);
                 }
 
-                drawPerson(fatherPosition, child.getFather());
+                addPerson(fatherPosition, child.getFather());
                 Position labelPosition = fatherPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2,
                     -getConfiguration().getMarriageLabelHeight() / 2);
-                drawLabel(labelPosition, motherPosition.getX() - fatherPosition.getX() - getConfiguration().getAdultImageWidth(),
+                addLabel(labelPosition, motherPosition.getX() - fatherPosition.getX() - getConfiguration().getAdultImageWidth(),
                     child.getParents().getMarriageDate());
                 addAllParents(fatherPosition, child.getFather());
             }
@@ -78,7 +78,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
                 addHeraldry(childPosition, child.getSimpleBirthPlace());
             }
 
-            drawPerson(motherPosition, child.getMother());
+            addPerson(motherPosition, child.getMother());
             addAllParents(motherPosition, child.getMother());
             addVerticalLineToParents(childPosition);
         }
@@ -95,8 +95,8 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
                 rootPersonPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
             );
 
-            drawPerson(spouse, person.getSpouse());
-            drawLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple().getMarriageDate());
+            addPerson(spouse, person.getSpouse());
+            addLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple().getMarriageDate());
             return spouse;
         }
         return rootPersonPosition;
@@ -119,8 +119,8 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 //                    Line.SIBLINGS);
         }
 
-        drawOlderSiblings(rootSibling, rootChild);
-        drawYoungerSiblings(spousePosition, rootChild);
+        addOlderSiblings(rootSibling, rootChild);
+        addYoungerSiblings(spousePosition, rootChild);
     }
 
     @Override
@@ -131,14 +131,14 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
             addLineAboveSpouse(rootSibling, spouseGap);
         }
 
-        drawOlderSiblings(rootSibling, rootChild);
-        drawYoungerSiblings(new Position(lastSpouseX, rootSibling.getY()), rootChild);
+        addOlderSiblings(rootSibling, rootChild);
+        addYoungerSiblings(new Position(lastSpouseX, rootSibling.getY()), rootChild);
     }
 
     @Override
     public void addVerticalLineToParents(Position child) {
         int endY = child.getY() - getConfiguration().getAdultImageHeight()
             - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
-        drawLine(child, new Position(child.getX(), endY), Line.LINEAGE);
+        addLine(child, new Position(child.getX(), endY), Line.LINEAGE);
     }
 }

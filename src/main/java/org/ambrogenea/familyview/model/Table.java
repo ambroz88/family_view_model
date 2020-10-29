@@ -1,30 +1,29 @@
-package org.ambrogenea.familyview.domain;
+package org.ambrogenea.familyview.model;
 
-import org.ambrogenea.familyview.model.DataModel;
+import org.ambrogenea.familyview.model.FamilyData;
 import org.ambrogenea.familyview.model.Person;
 
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class Table extends DefaultTableModel {
 
-    private final DataModel dataModel;
+    private final FamilyData familyData;
 
-    public Table(DataModel tree) {
+    public Table(FamilyData tree) {
         super();
         setColumnIdentifiers(getHeaderNames());
-        this.dataModel = tree;
+        this.familyData = tree;
     }
 
     @Override
     public int getRowCount() {
-        if (dataModel == null) {
+        if (familyData == null) {
             return 1;
         }
-        return dataModel.getIndividualsCount();
+        return familyData.getIndividualMap().size();
     }
 
     @Override
@@ -34,7 +33,7 @@ public class Table extends DefaultTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Person chosen = dataModel.getPerson(rowIndex);
+        Person chosen = familyData.getPerson(rowIndex);
         String result = "";
         if (columnIndex == 0) {
             result = chosen.getFirstName();

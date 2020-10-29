@@ -4,8 +4,8 @@ import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
-import org.ambrogenea.familyview.model.AncestorModel;
-import org.ambrogenea.familyview.model.Configuration;
+import org.ambrogenea.familyview.configuration.Configuration;
+import org.ambrogenea.familyview.model.FamilyData;
 import org.ambrogenea.familyview.service.ConfigurationService;
 
 import java.beans.PropertyChangeListener;
@@ -25,13 +25,13 @@ public final class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public AncestorModel getAncestorModel() {
-        return configuration.getAncestorModel();
+    public FamilyData getFamilyData() {
+        return configuration.getFamilyData();
     }
 
     @Override
-    public void setAncestorModel(AncestorModel ancestorModel) {
-        configuration.setAncestorModel(ancestorModel);
+    public void setFamilyData(FamilyData familyData) {
+        configuration.setFamilyData(familyData);
     }
 
     @Override

@@ -13,7 +13,6 @@ public class PersonRecord {
 
     private final String id;
     private final Sex sex;
-    private final int dbPosition;
     private final boolean directLineage;
     private final ArrayList<Residence> residences;
 
@@ -31,7 +30,6 @@ public class PersonRecord {
 
     public PersonRecord(Sex sex, boolean directLineage) {
         this.id = "N/A";
-        this.dbPosition = 0;
         this.sex = sex;
         this.firstName = "";
         this.surname = "";
@@ -61,7 +59,6 @@ public class PersonRecord {
         occupation = person.getOccupation();
         living = person.isLiving();
         directLineage = person.isDirectLineage();
-        dbPosition = person.getPosition();
         residences = new ArrayList<>(person.getResidenceList());
     }
 
@@ -75,6 +72,15 @@ public class PersonRecord {
 
     public String getSurname() {
         return surname;
+    }
+
+    public String getName() {
+        if (getFirstName().isEmpty()) {
+            return getSurname();
+        } else if (getSurname().isEmpty()) {
+            return getFirstName();
+        }
+        return getFirstName() + " " + getSurname();
     }
 
     public Sex getSex() {
@@ -127,10 +133,6 @@ public class PersonRecord {
 
     public Position getPosition() {
         return position;
-    }
-
-    public int getDbPosition() {
-        return dbPosition;
     }
 
     public List<Residence> getResidences() {

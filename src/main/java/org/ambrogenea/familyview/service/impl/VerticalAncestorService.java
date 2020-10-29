@@ -23,8 +23,8 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
             - getConfiguration().getAdultImageHeightAlternative() / 2
             - getConfiguration().getMarriageLabelHeight());
 
-        drawLabel(label, getConfiguration().getMarriageLabelWidth(), marriageDate);
-        drawPerson(motherPosition, mother);
+        addLabel(label, getConfiguration().getMarriageLabelWidth(), marriageDate);
+        addPerson(motherPosition, mother);
         return motherPosition;
     }
 
@@ -34,7 +34,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
             - getConfiguration().getAdultImageHeight()
             - getConfiguration().getMarriageLabelHeight() - Spaces.VERTICAL_GAP;
         Position fatherPosition = new Position(childPosition.getX(), fatherY);
-        drawPerson(fatherPosition, father);
+        addPerson(fatherPosition, father);
         return fatherPosition;
     }
 
@@ -43,9 +43,9 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         if (child.getMother() != null) {
             if (child.getFather() == null) {
                 Position motherPosition = childPosition.addXAndY(0,-configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP);
-                drawPerson(motherPosition, child.getMother());
+                addPerson(motherPosition, child.getMother());
                 addAllParents(motherPosition, child.getMother());
-                drawLine(motherPosition, childPosition, Line.LINEAGE);
+                addLine(motherPosition, childPosition, Line.LINEAGE);
             } else {
                 Position coupleCenterPosition = addParents(childPosition,child);
 
@@ -56,7 +56,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
                 addAllParents(motherPosition, child.getMother());
 
                 Position linePosition = new Position(childPosition.getX(),fatherPosition.getY());
-                drawLine(linePosition, childPosition, Line.LINEAGE);
+                addLine(linePosition, childPosition, Line.LINEAGE);
 
                 if (configuration.isShowHeraldry()) {
                     addHeraldry(childPosition, child.getSimpleBirthPlace());
@@ -118,16 +118,16 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
                 int labelY = (motherY + fatherY) / 2;
 
                 Position fatherPosition = new Position(fatherX, fatherY);
-                drawPerson(fatherPosition, child.getFather());
+                addPerson(fatherPosition, child.getFather());
                 addAllParents(fatherPosition, child.getFather());
 
                 Position motherPosition = new Position(motherX, motherY);
-                drawPerson(motherPosition, child.getMother());
+                addPerson(motherPosition, child.getMother());
                 addAllParents(motherPosition, child.getMother());
 
-                drawLabel(new Position(fatherX, labelY - configuration.getMarriageLabelHeight() / 2),
+                addLabel(new Position(fatherX, labelY - configuration.getMarriageLabelHeight() / 2),
                     configuration.getMarriageLabelWidth(), child.getParents().getMarriageDate());
-                drawLine(new Position(fatherX, labelY), childPosition, Line.LINEAGE);
+                addLine(new Position(fatherX, labelY), childPosition, Line.LINEAGE);
 
                 if (configuration.isShowHeraldry()) {
                     addHeraldry(new Position(fatherX, childY), child.getSimpleBirthPlace());
@@ -145,8 +145,8 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
 
             Position label = rootPersonPosition.addXAndY(0, getConfiguration().getAdultImageHeightAlternative() / 2);
 
-            drawPerson(spouse, person.getSpouse());
-            drawLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple().getMarriageDate());
+            addPerson(spouse, person.getSpouse());
+            addLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple().getMarriageDate());
             return spouse;
         }
         return rootPersonPosition;
@@ -162,13 +162,13 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
 
         if (!rootChild.getYoungerSiblings().isEmpty()) {
             int lineY = rootSibling.getY() - (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
-            drawLine(new Position(rootSibling.getX(), lineY),
+            addLine(new Position(rootSibling.getX(), lineY),
                 new Position(spousePosition.getX(), lineY),
                 Line.SIBLINGS);
         }
 
-        drawOlderSiblings(rootSibling, rootChild);
-        drawYoungerSiblings(spousePosition, rootChild);
+        addOlderSiblings(rootSibling, rootChild);
+        addYoungerSiblings(spousePosition, rootChild);
     }
 
     @Override
@@ -179,8 +179,8 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
             addLineAboveSpouse(rootSibling, spouseGap);
         }
 
-        drawOlderSiblings(rootSibling, rootChild);
-        drawYoungerSiblings(new Position(lastSpouseX, rootSibling.getY()), rootChild);
+        addOlderSiblings(rootSibling, rootChild);
+        addYoungerSiblings(new Position(lastSpouseX, rootSibling.getY()), rootChild);
     }
 
     @Override
@@ -188,6 +188,6 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         int endY = child.getY() - getConfiguration().getAdultImageHeight()
             - getConfiguration().getAdultImageHeightAlternative() / 2
             - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
-        drawLine(child, new Position(child.getX(), endY), Line.LINEAGE);
+        addLine(child, new Position(child.getX(), endY), Line.LINEAGE);
     }
 }

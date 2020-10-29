@@ -1,20 +1,18 @@
 package org.ambrogenea.familyview.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 import org.ambrogenea.familyview.enums.InfoType;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.utils.Tools;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class Person {
 
     private final String id;
-    private int position;
 
     private String firstName;
     private String surname;
@@ -39,7 +37,6 @@ public class Person {
     public Person(Person person) {
         if (person != null) {
             this.id = person.getId();
-            this.position = person.getPosition();
 
             this.firstName = person.getFirstName();
             this.surname = person.getSurname();
@@ -68,7 +65,6 @@ public class Person {
         residenceList = new ArrayList<>();
         parents = new Couple();
         living = true;
-        position = -1;
 
         firstName = "";
         surname = "";
@@ -77,14 +73,6 @@ public class Person {
         deathDate = "";
         deathPlace = "";
         occupation = "";
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     public String getId() {

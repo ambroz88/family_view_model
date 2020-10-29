@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
-import org.ambrogenea.familyview.model.AncestorModel;
+import org.ambrogenea.familyview.model.FamilyData;
 
 /**
  *
@@ -13,9 +13,9 @@ import org.ambrogenea.familyview.model.AncestorModel;
  */
 public interface ConfigurationService {
 
-    AncestorModel getAncestorModel();
+    FamilyData getFamilyData();
 
-    void setAncestorModel(AncestorModel ancestorModel);
+    void setFamilyData(FamilyData ancestorModel);
 
     int getWideMarriageLabel();
 

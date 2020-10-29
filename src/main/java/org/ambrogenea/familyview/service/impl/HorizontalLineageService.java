@@ -20,7 +20,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
                 addSiblingsAroundWives(rootPersonPosition, rootPerson, lastSpouse.getX());
             }
         } else if (getConfiguration().isShowSiblings()) {
-            drawSiblings(rootPersonPosition, rootPerson);
+            addSiblings(rootPersonPosition, rootPerson);
         }
     }
 
@@ -45,7 +45,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
                 generateFathersFamily(fatherPosition, person.getFather());
             } else {
                 Position motherPosition = child.addXAndY(0, getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
-                drawPerson(motherPosition, person.getMother());
+                addPerson(motherPosition, person.getMother());
 
                 generateFathersFamily(motherPosition, person.getMother());
                 if (getConfiguration().isShowSiblings()) {

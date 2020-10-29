@@ -6,6 +6,7 @@ import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
 import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
+import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
@@ -17,7 +18,7 @@ public class AllAncestorTreeService implements TreeService {
     private ConfigurationService configuration;
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, ConfigurationService configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration) {
         this.configuration = configuration;
         if (configuration.isShowCouplesVertical()) {
             specificAncestorService = new VerticalAncestorService(configuration);
@@ -25,8 +26,8 @@ public class AllAncestorTreeService implements TreeService {
             specificAncestorService = new HorizontalAncestorService(configuration);
         }
 
-        drawFirstParents(rootPerson, rootPosition);
-        return specificAncestorService.getTreeModel();
+        drawFirstParents(rootPerson, pageSetup.getRootPosition());
+        return specificAncestorService.getTreeModel().setPageSetup(pageSetup);
     }
 
     private void drawFirstParents(AncestorPerson rootPerson, Position child) {
@@ -47,22 +48,22 @@ public class AllAncestorTreeService implements TreeService {
 
             if (rootPerson.getFather() != null) {
                 Position fatherPosition = new Position(fatherX, parentsY);
-                specificAncestorService.drawPerson(fatherPosition, rootPerson.getFather());
+                specificAncestorService.addPerson(fatherPosition, rootPerson.getFather());
                 specificAncestorService.addGrandParents(rootPerson.getFather(), fatherPosition);
             }
 
             Position motherPosition = new Position(motherX, parentsY);
-            specificAncestorService.drawPerson(motherPosition, rootPerson.getMother());
+            specificAncestorService.addPerson(motherPosition, rootPerson.getMother());
             specificAncestorService.addGrandParents(rootPerson.getMother(), motherPosition);
 
             int halfAdult = configuration.getAdultImageWidth() / 2;
             int labelWidth = motherX - fatherX - configuration.getAdultImageWidth();
-            specificAncestorService.drawLabel(new Position(fatherX + halfAdult, parentsY - configuration.getMarriageLabelHeight() / 2), labelWidth, rootPerson.getParents().getMarriageDate());
+            specificAncestorService.addLabel(new Position(fatherX + halfAdult, parentsY - configuration.getMarriageLabelHeight() / 2), labelWidth, rootPerson.getParents().getMarriageDate());
 
             int newChildX = (fatherX + motherX) / 2;
             Position newChild = new Position(newChildX, child.getY());
-            specificAncestorService.drawPerson(newChild, rootPerson);
-            specificAncestorService.drawLine(new Position(newChildX, parentsY), newChild, Line.LINEAGE);
+            specificAncestorService.addRootPerson(newChild, rootPerson);
+            specificAncestorService.addLine(new Position(newChildX, parentsY), newChild, Line.LINEAGE);
 
             if (configuration.isShowSpouses()) {
                 specificAncestorService.addRootSpouses(newChild, rootPerson);

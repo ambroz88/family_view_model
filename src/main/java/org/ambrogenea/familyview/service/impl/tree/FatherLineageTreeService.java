@@ -5,6 +5,7 @@ import org.ambrogenea.familyview.domain.TreeModel;
 import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
+import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalLineageService;
 import org.ambrogenea.familyview.service.impl.VerticalLineageService;
@@ -12,7 +13,7 @@ import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 public class FatherLineageTreeService implements TreeService {
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, ConfigurationService configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration) {
         LineageService lineageService;
         if (configuration.isShowCouplesVertical()) {
             lineageService = new VerticalLineageService(configuration);
@@ -20,7 +21,8 @@ public class FatherLineageTreeService implements TreeService {
             lineageService = new HorizontalLineageService(configuration);
         }
 
-        lineageService.drawPerson(rootPosition, rootPerson);
+        Position rootPosition = pageSetup.getRootPosition();
+        lineageService.addRootPerson(rootPosition, rootPerson);
         lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
 
         if (rootPerson.getFather() != null) {
@@ -36,7 +38,7 @@ public class FatherLineageTreeService implements TreeService {
             }
         }
 
-        return lineageService.getTreeModel();
+        return lineageService.getTreeModel().setPageSetup(pageSetup);
     }
 
 }

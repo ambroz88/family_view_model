@@ -20,7 +20,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
                 addSiblingsAroundWives(rootPersonPosition, rootPerson, lastSpouse.getX());
             }
         } else if (getConfiguration().isShowSiblings()) {
-            drawSiblings(rootPersonPosition, rootPerson);
+            addSiblings(rootPersonPosition, rootPerson);
         }
     }
 
@@ -45,7 +45,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
                 generateFathersFamily(fatherPosition, person.getFather());
             } else {
                 Position motherPosition = addFather(child, person.getMother());
-                drawLine(child, motherPosition, Line.LINEAGE);
+                addLine(child, motherPosition, Line.LINEAGE);
                 generateFathersFamily(motherPosition, person.getMother());
                 if (getConfiguration().isShowSiblings()) {
                     addSiblingsAroundMother(motherPosition, person.getMother());

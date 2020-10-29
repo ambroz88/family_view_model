@@ -4,6 +4,7 @@ import org.ambrogenea.familyview.domain.Position;
 import org.ambrogenea.familyview.domain.TreeModel;
 import org.ambrogenea.familyview.model.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
+import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
@@ -11,16 +12,18 @@ import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
 public class CloseFamilyTreeService implements TreeService {
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, Position rootPosition, ConfigurationService configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration) {
         SpecificAncestorService ancestorService = new HorizontalAncestorService(configuration);
-        ancestorService.drawPerson(rootPosition, rootPerson);
+        Position rootPosition = pageSetup.getRootPosition();
+        ancestorService.addRootPerson(rootPosition, rootPerson);
 
         if (configuration.isShowParents()) {
-            ancestorService.addFather(rootPosition, rootPerson);
-            ancestorService.addMother(rootPosition, rootPerson, rootPerson.getParents().getMarriageDate());
+            ancestorService.addFather(rootPosition, rootPerson.getFather());
+            ancestorService.addMother(rootPosition, rootPerson.getMother(), rootPerson.getParents().getMarriageDate());
             if (configuration.isShowHeraldry() && !rootPerson.getParents().isEmpty()) {
                 ancestorService.addHeraldry(rootPosition, rootPerson.getSimpleBirthPlace());
             }
+            ancestorService.addVerticalLineToParents(rootPosition);
         }
 
         if (configuration.isShowSpouses()) {
@@ -43,9 +46,9 @@ public class CloseFamilyTreeService implements TreeService {
                 ancestorService.addRootSpouses(rootPosition, rootPerson);
             }
         } else if (configuration.isShowSiblings()) {
-            ancestorService.drawSiblings(rootPosition, rootPerson);
+            ancestorService.addSiblings(rootPosition, rootPerson);
         }
 
-        return ancestorService.getTreeModel();
+        return ancestorService.getTreeModel().setPageSetup(pageSetup);
     }
 }
