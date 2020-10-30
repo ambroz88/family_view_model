@@ -2,7 +2,7 @@ package org.ambrogenea.familyview.service.impl.paging;
 
 import static org.ambrogenea.familyview.constant.Spaces.*;
 
-import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.Paging;
 

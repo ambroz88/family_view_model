@@ -1,7 +1,7 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.FamilyData;
+import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.domain.FamilyData;
 
 public interface SelectionService {
 

@@ -1,4 +1,4 @@
-package org.ambrogenea.familyview.model;
+package org.ambrogenea.familyview.domain;
 
 /**
  *

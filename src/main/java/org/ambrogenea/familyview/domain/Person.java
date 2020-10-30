@@ -1,11 +1,13 @@
-package org.ambrogenea.familyview.model;
-
-import org.ambrogenea.familyview.enums.InfoType;
-import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.utils.Tools;
+package org.ambrogenea.familyview.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.parsing.Information;
+import org.ambrogenea.familyview.enums.InfoType;
+import org.ambrogenea.familyview.enums.Sex;
+import org.ambrogenea.familyview.utils.Tools;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -30,7 +32,7 @@ public class Person {
     private Couple parents;
 
     public Person(String id) {
-        this.id = id.replace(Information.MARKER, "");
+        this.id = id;
         initEmpty();
     }
 
@@ -210,7 +212,7 @@ public class Person {
     }
 
     public void setParentID(String parentID) {
-        this.parentID = parentID.replace(Information.MARKER, "");
+        this.parentID = parentID;
     }
 
     public ArrayList<String> getSpouseID() {
@@ -218,7 +220,7 @@ public class Person {
     }
 
     public void addSpouseID(String spouseID) {
-        getSpouseID().add(spouseID.replace(Information.MARKER, ""));
+        getSpouseID().add(spouseID);
     }
 
     public Couple getParents() {
@@ -307,9 +309,9 @@ public class Person {
                 getLastResidence().setCity(info.getValue());
             }
         } else if (info.getType().equals(InfoType.PARENTS)) {
-            setParentID(info.getValue());
+            setParentID(info.getValue().replace(Information.MARKER, ""));
         } else if (info.getType().equals(InfoType.SPOUSE)) {
-            addSpouseID(info.getValue());
+            addSpouseID(info.getValue().replace(Information.MARKER, ""));
         }
     }
 

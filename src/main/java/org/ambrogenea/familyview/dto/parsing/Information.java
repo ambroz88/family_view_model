@@ -1,4 +1,4 @@
-package org.ambrogenea.familyview.model;
+package org.ambrogenea.familyview.dto.parsing;
 
 import org.ambrogenea.familyview.enums.InfoType;
 

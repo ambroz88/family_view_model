@@ -1,6 +1,6 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.domain.TreeModel;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
 
 public interface IsolatedTreeCreator {
 

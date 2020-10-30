@@ -1,9 +1,12 @@
-package org.ambrogenea.familyview.model;
+package org.ambrogenea.familyview.dto;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.domain.Person;
+import org.ambrogenea.familyview.dto.parsing.Information;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.utils.Tools;
 
@@ -61,7 +64,7 @@ public class AncestorPerson extends Person {
     }
 
     public AncestorPerson(String id, boolean lineage) {
-        super(id);
+        super(id.replace(Information.MARKER, ""));
         this.directLineage = lineage;
         initEmpty();
     }

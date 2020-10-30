@@ -1,8 +1,8 @@
-package org.ambrogenea.familyview.domain;
+package org.ambrogenea.familyview.dto.tree;
 
 import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.model.AncestorPerson;
-import org.ambrogenea.familyview.model.Residence;
+import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.domain.Residence;
 import org.ambrogenea.familyview.utils.Tools;
 
 import java.util.ArrayList;

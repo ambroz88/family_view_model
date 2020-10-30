@@ -1,6 +1,6 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.domain.Position;
+import org.ambrogenea.familyview.dto.tree.Position;
 
 /**
  *

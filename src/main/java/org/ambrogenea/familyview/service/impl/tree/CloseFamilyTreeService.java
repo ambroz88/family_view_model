@@ -1,8 +1,8 @@
 package org.ambrogenea.familyview.service.impl.tree;
 
-import org.ambrogenea.familyview.domain.Position;
-import org.ambrogenea.familyview.domain.TreeModel;
-import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.SpecificAncestorService;

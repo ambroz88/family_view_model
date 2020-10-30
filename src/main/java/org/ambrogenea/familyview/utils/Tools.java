@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.ambrogenea.familyview.domain.PersonRecord;
+import org.ambrogenea.familyview.dto.tree.PersonRecord;
 import org.ambrogenea.familyview.enums.Sex;
 
 /**

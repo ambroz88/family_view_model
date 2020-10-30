@@ -5,8 +5,8 @@ import static org.ambrogenea.familyview.constant.Spaces.RESIDENCE_SIZE;
 import static org.ambrogenea.familyview.constant.Spaces.SIBLINGS_GAP;
 import static org.ambrogenea.familyview.constant.Spaces.VERTICAL_GAP;
 
-import org.ambrogenea.familyview.domain.Position;
-import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 

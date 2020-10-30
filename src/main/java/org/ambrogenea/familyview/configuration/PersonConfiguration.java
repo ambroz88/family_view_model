@@ -3,7 +3,7 @@ package org.ambrogenea.familyview.configuration;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
-import org.ambrogenea.familyview.model.FamilyData;
+import org.ambrogenea.familyview.domain.FamilyData;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>

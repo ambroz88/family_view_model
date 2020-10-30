@@ -1,4 +1,4 @@
-package org.ambrogenea.familyview.domain;
+package org.ambrogenea.familyview.dto.tree;
 
 
 import org.ambrogenea.familyview.constant.Spaces;

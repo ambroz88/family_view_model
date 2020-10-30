@@ -5,7 +5,7 @@ import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
 import org.ambrogenea.familyview.configuration.Configuration;
-import org.ambrogenea.familyview.model.FamilyData;
+import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.service.ConfigurationService;
 
 import java.beans.PropertyChangeListener;

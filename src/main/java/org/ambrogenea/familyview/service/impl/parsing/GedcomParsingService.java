@@ -1,7 +1,10 @@
 package org.ambrogenea.familyview.service.impl.parsing;
 
+import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.parsing.Information;
+import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.enums.InfoType;
-import org.ambrogenea.familyview.model.*;
 import org.ambrogenea.familyview.service.ParsingService;
 
 import java.io.BufferedReader;

@@ -1,7 +1,7 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.domain.TreeModel;
-import org.ambrogenea.familyview.model.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 
 public interface TreeService {
 

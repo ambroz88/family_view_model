@@ -1,6 +1,6 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.model.FamilyData;
+import org.ambrogenea.familyview.domain.FamilyData;
 
 import java.io.IOException;
 import java.io.InputStream;

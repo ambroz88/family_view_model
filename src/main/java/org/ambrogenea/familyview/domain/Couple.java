@@ -1,4 +1,6 @@
-package org.ambrogenea.familyview.model;
+package org.ambrogenea.familyview.domain;
+
+import org.ambrogenea.familyview.dto.AncestorPerson;
 
 import java.util.ArrayList;
 

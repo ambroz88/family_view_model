@@ -1,7 +1,13 @@
-package org.ambrogenea.familyview.model;
+package org.ambrogenea.familyview.domain;
+
+import org.ambrogenea.familyview.dto.AncestorPerson;
 
 import java.util.LinkedHashMap;
 import java.util.Optional;
+
+import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.domain.Person;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 
 /**
  *
@@ -30,16 +36,14 @@ public class FamilyData {
     }
 
     private void addSpouse(AncestorPerson person) {
-        if (!person.getSpouseID().isEmpty()) {
-            for (String coupleID : person.getSpouseID()) {
-                if (spouseMap.containsKey(coupleID)) {
-                    Couple partner = spouseMap.get(coupleID);
-                    partner.addSpouse(person);
-                } else {
-                    spouseMap.put(coupleID, new Couple(person));
-                }
+        person.getSpouseID().forEach(coupleID -> {
+            if (spouseMap.containsKey(coupleID)) {
+                Couple partner = spouseMap.get(coupleID);
+                partner.addSpouse(person);
+            } else {
+                spouseMap.put(coupleID, new Couple(person));
             }
-        }
+        });
     }
 
     public Person getPerson(int index) {
