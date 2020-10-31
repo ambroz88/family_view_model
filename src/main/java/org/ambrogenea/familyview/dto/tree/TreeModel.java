@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ambrogenea.familyview.constant.Spaces;
-import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.domain.Residence;
+import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 
@@ -20,10 +20,12 @@ public class TreeModel {
     protected final Set<ResidenceDto> residences;
     protected final ArrayList<String> cityRegister;
 
+    private String treeName;
     private PersonRecord rootPerson;
     private PageSetup pageSetup;
 
     public TreeModel() {
+        treeName = "";
         persons = new HashSet<>();
         marriages = new HashSet<>();
         lines = new HashSet<>();
@@ -76,6 +78,14 @@ public class TreeModel {
     public TreeModel setPageSetup(PageSetup pageSetup) {
         this.pageSetup = pageSetup;
         return this;
+    }
+
+    public String getTreeName() {
+        return treeName;
+    }
+
+    public void setTreeName(String treeName) {
+        this.treeName = treeName;
     }
 
     public Set<ResidenceDto> getResidences() {

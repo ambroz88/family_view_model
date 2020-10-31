@@ -146,6 +146,7 @@ public class WordGenerator {
             imageRun.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, "", emuWidth, emuHeight);
 
             addFamilyDescription(document);
+            imageStream.close();
         } catch (InvalidFormatException | IOException ex) {
             System.out.println("Image was not added to word document: " + ex.getMessage());
         }

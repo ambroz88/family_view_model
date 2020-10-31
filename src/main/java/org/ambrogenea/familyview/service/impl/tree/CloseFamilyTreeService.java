@@ -1,8 +1,8 @@
 package org.ambrogenea.familyview.service.impl.tree;
 
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
@@ -17,9 +17,13 @@ public class CloseFamilyTreeService implements TreeService {
         Position rootPosition = pageSetup.getRootPosition();
         ancestorService.addRootPerson(rootPosition, rootPerson);
 
-        if (configuration.isShowParents()) {
-            ancestorService.addFather(rootPosition, rootPerson.getFather());
-            ancestorService.addMother(rootPosition, rootPerson.getMother(), rootPerson.getParents().getMarriageDate());
+        if (configuration.isShowParents() && (rootPerson.getParents() != null && !rootPerson.getParents().isEmpty())) {
+            if (rootPerson.getFather() != null) {
+                ancestorService.addFather(rootPosition, rootPerson.getFather());
+                ancestorService.addMother(rootPosition, rootPerson.getMother(), rootPerson.getParents().getMarriageDate());
+            } else {
+                ancestorService.addFather(rootPosition, rootPerson.getMother());
+            }
             if (configuration.isShowHeraldry() && !rootPerson.getParents().isEmpty()) {
                 ancestorService.addHeraldry(rootPosition, rootPerson.getSimpleBirthPlace());
             }
