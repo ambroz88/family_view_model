@@ -1,14 +1,15 @@
 package org.ambrogenea.familyview.service.impl.tree;
 
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalLineageService;
 import org.ambrogenea.familyview.service.impl.VerticalLineageService;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class MotherLineageTreeService implements TreeService {
 
@@ -36,7 +37,10 @@ public class MotherLineageTreeService implements TreeService {
             }
         }
 
-        return lineageService.getTreeModel().setPageSetup(pageSetup);
+        TreeModel treeModel = lineageService.getTreeModel();
+        treeModel.setPageSetup(pageSetup);
+        treeModel.setTreeName("Rodová linie matky " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
 }

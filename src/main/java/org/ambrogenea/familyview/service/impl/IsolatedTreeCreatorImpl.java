@@ -1,11 +1,12 @@
 package org.ambrogenea.familyview.service.impl;
 
-import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.service.*;
 import org.ambrogenea.familyview.service.impl.paging.*;
 import org.ambrogenea.familyview.service.impl.selection.*;
 import org.ambrogenea.familyview.service.impl.tree.*;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
 
@@ -16,7 +17,10 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         PageSetup setup = new AllAncestorPageSetup(configurationService, rootPerson);
 
         TreeService treeService = new AllAncestorTreeService();
-        return treeService.generateTreeModel(rootPerson, setup, configurationService);
+        TreeModel treeModel = treeService.generateTreeModel(rootPerson, setup, configurationService);
+        treeModel.setPageSetup(setup);
+        treeModel.setTreeName("Vývod z předků " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
     @Override
@@ -26,7 +30,10 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         PageSetup setup = new FatherLineagePageSetup(configurationService, rootPerson);
 
         TreeService treeService = new FatherLineageTreeService();
-        return treeService.generateTreeModel(rootPerson, setup, configurationService);
+        TreeModel treeModel = treeService.generateTreeModel(rootPerson, setup, configurationService);
+        treeModel.setPageSetup(setup);
+        treeModel.setTreeName("Rodová linie " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
     @Override
@@ -36,7 +43,10 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         PageSetup setup = new MotherLineagePageSetup(configurationService, rootPerson);
 
         TreeService treeService = new MotherLineageTreeService();
-        return treeService.generateTreeModel(rootPerson, setup, configurationService);
+        TreeModel treeModel = treeService.generateTreeModel(rootPerson, setup, configurationService);
+        treeModel.setPageSetup(setup);
+        treeModel.setTreeName("Rodová linie matky " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
     @Override
@@ -46,7 +56,10 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         PageSetup setup = new ParentLineagePageSetup(configurationService, rootPerson);
 
         TreeService treeService = new ParentLineageTreeService();
-        return treeService.generateTreeModel(rootPerson, setup, configurationService);
+        TreeModel treeModel = treeService.generateTreeModel(rootPerson, setup, configurationService);
+        treeModel.setPageSetup(setup);
+        treeModel.setTreeName("Rodové linie rodičů " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
     @Override
@@ -56,7 +69,10 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         PageSetup setup = new CloseFamilyPageSetup(configurationService, rootPerson);
 
         TreeService treeService = new CloseFamilyTreeService();
-        return treeService.generateTreeModel(rootPerson, setup, configurationService);
+        TreeModel treeModel = treeService.generateTreeModel(rootPerson, setup, configurationService);
+        treeModel.setPageSetup(setup);
+        treeModel.setTreeName("Rodina " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
 }

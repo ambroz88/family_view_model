@@ -5,10 +5,11 @@ import static org.ambrogenea.familyview.constant.Spaces.RESIDENCE_SIZE;
 import static org.ambrogenea.familyview.constant.Spaces.SIBLINGS_GAP;
 import static org.ambrogenea.familyview.constant.Spaces.VERTICAL_GAP;
 
-import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class CloseFamilyPageSetup implements PageSetup {
 
@@ -76,7 +77,7 @@ public class CloseFamilyPageSetup implements PageSetup {
 
     private int calculatePageHeight(AncestorPerson personModel) {
         int generationHeight = config.getAdultImageHeight() + VERTICAL_GAP;
-        return generationHeight * calculateGenerations(personModel);
+        return generationHeight * Tools.calculateGenerations(personModel, config);
     }
 
     private int calculatePageWidth(AncestorPerson personModel) {
@@ -129,18 +130,6 @@ public class CloseFamilyPageSetup implements PageSetup {
         }
 
         return width;
-    }
-
-    public int calculateGenerations(AncestorPerson personModel) {
-        int generationCount = 1;
-
-        if (config.isShowParents() && !personModel.getParents().isEmpty()) {
-            generationCount++;
-        }
-        if (config.isShowChildren() && personModel.getAllChildrenCount() > 0) {
-            generationCount++;
-        }
-        return generationCount;
     }
 
 }

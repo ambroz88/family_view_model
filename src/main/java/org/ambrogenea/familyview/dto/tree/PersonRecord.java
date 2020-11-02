@@ -1,15 +1,16 @@
 package org.ambrogenea.familyview.dto.tree;
 
-import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.domain.Residence;
-import org.ambrogenea.familyview.utils.Tools;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PersonRecord {
+import org.ambrogenea.familyview.domain.Personalize;
+import org.ambrogenea.familyview.domain.Residence;
+import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.enums.Sex;
+import org.ambrogenea.familyview.utils.Tools;
+
+public class PersonRecord implements Personalize {
 
     private final String id;
     private final Sex sex;
@@ -66,14 +67,17 @@ public class PersonRecord {
         return id;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public String getSurname() {
         return surname;
     }
 
+    @Override
     public String getName() {
         if (getFirstName().isEmpty()) {
             return getSurname();
@@ -83,6 +87,7 @@ public class PersonRecord {
         return getFirstName() + " " + getSurname();
     }
 
+    @Override
     public Sex getSex() {
         return sex;
     }

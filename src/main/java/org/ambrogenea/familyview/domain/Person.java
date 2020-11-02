@@ -12,7 +12,7 @@ import org.ambrogenea.familyview.utils.Tools;
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class Person {
+public class Person implements Personalize {
 
     private final String id;
 
@@ -81,6 +81,7 @@ public class Person {
         return id;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
@@ -89,6 +90,7 @@ public class Person {
         this.firstName = firstName;
     }
 
+    @Override
     public String getSurname() {
         return surname;
     }
@@ -97,6 +99,7 @@ public class Person {
         this.surname = surname;
     }
 
+    @Override
     public String getName() {
         if (getFirstName().isEmpty()) {
             return getSurname();
@@ -121,6 +124,7 @@ public class Person {
         }
     }
 
+    @Override
     public Sex getSex() {
         return sex;
     }

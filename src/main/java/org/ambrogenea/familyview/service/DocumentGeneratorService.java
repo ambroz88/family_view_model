@@ -1,10 +1,9 @@
 package org.ambrogenea.familyview.service;
 
-import java.io.InputStream;
 import java.util.List;
 
 import org.ambrogenea.familyview.domain.FamilyData;
-import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.dto.parsing.DocumentInputs;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
@@ -13,8 +12,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  */
 public interface DocumentGeneratorService {
 
-    List<TreeModel> generateFamilies(String personId, FamilyData familyData);
+    List<DocumentInputs> generateFamilies(String personId, FamilyData familyData);
 
-    XWPFDocument generateDocument(List<InputStream> familyImages);
+    XWPFDocument generateDocument(List<DocumentInputs> familyInputs);
 
 }

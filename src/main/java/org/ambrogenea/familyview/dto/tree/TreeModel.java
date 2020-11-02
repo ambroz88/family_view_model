@@ -75,9 +75,8 @@ public class TreeModel {
         return pageSetup;
     }
 
-    public TreeModel setPageSetup(PageSetup pageSetup) {
+    public void setPageSetup(PageSetup pageSetup) {
         this.pageSetup = pageSetup;
-        return this;
     }
 
     public String getTreeName() {

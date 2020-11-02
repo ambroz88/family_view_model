@@ -1,16 +1,17 @@
 package org.ambrogenea.familyview.service.impl.tree;
 
 import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
 import org.ambrogenea.familyview.service.impl.VerticalAncestorService;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class AllAncestorTreeService implements TreeService {
 
@@ -27,7 +28,11 @@ public class AllAncestorTreeService implements TreeService {
         }
 
         drawFirstParents(rootPerson, pageSetup.getRootPosition());
-        return specificAncestorService.getTreeModel().setPageSetup(pageSetup);
+
+        TreeModel treeModel = specificAncestorService.getTreeModel();
+        treeModel.setPageSetup(pageSetup);
+        treeModel.setTreeName("Vývod z předků " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
     private void drawFirstParents(AncestorPerson rootPerson, Position child) {

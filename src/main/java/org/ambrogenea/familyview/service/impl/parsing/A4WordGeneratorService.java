@@ -1,11 +1,11 @@
 package org.ambrogenea.familyview.service.impl.parsing;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.parsing.DocumentInputs;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.DocumentGeneratorService;
@@ -13,24 +13,21 @@ import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.paging.CloseFamilyPageSetup;
 import org.ambrogenea.familyview.service.impl.selection.FathersSelectionService;
 import org.ambrogenea.familyview.service.impl.tree.CloseFamilyTreeService;
+import org.ambrogenea.familyview.utils.Tools;
 import org.ambrogenea.familyview.word.WordGenerator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 public class A4WordGeneratorService implements DocumentGeneratorService {
 
     private final ConfigurationService configuration;
-    private final List<TreeModel> treeModels;
-    private final List<Integer> generationCounts;
 
     public A4WordGeneratorService(ConfigurationService configuration) {
         this.configuration = configuration;
-        this.treeModels = new ArrayList<>();
-        this.generationCounts = new ArrayList<>();
     }
 
     @Override
-    public List<TreeModel> generateFamilies(String personId, FamilyData familyData) {
-
+    public List<DocumentInputs> generateFamilies(String personId, FamilyData familyData) {
+        List<DocumentInputs> inputs = new ArrayList<>();
         FathersSelectionService fathersSelectionService = new FathersSelectionService(familyData);
         AncestorPerson rootPerson = fathersSelectionService.select(personId, 20);
 
@@ -40,7 +37,7 @@ public class A4WordGeneratorService implements DocumentGeneratorService {
 
             while (actualPerson != null) {
                 if (generations < configuration.getGenerationCount()) {
-                    treeModels.add(generateFamilyTree(actualPerson));
+                    inputs.add(generateFamilyTree(actualPerson));
 
                     actualPerson = actualPerson.getFather();
                     generations++;
@@ -50,32 +47,34 @@ public class A4WordGeneratorService implements DocumentGeneratorService {
             }
         }
 
-        return treeModels;
+        return inputs;
     }
 
     @Override
-    public XWPFDocument generateDocument(List<InputStream> familyImages) {
+    public XWPFDocument generateDocument(List<DocumentInputs> familyInputs) {
         XWPFDocument doc = WordGenerator.createWordDocument(WordGenerator.FORMAT_A4);
-        TreeModel model;
+        TreeModel treeModel;
 
-        for (int i = 0; i < familyImages.size(); i++) {
-            model = treeModels.get(i);
-            WordGenerator.setMaxHeight(generationCounts.get(i));
-            WordGenerator.createFamilyPage(doc, model.getTreeName());
-            WordGenerator.addImageToPage(doc, familyImages.get(i), model.getPageSetup().getWidth(), model.getPageSetup().getHeight());
+        for (DocumentInputs input : familyInputs) {
+            treeModel = input.getTreeModel();
+            WordGenerator.setMaxHeight(input.getGenerationsShown());
+            WordGenerator.createFamilyPage(doc, treeModel.getTreeName());
+            WordGenerator.addImageToPage(doc, input.getImageStream(),
+                     treeModel.getPageSetup().getWidth(), treeModel.getPageSetup().getHeight());
         }
 
         return doc;
     }
 
-    private TreeModel generateFamilyTree(AncestorPerson actualPerson) {
+    private DocumentInputs generateFamilyTree(AncestorPerson actualPerson) {
+        DocumentInputs input = new DocumentInputs();
+
         CloseFamilyPageSetup setup = new CloseFamilyPageSetup(configuration, actualPerson);
-        generationCounts.add(setup.calculateGenerations(actualPerson));
+        input.setGenerationsShown(Tools.calculateGenerations(actualPerson, configuration));
 
         TreeService closeFamilyTreeService = new CloseFamilyTreeService();
-        TreeModel model = closeFamilyTreeService.generateTreeModel(actualPerson, setup, configuration);
-        model.setTreeName("Rodina " + actualPerson.getName());
-        return model;
+        input.setTreeModel(closeFamilyTreeService.generateTreeModel(actualPerson, setup, configuration));
+        return input;
     }
 
 }

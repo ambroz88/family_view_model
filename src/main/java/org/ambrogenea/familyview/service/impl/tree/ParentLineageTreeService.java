@@ -1,16 +1,17 @@
 package org.ambrogenea.familyview.service.impl.tree;
 
 import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalLineageService;
 import org.ambrogenea.familyview.service.impl.VerticalLineageService;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class ParentLineageTreeService implements TreeService {
 
@@ -35,7 +36,10 @@ public class ParentLineageTreeService implements TreeService {
             lineageService.generateMotherFamily(rootPosition, rootPerson);
         }
 
-        return lineageService.getTreeModel().setPageSetup(pageSetup);
+        TreeModel treeModel = lineageService.getTreeModel();
+        treeModel.setPageSetup(pageSetup);
+        treeModel.setTreeName("Rodové linie rodičů " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 
     private void drawParentsLineage(AncestorPerson rootPerson, Position child) {
@@ -78,7 +82,7 @@ public class ParentLineageTreeService implements TreeService {
             }
         }
 
-        Position LabelPosition = fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2,-configuration.getMarriageLabelHeight() / 2);
+        Position LabelPosition = fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2, -configuration.getMarriageLabelHeight() / 2);
         int labelWidth = motherX - LabelPosition.getX() - configuration.getAdultImageWidth() / 2;
         lineageService.addLabel(LabelPosition, labelWidth, rootPerson.getParents().getMarriageDate());
         lineageService.addLine(childPosition, new Position(centerXPosition, LabelPosition.getY() + configuration.getMarriageLabelHeight()), Line.LINEAGE);

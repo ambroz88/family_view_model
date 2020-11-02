@@ -8,6 +8,7 @@ import org.ambrogenea.familyview.service.PageSetup;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
+import org.ambrogenea.familyview.utils.Tools;
 
 public class CloseFamilyTreeService implements TreeService {
 
@@ -53,6 +54,9 @@ public class CloseFamilyTreeService implements TreeService {
             ancestorService.addSiblings(rootPosition, rootPerson);
         }
 
-        return ancestorService.getTreeModel().setPageSetup(pageSetup);
+        TreeModel treeModel = ancestorService.getTreeModel();
+        treeModel.setPageSetup(pageSetup);
+        treeModel.setTreeName("Rodina " + Tools.getNameIn2ndFall(rootPerson));
+        return treeModel;
     }
 }
