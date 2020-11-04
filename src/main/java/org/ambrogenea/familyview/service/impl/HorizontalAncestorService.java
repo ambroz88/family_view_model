@@ -1,9 +1,9 @@
 package org.ambrogenea.familyview.service.impl;
 
 import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 
@@ -16,11 +16,11 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     @Override
     public Position addMother(Position childPosition, AncestorPerson mother, String marriageDate) {
         Position motherPosition = childPosition.addXAndY(getConfiguration().getHalfSpouseLabelSpace(),
-            -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
         Position label = new Position(
-            childPosition.getX() - getConfiguration().getMarriageLabelWidth() / 2,
-            motherPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
+                childPosition.getX() - getConfiguration().getMarriageLabelWidth() / 2,
+                motherPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
         );
 
         addLabel(label, getConfiguration().getMarriageLabelWidth(), marriageDate);
@@ -31,7 +31,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     @Override
     public Position addFather(Position childPosition, AncestorPerson father) {
         Position fatherPosition = childPosition.addXAndY(-getConfiguration().getHalfSpouseLabelSpace(),
-            -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
 
         addPerson(fatherPosition, father);
         return fatherPosition;
@@ -68,9 +68,9 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 
                 addPerson(fatherPosition, child.getFather());
                 Position labelPosition = fatherPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2,
-                    -getConfiguration().getMarriageLabelHeight() / 2);
+                        -getConfiguration().getMarriageLabelHeight() / 2);
                 addLabel(labelPosition, motherPosition.getX() - fatherPosition.getX() - getConfiguration().getAdultImageWidth(),
-                    child.getParents().getMarriageDate());
+                        child.getParents().getMarriageDate());
                 addAllParents(fatherPosition, child.getFather());
             }
 
@@ -88,11 +88,11 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     public Position addSpouse(Position rootPersonPosition, AncestorPerson person) {
         if (person.getSpouse() != null) {
             Position spouse = rootPersonPosition.addXAndY(
-                getConfiguration().getMarriageLabelWidth() + getConfiguration().getAdultImageWidth(), 0);
+                    getConfiguration().getMarriageLabelWidth() + getConfiguration().getAdultImageWidth(), 0);
 
             Position label = new Position(
-                rootPersonPosition.getX() + getConfiguration().getAdultImageWidth() / 2,
-                rootPersonPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
+                    rootPersonPosition.getX() + getConfiguration().getAdultImageWidth() / 2,
+                    rootPersonPosition.getY() - getConfiguration().getMarriageLabelHeight() / 2
             );
 
             addPerson(spouse, person.getSpouse());
@@ -138,7 +138,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     @Override
     public void addVerticalLineToParents(Position child) {
         int endY = child.getY() - getConfiguration().getAdultImageHeight()
-            - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
+                - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
         addLine(child, new Position(child.getX(), endY), Line.LINEAGE);
     }
 }

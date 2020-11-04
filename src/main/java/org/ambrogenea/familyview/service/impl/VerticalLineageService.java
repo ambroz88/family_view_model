@@ -1,9 +1,9 @@
 package org.ambrogenea.familyview.service.impl;
 
-import org.ambrogenea.familyview.service.ConfigurationService;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
-import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 
 public class VerticalLineageService extends VerticalAncestorService implements LineageService {

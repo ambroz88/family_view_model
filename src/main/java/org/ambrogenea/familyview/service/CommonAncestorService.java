@@ -3,7 +3,7 @@ package org.ambrogenea.familyview.service;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.dto.AncestorCouple;
 
 public interface CommonAncestorService {
 
@@ -23,9 +23,9 @@ public interface CommonAncestorService {
 
     void addHeraldry(Position childPosition, String simpleBirthPlace);
 
-    void addChildrenHeraldry(Position childPosition, Couple spouseCouple);
+    void addChildrenHeraldry(Position childPosition, AncestorCouple spouseCouple);
 
-    int generateChildren(Position fatherPosition, Couple spouseCouple);
+    int generateChildren(Position fatherPosition, AncestorCouple spouseCouple);
 
     Position addParents(Position childPosition, AncestorPerson person);
 

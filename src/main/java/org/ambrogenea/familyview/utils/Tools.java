@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.ambrogenea.familyview.domain.Person;
 import org.ambrogenea.familyview.domain.Personalize;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.PersonRecord;
@@ -218,4 +219,13 @@ public final class Tools {
 
         return firstName + " " + surName;
     }
+
+    public static AncestorPerson createEmtpyWoman() {
+        Person woman = new Person("0000");
+        woman.setSex(Sex.FEMALE);
+        AncestorPerson mother = new AncestorPerson(woman);
+        mother.setDirectLineage(true);
+        return mother;
+    }
+
 }

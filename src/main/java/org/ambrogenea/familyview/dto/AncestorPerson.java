@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.ambrogenea.familyview.domain.Couple;
 import org.ambrogenea.familyview.domain.Person;
-import org.ambrogenea.familyview.dto.parsing.Information;
+import org.ambrogenea.familyview.domain.Personalize;
+import org.ambrogenea.familyview.domain.Residence;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.utils.Tools;
 
@@ -14,18 +14,34 @@ import org.ambrogenea.familyview.utils.Tools;
  *
  * @author Jiri Ambroz
  */
-public class AncestorPerson extends Person {
+public class AncestorPerson implements Personalize {
 
     public static final int CODE_MALE = -1;
     public static final int CODE_FEMALE = 1;
+
+    private final String id;
+
+    private String firstName;
+    private String surname;
+    private Sex sex;
+    private String birthDate;
+    private String birthPlace;
+    private String deathDate;
+    private String deathPlace;
+    private String occupation;
+    private boolean living;
+    private boolean directLineage;
+
+    private ArrayList<Residence> residenceList;
+
+    private AncestorCouple parents;
+    private LinkedList<AncestorCouple> spouses;
 
     private ArrayList<Integer> ancestorLine;
     private LinkedList<AncestorPerson> youngerSiblings;
     private LinkedList<AncestorPerson> olderSiblings;
     private int maxYoungerSiblingsSpouse;
     private int maxOlderSiblingsSpouse;
-    private LinkedList<Couple> spouses;
-    private boolean directLineage;
     private int ancestorGenerations;
     private double lastParentsCount;
     private double innerParentsCount;
@@ -33,9 +49,19 @@ public class AncestorPerson extends Person {
     private int maxYoungerSiblings;
 
     public AncestorPerson(AncestorPerson person) {
-        super(person);
-
         if (person != null) {
+            this.id = person.getId();
+            this.firstName = person.getFirstName();
+            this.surname = person.getSurname();
+            this.sex = person.getSex();
+            this.living = person.isLiving();
+            this.birthDate = person.getBirthDate();
+            this.birthPlace = person.getBirthPlace();
+            this.deathDate = person.getDeathDate();
+            this.deathPlace = person.getDeathPlace();
+            this.occupation = person.getOccupation();
+            this.residenceList = person.getResidenceList();
+
             initSiblings();
             directLineage = person.isDirectLineage();
             innerParentsCount = person.getInnerParentsCount();
@@ -51,30 +77,48 @@ public class AncestorPerson extends Person {
                 this.spouses = new LinkedList<>();
             }
         } else {
-            directLineage = false;
+            this.directLineage = false;
+            this.id = "";
             initEmpty();
         }
     }
 
-    public AncestorPerson(Person person, boolean lineage) {
-        super(person);
-        this.directLineage = lineage;
-        initEmpty();
-        this.setSex(person.getSex());
-    }
+    public AncestorPerson(Person person) {
+        this.id = person.getId();
+        this.firstName = person.getFirstName();
+        this.surname = person.getSurname();
+        this.sex = person.getSex();
+        this.living = person.isLiving();
+        this.birthDate = person.getBirthDate();
+        this.birthPlace = person.getBirthPlace();
+        this.deathDate = person.getDeathDate();
+        this.deathPlace = person.getDeathPlace();
+        this.occupation = person.getOccupation();
+        this.residenceList = person.getResidenceList();
 
-    public AncestorPerson(String id, boolean lineage) {
-        super(id.replace(Information.MARKER, ""));
-        this.directLineage = lineage;
+        fillAncestorLine();
         initEmpty();
     }
 
     private void initEmpty() {
+        residenceList = new ArrayList<>();
+        living = false;
+        directLineage = true;
+
+        firstName = "";
+        surname = "";
+        birthDate = "";
+        birthPlace = "";
+        deathDate = "";
+        deathPlace = "";
+        occupation = "";
+
         ancestorGenerations = 0;
         lastParentsCount = 0;
         innerParentsCount = 0;
         ancestorLine = new ArrayList<>();
         spouses = new LinkedList<>();
+        residenceList = new ArrayList<>();
         initSiblings();
     }
 
@@ -87,9 +131,7 @@ public class AncestorPerson extends Person {
         maxYoungerSiblings = 0;
     }
 
-    @Override
-    public final void setSex(Sex sex) {
-        super.setSex(sex);
+    private void fillAncestorLine() {
         ancestorLine.clear();
         if (sex.equals(Sex.MALE)) {
             ancestorLine.add(CODE_MALE);
@@ -98,9 +140,8 @@ public class AncestorPerson extends Person {
         }
     }
 
-    @Override
     public void setFather(AncestorPerson father) {
-        super.setFather(father);
+        parents.setHusband(father);
 
         if (getFather() != null) {
             double fatherParentsCount = getFather().getLastParentsCount();
@@ -127,9 +168,8 @@ public class AncestorPerson extends Person {
         }
     }
 
-    @Override
     public void setMother(AncestorPerson mother) {
-        super.setMother(mother);
+        parents.setWife(mother);
 
         if (getMother() != null) {
             double motherParentsCount = getMother().getLastParentsCount();
@@ -155,23 +195,32 @@ public class AncestorPerson extends Person {
         }
     }
 
-    @Override
-    public void setParents(Couple parents) {
-        super.setParents(parents);
+    public void setParents(AncestorCouple parents) {
+        this.parents = parents;
         if (parents != null && !parents.isEmpty()) {
             if (getFather() == null) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
-                AncestorPerson mother = new AncestorPerson("000", true);
-                mother.setSex(Sex.FEMALE);
-                setMother(mother);
+                setMother(Tools.createEmtpyWoman());
             } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
             }
         }
+    }
+
+    public AncestorCouple getParents() {
+        return parents;
+    }
+
+    public AncestorPerson getFather() {
+        return parents.getHusband();
+    }
+
+    public AncestorPerson getMother() {
+        return parents.getWife();
     }
 
     public boolean isDirectLineage() {
@@ -315,7 +364,7 @@ public class AncestorPerson extends Person {
         }
     }
 
-    public Couple getSpouseCouple() {
+    public AncestorCouple getSpouseCouple() {
         if (spouses.isEmpty()) {
             return null;
         } else {
@@ -323,7 +372,7 @@ public class AncestorPerson extends Person {
         }
     }
 
-    public Couple getSpouseCouple(int index) {
+    public AncestorCouple getSpouseCouple(int index) {
         if (spouses.isEmpty() || index >= spouses.size()) {
             return null;
         } else {
@@ -331,21 +380,25 @@ public class AncestorPerson extends Person {
         }
     }
 
-    public LinkedList<Couple> getSpouseCouples() {
+    public LinkedList<AncestorCouple> getSpouseCouples() {
         return spouses;
     }
 
-    public void addSpouseCouple(Couple spouse) {
+    public void setSpouseCouples(LinkedList<AncestorCouple> spouses) {
+        this.spouses = spouses;
+    }
+
+    public void addSpouseCouple(AncestorCouple spouse) {
         if (spouse != null) {
             if (!this.spouses.isEmpty()) {
-                Couple lastCouple = this.spouses.get(spouses.size() - 1);
+                AncestorCouple lastCouple = this.spouses.get(spouses.size() - 1);
                 if (Tools.isEarlier(spouse.getMarriageDateEnglish(), lastCouple.getMarriageDateEnglish())) {
-                    this.spouses.add(this.spouses.size() - 1, new Couple(spouse));
+                    this.spouses.add(this.spouses.size() - 1, new AncestorCouple(spouse));
                 } else {
-                    this.spouses.add(new Couple(spouse));
+                    this.spouses.add(new AncestorCouple(spouse));
                 }
             } else {
-                this.spouses.add(new Couple(spouse));
+                this.spouses.add(new AncestorCouple(spouse));
             }
         }
     }
@@ -360,10 +413,71 @@ public class AncestorPerson extends Person {
 
     public int getAllChildrenCount() {
         int count = 0;
-        for (Couple spouse : getSpouseCouples()) {
+        for (AncestorCouple spouse : getSpouseCouples()) {
             count = count + spouse.getChildrenIndexes().size();
         }
         return count;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getName() {
+        if (getFirstName().isEmpty()) {
+            return getSurname();
+        } else if (getSurname().isEmpty()) {
+            return getFirstName();
+        }
+        return getFirstName() + " " + getSurname();
+    }
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public String getBirthPlace() {
+        return birthPlace;
+    }
+
+    public String getSimpleBirthPlace() {
+        return birthPlace.split(",")[0];
+    }
+
+    public String getDeathDate() {
+        return deathDate;
+    }
+
+    public String getDeathPlace() {
+        return deathPlace;
+    }
+
+    public String getSimpleDeathPlace() {
+        return deathPlace.split(",")[0];
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public boolean isLiving() {
+        return living;
+    }
+
+    public ArrayList<Residence> getResidenceList() {
+        return residenceList;
     }
 
     @Override

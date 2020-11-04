@@ -1,18 +1,18 @@
 package org.ambrogenea.familyview.service.impl.parsing;
 
-import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.parsing.Information;
-import org.ambrogenea.familyview.domain.Couple;
-import org.ambrogenea.familyview.domain.FamilyData;
-import org.ambrogenea.familyview.enums.InfoType;
-import org.ambrogenea.familyview.service.ParsingService;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+
+import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.domain.FamilyData;
+import org.ambrogenea.familyview.domain.Person;
+import org.ambrogenea.familyview.dto.parsing.Information;
+import org.ambrogenea.familyview.enums.InfoType;
+import org.ambrogenea.familyview.service.ParsingService;
 
 public class GedcomParsingService implements ParsingService {
 
@@ -36,7 +36,7 @@ public class GedcomParsingService implements ParsingService {
 
     private FamilyData parseGEDCOMLines(ArrayList<String> rows) {
         Information info;
-        AncestorPerson person = null;
+        Person person = null;
         InfoType lastType = InfoType.INDIVIDUAL;
         Couple couple = new Couple();
         FamilyData familyData = new FamilyData();
@@ -49,7 +49,7 @@ public class GedcomParsingService implements ParsingService {
             if (recordType.equals(InfoType.INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     familyData.addPerson(person);
-                    person = new AncestorPerson(info.getValue(), true);
+                    person = new Person(info.getValue());
                 } else if (person != null) {
                     person.setInformation(info, lastType);
                 }
@@ -60,7 +60,16 @@ public class GedcomParsingService implements ParsingService {
                     person = null;
                     couple = familyData.getSpouseMap().get(info.getValue().replace(Information.MARKER, ""));
                 } else if (info.getType().equals(InfoType.CHILD)) {
-                    couple.addChildrenIndex(info.getValue().replace(Information.MARKER, ""));
+                    String childId = info.getValue().replace(Information.MARKER, "");
+                    couple.addChildrenIndex(childId);
+                    Person child = familyData.getIndividualMap().get(childId);
+                    if (couple.hasHusband()) {
+                        child.setFatherId(couple.getHusband().getId());
+                    }
+                    if (couple.hasWife()) {
+                        child.setMotherId(couple.getWife().getId());
+                    }
+
                 } else if (info.getType().equals(InfoType.DATE) && lastType.equals(InfoType.MARRIAGE)) {
                     couple.setMarriageDate(info.getValue());
                 } else if (info.getType().equals(InfoType.PLACE) && lastType.equals(InfoType.MARRIAGE)) {

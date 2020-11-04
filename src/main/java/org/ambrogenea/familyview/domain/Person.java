@@ -3,7 +3,6 @@ package org.ambrogenea.familyview.domain;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.parsing.Information;
 import org.ambrogenea.familyview.enums.InfoType;
 import org.ambrogenea.familyview.enums.Sex;
@@ -29,7 +28,8 @@ public class Person implements Personalize {
     private ArrayList<String> spouseID;
     private ArrayList<Residence> residenceList;
 
-    private Couple parents;
+    private String fatherId;
+    private String motherId;
 
     public Person(String id) {
         this.id = id;
@@ -50,11 +50,10 @@ public class Person implements Personalize {
             this.deathPlace = person.getDeathPlace();
             this.occupation = person.getOccupation();
             this.residenceList = person.getResidenceList();
+            this.fatherId = person.getFatherId();
+            this.motherId = person.getMotherId();
             this.parentID = person.getParentID();
             this.spouseID = person.getSpouseID();
-            if (person.getParents() != null) {
-                this.parents = new Couple(person.getParents());
-            }
 
         } else {
             this.id = "";
@@ -65,7 +64,6 @@ public class Person implements Personalize {
     private void initEmpty() {
         spouseID = new ArrayList<>();
         residenceList = new ArrayList<>();
-        parents = new Couple();
         living = true;
 
         firstName = "";
@@ -75,6 +73,9 @@ public class Person implements Personalize {
         deathDate = "";
         deathPlace = "";
         occupation = "";
+
+        fatherId = "";
+        motherId = "";
     }
 
     public String getId() {
@@ -227,28 +228,20 @@ public class Person implements Personalize {
         getSpouseID().add(spouseID);
     }
 
-    public Couple getParents() {
-        return parents;
+    public String getFatherId() {
+        return fatherId;
     }
 
-    public void setFather(AncestorPerson father) {
-        getParents().setHusband(father);
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
     }
 
-    public AncestorPerson getFather() {
-        return getParents().getHusband();
+    public String getMotherId() {
+        return motherId;
     }
 
-    public void setMother(AncestorPerson mother) {
-        getParents().setWife(mother);
-    }
-
-    public AncestorPerson getMother() {
-        return getParents().getWife();
-    }
-
-    public void setParents(Couple parents) {
-        this.parents = new Couple(parents);
+    public void setMotherId(String motherId) {
+        this.motherId = motherId;
     }
 
     public boolean isChild() {
@@ -321,7 +314,7 @@ public class Person implements Personalize {
 
     @Override
     public String toString() {
-        return getName() + "; parents: " + parents;
+        return getName();
     }
 
 }

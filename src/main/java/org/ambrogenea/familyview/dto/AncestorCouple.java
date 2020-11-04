@@ -1,8 +1,8 @@
-package org.ambrogenea.familyview.domain;
+package org.ambrogenea.familyview.dto;
 
 import java.util.ArrayList;
 
-import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.domain.Couple;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.utils.Tools;
 
@@ -10,39 +10,63 @@ import org.ambrogenea.familyview.utils.Tools;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class Couple {
+public class AncestorCouple {
 
     private ArrayList<String> childrenID;
     private ArrayList<AncestorPerson> children;
 
-    private Person wife;
-    private Person husband;
+    private AncestorPerson wife;
+    private AncestorPerson husband;
     private String marriageDate;
     private String marriagePlace;
 
-    public Couple() {
+    public AncestorCouple() {
         initEmpty();
     }
 
-    public Couple(Person husband, Person wife) {
+    public AncestorCouple(AncestorPerson husband, AncestorPerson wife) {
         this.husband = husband;
         this.wife = wife;
         initEmpty();
     }
 
-    public Couple(Person person) {
-        addSpouse(person);
+    public AncestorCouple(AncestorPerson person) {
+        if (person.getSex().equals(Sex.MALE)) {
+            husband = person;
+        } else if (person.getSex().equals(Sex.FEMALE)) {
+            wife = person;
+        }
         initEmpty();
     }
 
-    public Couple(Couple couple) {
+    public AncestorCouple(Couple couple) {
         if (couple != null) {
             if (couple.getHusband() != null) {
-                this.husband = new Person(couple.getHusband());
+                this.husband = new AncestorPerson(couple.getHusband());
+                this.husband.setDirectLineage(true);
             }
 
             if (couple.getWife() != null) {
-                this.wife = new Person(couple.getWife());
+                this.wife = new AncestorPerson(couple.getWife());
+                this.wife.setDirectLineage(true);
+            }
+            this.childrenID = couple.getChildrenIndexes();
+            this.children = new ArrayList<>(couple.getChildren());
+            this.marriageDate = couple.getMarriageDateEnglish();
+            this.marriagePlace = couple.getMarriagePlace();
+        } else {
+            initEmpty();
+        }
+    }
+
+    public AncestorCouple(AncestorCouple couple) {
+        if (couple != null) {
+            if (couple.getHusband() != null) {
+                this.husband = new AncestorPerson(couple.getHusband());
+            }
+
+            if (couple.getWife() != null) {
+                this.wife = new AncestorPerson(couple.getWife());
             }
             this.childrenID = couple.getChildrenIndexes();
             this.children = new ArrayList<>(couple.getChildren());
@@ -60,19 +84,11 @@ public class Couple {
         marriagePlace = "";
     }
 
-    public void addSpouse(Person person) {
-        if (person.getSex().equals(Sex.MALE)) {
-            setHusband(person);
-        } else if (person.getSex().equals(Sex.FEMALE)) {
-            setWife(person);
-        }
-    }
-
-    public void setWife(Person wife) {
+    public void setWife(AncestorPerson wife) {
         this.wife = wife;
     }
 
-    public void setHusband(Person husband) {
+    public void setHusband(AncestorPerson husband) {
         this.husband = husband;
     }
 
@@ -96,7 +112,7 @@ public class Couple {
         this.marriagePlace = place;
     }
 
-    public Person getSpouse(Sex sex) {
+    public AncestorPerson getSpouse(Sex sex) {
         if (sex.equals(Sex.MALE)) {
             return getWife();
         } else {
@@ -104,11 +120,11 @@ public class Couple {
         }
     }
 
-    public Person getWife() {
+    public AncestorPerson getWife() {
         return wife;
     }
 
-    public Person getHusband() {
+    public AncestorPerson getHusband() {
         return husband;
     }
 

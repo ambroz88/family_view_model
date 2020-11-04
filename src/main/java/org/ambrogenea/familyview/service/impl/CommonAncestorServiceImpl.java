@@ -1,13 +1,5 @@
 package org.ambrogenea.familyview.service.impl;
 
-import org.ambrogenea.familyview.dto.tree.Line;
-import org.ambrogenea.familyview.dto.tree.Arc;
-import org.ambrogenea.familyview.dto.tree.Marriage;
-import org.ambrogenea.familyview.dto.tree.PersonRecord;
-import org.ambrogenea.familyview.dto.tree.Position;
-import org.ambrogenea.familyview.dto.tree.ImageModel;
-import org.ambrogenea.familyview.dto.tree.TreeModel;
-
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +7,16 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.ambrogenea.familyview.constant.Spaces;
-import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.dto.tree.Arc;
+import org.ambrogenea.familyview.dto.tree.ImageModel;
+import org.ambrogenea.familyview.dto.tree.Line;
+import org.ambrogenea.familyview.dto.tree.Marriage;
+import org.ambrogenea.familyview.dto.tree.PersonRecord;
+import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.service.CommonAncestorService;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.utils.Tools;
@@ -179,7 +178,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     @Override
-    public int generateChildren(Position fatherPosition, Couple spouseCouple) {
+    public int generateChildren(Position fatherPosition, AncestorCouple spouseCouple) {
         int childrenWidth = 0;
         if (spouseCouple != null) {
 
@@ -198,7 +197,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         return childrenWidth;
     }
 
-    private int addChildren(Position heraldryPosition, Couple spouseCouple) {
+    private int addChildren(Position heraldryPosition, AncestorCouple spouseCouple) {
         int childrenCount = spouseCouple.getChildren().size();
         int childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
 
@@ -272,7 +271,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     @Override
-    public void addChildrenHeraldry(Position childPosition, Couple spouseCouple) {
+    public void addChildrenHeraldry(Position childPosition, AncestorCouple spouseCouple) {
         String birthPlace = spouseCouple.getChildren().get(0).getSimpleBirthPlace();
         addHeraldry(childPosition, birthPlace);
     }
