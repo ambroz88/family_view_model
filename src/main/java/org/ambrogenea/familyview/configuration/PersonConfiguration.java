@@ -74,6 +74,8 @@ public class PersonConfiguration {
         showMarriage = true;
         showResidence = false;
         showTemple = false;
+
+        locale = new Locale("en");
     }
 
     public FamilyData getFamilyData() {

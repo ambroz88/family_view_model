@@ -36,7 +36,7 @@ public class CloseFamilyTreeService implements TreeService {
                 if (configuration.isShowChildren()) {
 //                    int lastSpousePosition = ancestorService.drawAllSpousesWithKids(rootPosition, rootPerson);
 //                    ancestorService.drawSiblingsAroundWives(rootPosition, rootPerson, lastSpousePosition);
-                    ancestorService.addSpouse(rootPosition, rootPerson);
+                    ancestorService.addRootSpouses(rootPosition, rootPerson);
                     ancestorService.addSiblingsAroundMother(rootPosition, rootPerson);
                     ancestorService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
                 } else {

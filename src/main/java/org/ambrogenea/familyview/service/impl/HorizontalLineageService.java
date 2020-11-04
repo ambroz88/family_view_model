@@ -26,7 +26,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
 
     @Override
     public void generateFathersFamily(Position child, AncestorPerson person) {
-        if (person.getMother() != null) {
+        if (person != null && person.getMother() != null) {
 
             addVerticalLineToParents(child);
             if (getConfiguration().isShowHeraldry()) {

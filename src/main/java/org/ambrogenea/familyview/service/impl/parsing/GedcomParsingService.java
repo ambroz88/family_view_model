@@ -49,7 +49,7 @@ public class GedcomParsingService implements ParsingService {
             if (recordType.equals(InfoType.INDIVIDUAL)) {
                 if (info.getCode() == 0) {
                     familyData.addPerson(person);
-                    person = new Person(info.getValue());
+                    person = new Person(info.getValue().replace(Information.MARKER, ""));
                 } else if (person != null) {
                     person.setInformation(info, lastType);
                 }

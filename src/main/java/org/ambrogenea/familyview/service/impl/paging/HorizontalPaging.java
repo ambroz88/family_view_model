@@ -47,10 +47,10 @@ public class HorizontalPaging implements Paging {
 
     @Override
     public int calculateFatherLineageX(AncestorPerson person) {
-        int ancestorGeneration;
-        if (person.getFather().getAncestorGenerations() > 0) {
+        int ancestorGeneration = 0;
+        if (person.getFather() != null && person.getFather().getAncestorGenerations() > 0) {
             ancestorGeneration = person.getFather().getAncestorGenerations() + 1;
-        } else {
+        } else if (person.getMother() != null) {
             ancestorGeneration = person.getMother().getAncestorGenerations() + 1;
         }
 
@@ -78,10 +78,10 @@ public class HorizontalPaging implements Paging {
 
     @Override
     public int calculateFatherLineageWidth(AncestorPerson person) {
-        int ancestorGeneration;
-        if (person.getFather().getAncestorGenerations() > 0) {
+        int ancestorGeneration = 0;
+        if (person.getFather() != null && person.getFather().getAncestorGenerations() > 0) {
             ancestorGeneration = person.getFather().getAncestorGenerations() + 1;
-        } else {
+        } else if (person.getMother() != null) {
             ancestorGeneration = person.getMother().getAncestorGenerations() + 1;
         }
 
@@ -191,8 +191,8 @@ public class HorizontalPaging implements Paging {
     @Override
     public int calculateLineageY(AncestorPerson person, int pageHeight) {
         int positionY = pageHeight - VERTICAL_GAP / 2 - config.getAdultImageHeight() / 2;
-        if (config.isShowSpouses() && person.getSpouseCouple() != null &&
-            config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
+        if (config.isShowSpouses() && person.getSpouseCouple() != null
+                && config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
             positionY = positionY - (VERTICAL_GAP + config.getSiblingImageHeight());
         }
         return positionY;

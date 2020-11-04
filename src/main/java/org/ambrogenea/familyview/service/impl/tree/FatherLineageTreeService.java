@@ -33,7 +33,6 @@ public class FatherLineageTreeService implements TreeService {
         }
 
         if (configuration.isShowSpouses()) {
-            lineageService.addSpouse(rootPosition, rootPerson);
             if (configuration.isShowChildren()) {
                 lineageService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
             }

@@ -138,21 +138,6 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     }
 
     @Override
-    public Position addSpouse(Position rootPersonPosition, AncestorPerson person) {
-        if (person.getSpouse() != null) {
-            Position spouse = rootPersonPosition.addXAndY(getConfiguration().getMarriageLabelWidth(),
-                    getConfiguration().getMarriageLabelHeight() + getConfiguration().getAdultImageHeightAlternative());
-
-            Position label = rootPersonPosition.addXAndY(0, getConfiguration().getAdultImageHeightAlternative() / 2);
-
-            addPerson(spouse, person.getSpouse());
-            addLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple().getMarriageDate());
-            return spouse;
-        }
-        return rootPersonPosition;
-    }
-
-    @Override
     public void addSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild) {
         int spouseGap = 0;
         if (rootChild.getSpouse() != null) {

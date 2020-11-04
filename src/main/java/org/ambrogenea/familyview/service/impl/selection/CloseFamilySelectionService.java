@@ -24,9 +24,9 @@ public class CloseFamilySelectionService extends CommonSelectionService implemen
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
 
+        addSiblings(ancestorPerson, person.getParentID());
         ancestorPerson.setParents(findParents(person.getParentID()));
         ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
-        addSiblings(ancestorPerson);
         return ancestorPerson;
     }
 

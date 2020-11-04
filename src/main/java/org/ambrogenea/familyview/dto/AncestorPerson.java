@@ -79,6 +79,13 @@ public class AncestorPerson implements Personalize {
         } else {
             this.directLineage = false;
             this.id = "";
+            firstName = "";
+            surname = "";
+            birthDate = "";
+            birthPlace = "";
+            deathDate = "";
+            deathPlace = "";
+            occupation = "";
             initEmpty();
         }
     }
@@ -96,22 +103,14 @@ public class AncestorPerson implements Personalize {
         this.occupation = person.getOccupation();
         this.residenceList = person.getResidenceList();
 
-        fillAncestorLine();
         initEmpty();
+        fillAncestorLine();
     }
 
     private void initEmpty() {
         residenceList = new ArrayList<>();
         living = false;
         directLineage = true;
-
-        firstName = "";
-        surname = "";
-        birthDate = "";
-        birthPlace = "";
-        deathDate = "";
-        deathPlace = "";
-        occupation = "";
 
         ancestorGenerations = 0;
         lastParentsCount = 0;
@@ -216,10 +215,17 @@ public class AncestorPerson implements Personalize {
     }
 
     public AncestorPerson getFather() {
+        if (parents == null) {
+            return null;
+        }
+
         return parents.getHusband();
     }
 
     public AncestorPerson getMother() {
+        if (parents == null) {
+            return null;
+        }
         return parents.getWife();
     }
 

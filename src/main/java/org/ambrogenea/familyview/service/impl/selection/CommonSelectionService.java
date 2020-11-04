@@ -38,8 +38,8 @@ public class CommonSelectionService {
         return spouses;
     }
 
-    protected void addSiblings(AncestorPerson person) {
-        AncestorCouple parents = person.getParents();
+    protected void addSiblings(AncestorPerson person, String parentId) {
+        Couple parents = getFamilyData().getSpouseMap().get(parentId);
         if (parents != null) {
             ArrayList<String> children = parents.getChildrenIndexes();
             int position = 0;
@@ -79,8 +79,8 @@ public class CommonSelectionService {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
         ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        addSiblings(ancestorPerson, person.getParentID());
         addManParents(ancestorPerson, person.getParentID());
-        addSiblings(ancestorPerson);
         return ancestorPerson;
     }
 
@@ -88,8 +88,8 @@ public class CommonSelectionService {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
         ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        addSiblings(ancestorPerson, person.getParentID());
         addWomanParents(ancestorPerson, person.getParentID());
-        addSiblings(ancestorPerson);
         return ancestorPerson;
     }
 
