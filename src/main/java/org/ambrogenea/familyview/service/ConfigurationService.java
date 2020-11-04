@@ -1,11 +1,12 @@
 package org.ambrogenea.familyview.service;
 
 import java.beans.PropertyChangeListener;
+import java.util.Locale;
 
+import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
-import org.ambrogenea.familyview.domain.FamilyData;
 
 /**
  *
@@ -16,6 +17,10 @@ public interface ConfigurationService {
     FamilyData getFamilyData();
 
     void setFamilyData(FamilyData ancestorModel);
+
+    Locale getLocale();
+
+    void setLocale(Locale locale);
 
     int getWideMarriageLabel();
 

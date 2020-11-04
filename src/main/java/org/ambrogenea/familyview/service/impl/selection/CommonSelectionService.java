@@ -15,6 +15,9 @@ public class CommonSelectionService {
     private FamilyData familyData;
     private int generationLimit;
 
+    public CommonSelectionService() {
+    }
+
     public CommonSelectionService(FamilyData familyData) {
         this.familyData = familyData;
     }

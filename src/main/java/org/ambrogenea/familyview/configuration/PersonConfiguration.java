@@ -1,9 +1,11 @@
 package org.ambrogenea.familyview.configuration;
 
+import java.util.Locale;
+
 import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
-import org.ambrogenea.familyview.domain.FamilyData;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -11,6 +13,7 @@ import org.ambrogenea.familyview.domain.FamilyData;
 public class PersonConfiguration {
 
     private FamilyData familyData;
+    private Locale locale;
 
     private int adultImageWidth;
     private int adultImageHeight;
@@ -79,6 +82,14 @@ public class PersonConfiguration {
 
     public void setFamilyData(FamilyData familyData) {
         this.familyData = familyData;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public int getAdultImageWidth() {

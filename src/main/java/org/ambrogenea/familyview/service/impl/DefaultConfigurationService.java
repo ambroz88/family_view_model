@@ -1,15 +1,16 @@
 package org.ambrogenea.familyview.service.impl;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Locale;
+
+import org.ambrogenea.familyview.configuration.Configuration;
 import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
-import org.ambrogenea.familyview.configuration.Configuration;
-import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.service.ConfigurationService;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -32,6 +33,16 @@ public final class DefaultConfigurationService implements ConfigurationService {
     @Override
     public void setFamilyData(FamilyData familyData) {
         configuration.setFamilyData(familyData);
+    }
+
+    @Override
+    public Locale getLocale() {
+        return configuration.getLocale();
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+        configuration.setLocale(locale);
     }
 
     @Override

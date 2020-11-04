@@ -9,6 +9,9 @@ import org.ambrogenea.familyview.service.SelectionService;
 
 public class CloseFamilySelectionService extends CommonSelectionService implements SelectionService {
 
+    public CloseFamilySelectionService() {
+    }
+
     public CloseFamilySelectionService(FamilyData familyData) {
         super(familyData);
     }

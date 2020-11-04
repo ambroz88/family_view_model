@@ -60,7 +60,7 @@ public class A4WordGeneratorService implements DocumentGeneratorService {
             WordGenerator.setMaxHeight(input.getGenerationsShown());
             WordGenerator.createFamilyPage(doc, treeModel.getTreeName());
             WordGenerator.addImageToPage(doc, input.getImageStream(),
-                     treeModel.getPageSetup().getWidth(), treeModel.getPageSetup().getHeight());
+                    treeModel.getPageSetup().getWidth(), treeModel.getPageSetup().getHeight());
         }
 
         return doc;

@@ -9,6 +9,9 @@ import org.ambrogenea.familyview.service.SelectionService;
 
 public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {
 
+    public AllAncestorsSelectionService() {
+    }
+
     public AllAncestorsSelectionService(FamilyData familyData) {
         super(familyData);
     }

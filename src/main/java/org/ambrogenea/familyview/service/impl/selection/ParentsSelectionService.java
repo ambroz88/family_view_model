@@ -7,6 +7,9 @@ import org.ambrogenea.familyview.service.SelectionService;
 
 public class ParentsSelectionService extends CommonSelectionService implements SelectionService {
 
+    public ParentsSelectionService() {
+    }
+
     public ParentsSelectionService(FamilyData familyData) {
         super(familyData);
     }
