@@ -2,9 +2,9 @@ package org.ambrogenea.familyview.service.impl.tree;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.PageSetup;
@@ -34,6 +34,7 @@ public class ParentLineageTreeService implements TreeService {
             lineageService.addRootPerson(rootPosition, rootPerson);
             lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
             lineageService.generateMotherFamily(rootPosition, rootPerson);
+            lineageService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
         }
 
         TreeModel treeModel = lineageService.getTreeModel();
@@ -74,18 +75,12 @@ public class ParentLineageTreeService implements TreeService {
         Position childPosition = new Position(centerXPosition, child.getY());
         lineageService.addRootPerson(childPosition, rootPerson);
         lineageService.generateSpouseAndSiblings(childPosition, rootPerson);
-
-        if (configuration.isShowSpouses()) {
-            lineageService.addRootSpouses(childPosition, rootPerson);
-            if (configuration.isShowChildren()) {
-                lineageService.generateChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
-            }
-        }
+        lineageService.generateChildren(new Position(centerXPosition, child.getY()), rootPerson.getSpouseCouple());
 
         Position LabelPosition = fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2, -configuration.getMarriageLabelHeight() / 2);
         int labelWidth = motherX - LabelPosition.getX() - configuration.getAdultImageWidth() / 2;
         lineageService.addLabel(LabelPosition, labelWidth, rootPerson.getParents().getMarriageDate());
-        lineageService.addLine(childPosition, new Position(centerXPosition, LabelPosition.getY() + configuration.getMarriageLabelHeight()), Line.LINEAGE);
+        lineageService.addLine(childPosition, new Position(centerXPosition, LabelPosition.getY() + configuration.getMarriageLabelHeight()), Relation.DIRECT);
     }
 
 }

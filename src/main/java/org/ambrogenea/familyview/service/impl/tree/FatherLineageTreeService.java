@@ -25,17 +25,12 @@ public class FatherLineageTreeService implements TreeService {
         Position rootPosition = pageSetup.getRootPosition();
         lineageService.addRootPerson(rootPosition, rootPerson);
         lineageService.generateSpouseAndSiblings(rootPosition, rootPerson);
+        lineageService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
 
         if (rootPerson.getFather() != null) {
             lineageService.generateFathersFamily(rootPosition, rootPerson);
         } else if (rootPerson.getMother() != null) {
             lineageService.generateMotherFamily(rootPosition, rootPerson);
-        }
-
-        if (configuration.isShowSpouses()) {
-            if (configuration.isShowChildren()) {
-                lineageService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
-            }
         }
 
         TreeModel treeModel = lineageService.getTreeModel();

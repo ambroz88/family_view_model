@@ -2,32 +2,37 @@ package org.ambrogenea.familyview.service.impl.tree;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationService;
+import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.PageSetup;
-import org.ambrogenea.familyview.service.SpecificAncestorService;
 import org.ambrogenea.familyview.service.TreeService;
-import org.ambrogenea.familyview.service.impl.HorizontalAncestorService;
-import org.ambrogenea.familyview.service.impl.VerticalAncestorService;
+import org.ambrogenea.familyview.service.impl.HorizontalLineageService;
+import org.ambrogenea.familyview.service.impl.VerticalLineageService;
 import org.ambrogenea.familyview.utils.Tools;
 
 public class AllAncestorTreeService implements TreeService {
 
-    private SpecificAncestorService specificAncestorService;
+    private LineageService specificAncestorService;
     private ConfigurationService configuration;
 
     @Override
     public TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration) {
         this.configuration = configuration;
         if (configuration.isShowCouplesVertical()) {
-            specificAncestorService = new VerticalAncestorService(configuration);
+            specificAncestorService = new VerticalLineageService(configuration);
         } else {
-            specificAncestorService = new HorizontalAncestorService(configuration);
+            specificAncestorService = new HorizontalLineageService(configuration);
         }
 
-        drawFirstParents(rootPerson, pageSetup.getRootPosition());
+        specificAncestorService.addFirstParents(pageSetup.getRootPosition(), rootPerson);
+
+        Position rootPosition = pageSetup.getRootPosition();
+        specificAncestorService.addRootPerson(rootPosition, rootPerson);
+        specificAncestorService.generateSpouseAndSiblings(rootPosition, rootPerson);
+        specificAncestorService.generateChildren(rootPosition, rootPerson.getSpouseCouple());
 
         TreeModel treeModel = specificAncestorService.getTreeModel();
         treeModel.setPageSetup(pageSetup);
@@ -54,12 +59,12 @@ public class AllAncestorTreeService implements TreeService {
             if (rootPerson.getFather() != null) {
                 Position fatherPosition = new Position(fatherX, parentsY);
                 specificAncestorService.addPerson(fatherPosition, rootPerson.getFather());
-                specificAncestorService.addGrandParents(rootPerson.getFather(), fatherPosition);
+                specificAncestorService.addGrandParents(fatherPosition, rootPerson.getFather());
             }
 
             Position motherPosition = new Position(motherX, parentsY);
             specificAncestorService.addPerson(motherPosition, rootPerson.getMother());
-            specificAncestorService.addGrandParents(rootPerson.getMother(), motherPosition);
+            specificAncestorService.addGrandParents(motherPosition, rootPerson.getMother());
 
             int halfAdult = configuration.getAdultImageWidth() / 2;
             int labelWidth = motherX - fatherX - configuration.getAdultImageWidth();
@@ -68,7 +73,7 @@ public class AllAncestorTreeService implements TreeService {
             int newChildX = (fatherX + motherX) / 2;
             Position newChild = new Position(newChildX, child.getY());
             specificAncestorService.addRootPerson(newChild, rootPerson);
-            specificAncestorService.addLine(new Position(newChildX, parentsY), newChild, Line.LINEAGE);
+            specificAncestorService.addLine(new Position(newChildX, parentsY), newChild, Relation.DIRECT);
 
             if (configuration.isShowSpouses()) {
                 specificAncestorService.addRootSpouses(newChild, rootPerson);

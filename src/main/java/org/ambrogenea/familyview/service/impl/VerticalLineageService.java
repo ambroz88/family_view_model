@@ -1,8 +1,8 @@
 package org.ambrogenea.familyview.service.impl;
 
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 
@@ -45,7 +45,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
                 generateFathersFamily(fatherPosition, person.getFather());
             } else {
                 Position motherPosition = addFather(child, person.getMother());
-                addLine(child, motherPosition, Line.LINEAGE);
+                addLine(child, motherPosition, Relation.DIRECT);
                 generateFathersFamily(motherPosition, person.getMother());
                 if (getConfiguration().isShowSiblings()) {
                     addSiblingsAroundMother(motherPosition, person.getMother());

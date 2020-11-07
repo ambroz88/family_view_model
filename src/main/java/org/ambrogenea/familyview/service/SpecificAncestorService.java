@@ -1,7 +1,7 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.Position;
 
 public interface SpecificAncestorService extends CommonAncestorService {
 
@@ -9,7 +9,9 @@ public interface SpecificAncestorService extends CommonAncestorService {
 
     Position addFather(Position childPosition, AncestorPerson father);
 
-    void addGrandParents(AncestorPerson child, Position childPosition);
+    void addFirstParents(Position childPosition, AncestorPerson child);
+
+    void addGrandParents(Position childPosition, AncestorPerson child);
 
     void addAllParents(Position childPosition, AncestorPerson child);
 

@@ -2,8 +2,8 @@ package org.ambrogenea.familyview.service.impl;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.tree.Line;
 import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.SpecificAncestorService;
 
@@ -38,7 +38,12 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     }
 
     @Override
-    public void addGrandParents(AncestorPerson child, Position childPosition) {
+    public void addFirstParents(Position childPosition, AncestorPerson child) {
+        addGrandParents(childPosition, child);
+    }
+
+    @Override
+    public void addGrandParents(Position childPosition, AncestorPerson child) {
         addAllParents(childPosition, child);
     }
 
@@ -116,6 +121,6 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     public void addVerticalLineToParents(Position child) {
         int endY = child.getY() - getConfiguration().getAdultImageHeight()
                 - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
-        addLine(child, new Position(child.getX(), endY), Line.LINEAGE);
+        addLine(child, new Position(child.getX(), endY), Relation.DIRECT);
     }
 }

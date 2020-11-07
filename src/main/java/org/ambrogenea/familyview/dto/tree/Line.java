@@ -1,5 +1,7 @@
 package org.ambrogenea.familyview.dto.tree;
 
+import org.ambrogenea.familyview.enums.Relation;
+
 /**
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -13,14 +15,14 @@ public class Line {
     private final int startY;
     private final int endX;
     private final int endY;
-    private int type;
+    private Relation relation;
 
     public Line(int startX, int startY, int endX, int endY) {
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
-        this.type = 2;
+        this.relation = Relation.DIRECT;
     }
 
     public int getStartX() {
@@ -39,12 +41,12 @@ public class Line {
         return endY;
     }
 
-    public int getType() {
-        return type;
+    public Relation getRelation() {
+        return relation;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setType(Relation relation) {
+        this.relation = relation;
     }
 
 }

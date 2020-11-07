@@ -1,7 +1,7 @@
 package org.ambrogenea.familyview.dto.tree;
 
-
 import org.ambrogenea.familyview.constant.Spaces;
+import org.ambrogenea.familyview.enums.Relation;
 
 /**
  *
@@ -14,12 +14,12 @@ public class Arc {
 
     private final Position leftUpperCorner;
     private final int startAngle;
-    private int type;
+    private Relation relation;
 
-    public Arc(Position leftUpperCorner, int startAngle) {
+    public Arc(Position leftUpperCorner, int startAngle, Relation relation) {
         this.leftUpperCorner = leftUpperCorner;
         this.startAngle = startAngle;
-        this.type = Line.SIBLINGS;
+        this.relation = relation;
     }
 
     public Position getLeftUpperCorner() {
@@ -30,11 +30,12 @@ public class Arc {
         return startAngle;
     }
 
-    public int getType() {
-        return type;
+    public Relation getRelation() {
+        return relation;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setRelation(Relation relation) {
+        this.relation = relation;
     }
+
 }

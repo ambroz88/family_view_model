@@ -1,9 +1,10 @@
 package org.ambrogenea.familyview.service;
 
+import org.ambrogenea.familyview.dto.AncestorCouple;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
-import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.AncestorCouple;
+import org.ambrogenea.familyview.enums.Relation;
 
 public interface CommonAncestorService {
 
@@ -19,7 +20,7 @@ public interface CommonAncestorService {
 
     void addLabel(Position labelPosition, int labelWidth, String text);
 
-    void addLine(Position start, Position end, int lineType);
+    void addLine(Position start, Position end, Relation lineType);
 
     void addHeraldry(Position childPosition, String simpleBirthPlace);
 

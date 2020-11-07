@@ -9,14 +9,9 @@ import javax.imageio.ImageIO;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.tree.Arc;
-import org.ambrogenea.familyview.dto.tree.ImageModel;
-import org.ambrogenea.familyview.dto.tree.Line;
-import org.ambrogenea.familyview.dto.tree.Marriage;
-import org.ambrogenea.familyview.dto.tree.PersonRecord;
-import org.ambrogenea.familyview.dto.tree.Position;
-import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.dto.tree.*;
 import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.CommonAncestorService;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.utils.Tools;
@@ -66,7 +61,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
             addPerson(siblingPosition, sibling);
             if (i == 0) {
-                addLine(siblingPosition, lineEnd, Line.SIBLINGS);
+                addLine(siblingPosition, lineEnd, Relation.SIDE);
             } else {
                 addStraightChildrenLine(siblingPosition);
             }
@@ -92,7 +87,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
             addPerson(siblingPosition, sibling);
             if (i == youngerSiblingsCount - 1) {
-                addLine(siblingPosition, lineEnd, Line.SIBLINGS);
+                addLine(siblingPosition, lineEnd, Relation.SIDE);
             } else {
                 addStraightChildrenLine(siblingPosition);
             }
@@ -105,7 +100,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     @Override
-    public void addLine(Position start, Position end, int lineType) {
+    public void addLine(Position start, Position end, Relation lineType) {
         if (start.getX() == end.getX() || start.getY() == end.getY()) {
 
             Line straigthLine = new Line(start.getX(), start.getY(), end.getX(), end.getY());
@@ -130,23 +125,23 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                     horizontal = new Line(start.getX() + Arc.RADIUS, end.getY(), end.getX(), end.getY());
                     if (start.getY() < end.getY()) {//ancestors
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX(), end.getY() - 2 * Arc.RADIUS), 180);
+                        arc = new Arc(new Position(start.getX(), end.getY() - 2 * Arc.RADIUS), 180, lineType);
                     } else {//children
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX(), end.getY()), 90);
+                        arc = new Arc(new Position(start.getX(), end.getY()), 90, lineType);
                     }
                 } else {
                     horizontal = new Line(start.getX() - Arc.RADIUS, end.getY(), end.getX(), end.getY());
                     if (start.getY() < end.getY()) {
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY() - 2 * Arc.RADIUS), -90);
+                        arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY() - 2 * Arc.RADIUS), -90, lineType);
                     } else {
                         vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY()), 0);
+                        arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY()), 0, lineType);
                     }
                 }
 
-                arc.setType(lineType);
+                arc.setRelation(lineType);
                 horizontal.setType(lineType);
                 vertical.setType(lineType);
 
@@ -188,7 +183,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 Position heraldryPosition = coupleCenterPosition.addXAndY(
                         0, (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
 
-                addLine(heraldryPosition, coupleCenterPosition, Line.SIBLINGS);
+                addLine(heraldryPosition, coupleCenterPosition, Relation.SIDE);
 
                 childrenWidth = addChildren(heraldryPosition, spouseCouple);
             }
@@ -211,7 +206,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
         for (int i = 0; i < childrenCount; i++) {
             if (i == 0 || i == childrenCount - 1) {
-                addLine(childrenPosition, heraldryPosition, Line.SIBLINGS);
+                addLine(childrenPosition, heraldryPosition, Relation.SIDE);
             } else {
                 addStraightChildrenLine(childrenPosition);
             }
@@ -267,7 +262,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     @Override
     public void addStraightChildrenLine(Position siblingPosition) {
         Position endLine = siblingPosition.addXAndY(0, -(configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
-        addLine(siblingPosition, endLine, Line.SIBLINGS);
+        addLine(siblingPosition, endLine, Relation.SIDE);
     }
 
     @Override
@@ -281,14 +276,14 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         return treeModel;
     }
 
-    public ConfigurationService getConfiguration() {
+    protected ConfigurationService getConfiguration() {
         return configuration;
     }
 
     protected void addLineAboveSpouse(Position rootSibling, int spouseGap) {
         int verticalShift = (configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2;
         Position linePosition = rootSibling.addXAndY(0, -verticalShift);
-        addLine(linePosition, linePosition.addXAndY(spouseGap, 0), Line.SIBLINGS);
+        addLine(linePosition, linePosition.addXAndY(spouseGap, 0), Relation.SIDE);
     }
 
 }
