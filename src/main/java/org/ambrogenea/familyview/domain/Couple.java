@@ -35,24 +35,6 @@ public class Couple {
         initEmpty();
     }
 
-    public Couple(Couple couple) {
-        if (couple != null) {
-            if (couple.getHusband() != null) {
-                this.husband = new Person(couple.getHusband());
-            }
-
-            if (couple.getWife() != null) {
-                this.wife = new Person(couple.getWife());
-            }
-            this.childrenID = couple.getChildrenIndexes();
-            this.children = new ArrayList<>(couple.getChildren());
-            this.marriageDate = couple.getMarriageDateEnglish();
-            this.marriagePlace = couple.getMarriagePlace();
-        } else {
-            initEmpty();
-        }
-    }
-
     private void initEmpty() {
         childrenID = new ArrayList<>();
         children = new ArrayList<>();

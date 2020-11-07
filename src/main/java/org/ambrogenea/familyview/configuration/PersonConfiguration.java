@@ -46,8 +46,8 @@ public class PersonConfiguration {
     private boolean showTemple;
 
     public PersonConfiguration() {
-        adultImageWidth = 180;
-        adultImageHeight = 130;
+        adultImageWidth = 200;
+        adultImageHeight = 140;
         marriageLabelWidth = Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 4 * 3);
         wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
         adultTopOffset = 10;
@@ -59,8 +59,8 @@ public class PersonConfiguration {
         adultFontSize = 14;
         siblingFontSize = 13;
 
-        adultDiagram = Diagrams.STICKY;
-        siblingDiagram = Diagrams.STICKY;
+        adultDiagram = Diagrams.PERGAMEN;
+        siblingDiagram = Diagrams.PERGAMEN;
         labelShape = LabelShape.OVAL;
         adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
         adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";

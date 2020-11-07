@@ -60,7 +60,7 @@ public class AncestorPerson implements Personalize {
             this.deathDate = person.getDeathDate();
             this.deathPlace = person.getDeathPlace();
             this.occupation = person.getOccupation();
-            this.residenceList = person.getResidenceList();
+            this.residenceList = new ArrayList<>(person.getResidenceList());
 
             initSiblings();
             directLineage = person.isDirectLineage();
@@ -86,6 +86,7 @@ public class AncestorPerson implements Personalize {
             deathDate = "";
             deathPlace = "";
             occupation = "";
+            residenceList = new ArrayList<>();
             initEmpty();
         }
     }
@@ -101,14 +102,13 @@ public class AncestorPerson implements Personalize {
         this.deathDate = person.getDeathDate();
         this.deathPlace = person.getDeathPlace();
         this.occupation = person.getOccupation();
-        this.residenceList = person.getResidenceList();
+        this.residenceList = new ArrayList<>(person.getResidenceList());
 
         initEmpty();
         fillAncestorLine();
     }
 
     private void initEmpty() {
-        residenceList = new ArrayList<>();
         living = false;
         directLineage = true;
 
@@ -117,7 +117,7 @@ public class AncestorPerson implements Personalize {
         innerParentsCount = 0;
         ancestorLine = new ArrayList<>();
         spouses = new LinkedList<>();
-        residenceList = new ArrayList<>();
+
         initSiblings();
     }
 

@@ -49,7 +49,7 @@ public class Person implements Personalize {
             this.deathDate = person.getDeathDate();
             this.deathPlace = person.getDeathPlace();
             this.occupation = person.getOccupation();
-            this.residenceList = person.getResidenceList();
+            this.residenceList = new ArrayList<>(person.getResidenceList());
             this.fatherId = person.getFatherId();
             this.motherId = person.getMotherId();
             this.parentID = person.getParentID();

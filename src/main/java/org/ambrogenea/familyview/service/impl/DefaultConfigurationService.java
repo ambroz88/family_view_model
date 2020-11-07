@@ -57,7 +57,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public int getMarriageLabelHeight() {
-        return Math.max((int) (getAdultImageHeight() * 0.2), Spaces.MIN_MARRIAGE_LABEL_HEIGHT);
+        return Math.max((int) (getAdultFontSize() + 10), Spaces.MIN_MARRIAGE_LABEL_HEIGHT);
     }
 
     @Override
