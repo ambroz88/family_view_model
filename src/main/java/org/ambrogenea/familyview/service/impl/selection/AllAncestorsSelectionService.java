@@ -21,20 +21,22 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
         setGenerationLimit(generationLimit);
 
         Person person = getFamilyData().getPersonById(personId);
-        AncestorPerson ancestorPerson = fromPersonWithParents(person);
+        AncestorPerson ancestorPerson = fromPersonWithParents(person, 1);
 
         ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
         return ancestorPerson;
     }
 
-    public AncestorPerson fromPersonWithParents(Person person) {
+    public AncestorPerson fromPersonWithParents(Person person, int generation) {
         AncestorPerson newPerson = new AncestorPerson(person);
         newPerson.setDirectLineage(true);
-        addAllParents(newPerson, person.getParentID());
+        if (generation + 1 <= getGenerationLimit()) {
+            addAllParents(newPerson, person.getParentID(), generation + 1);
+        }
         return newPerson;
     }
 
-    protected void addAllParents(AncestorPerson person, String parentId) {
+    protected void addAllParents(AncestorPerson person, String parentId, int generation) {
         if (parentId != null) {
             Couple parents = getFamilyData().getSpouseMap().get(parentId);
 
@@ -42,13 +44,13 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
                 person.setParents(new AncestorCouple(parents));
 
                 if (parents.getHusband() != null) {
-                    AncestorPerson father = fromPersonWithParents(parents.getHusband());
+                    AncestorPerson father = fromPersonWithParents(parents.getHusband(), generation);
                     father.addChildrenCode(person.getAncestorLine());
                     person.setFather(father);
                 }
 
                 if (parents.getWife() != null) {
-                    AncestorPerson mother = fromPersonWithParents(parents.getWife());
+                    AncestorPerson mother = fromPersonWithParents(parents.getWife(), generation);
                     mother.addChildrenCode(person.getAncestorLine());
                     person.setMother(mother);
                 }

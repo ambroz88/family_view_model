@@ -75,12 +75,15 @@ public class CommonSelectionService {
         }
     }
 
-    protected AncestorPerson fromPersonWithManParents(Person person) {
+    protected AncestorPerson fromPersonWithManParents(Person person, int generation) {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
         ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
-        addSiblings(ancestorPerson, person.getParentID());
-        addManParents(ancestorPerson, person.getParentID());
+
+        if (generation + 1 <= generationLimit) {
+            addSiblings(ancestorPerson, person.getParentID());
+            addManParents(ancestorPerson, person.getParentID(), generation + 1);
+        }
         return ancestorPerson;
     }
 
@@ -88,57 +91,55 @@ public class CommonSelectionService {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
         ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
-        addSiblings(ancestorPerson, person.getParentID());
-        addWomanParents(ancestorPerson, person.getParentID());
+        if (2 <= generationLimit) {
+            addSiblings(ancestorPerson, person.getParentID());
+            addWomanParents(ancestorPerson, person.getParentID(), 2);
+        }
         return ancestorPerson;
     }
 
-    private AncestorPerson addManParents(AncestorPerson person, String parentId) {
+    private AncestorPerson addManParents(AncestorPerson person, String parentId, int generation) {
         Couple parents = getFamilyData().getSpouseMap().get(parentId);
+
         if (person != null && parents != null) {
+            person.setParents(new AncestorCouple(parents));
 
-            if (person.getAncestorLine().size() < generationLimit) {
-                person.setParents(new AncestorCouple(parents));
+            if (parents.getHusband() != null) {
+                AncestorPerson father = fromPersonWithManParents(parents.getHusband(), generation);
+                father.addChildrenCode(person.getAncestorLine());
+                person.setFather(father);
+            } else {
+                AncestorPerson mother = fromPersonWithManParents(parents.getWife(), generation);
+                mother.addChildrenCode(person.getAncestorLine());
+                person.setMother(mother);
 
-                if (parents.getHusband() != null) {
-                    AncestorPerson father = fromPersonWithManParents(parents.getHusband());
-                    father.addChildrenCode(person.getAncestorLine());
-                    person.setFather(father);
-                } else {
-                    AncestorPerson mother = fromPersonWithManParents(parents.getWife());
-                    mother.addChildrenCode(person.getAncestorLine());
-                    person.setMother(mother);
-
-                    person.setMaxOlderSiblings(mother.getMaxOlderSiblings());
-                    person.setMaxOlderSiblingsSpouse(mother.getMaxOlderSiblingsSpouse());
-                    person.setMaxYoungerSiblings(mother.getMaxYoungerSiblings());
-                    person.setMaxYoungerSiblingsSpouse(mother.getMaxYoungerSiblingsSpouse());
-                }
-
+                person.setMaxOlderSiblings(mother.getMaxOlderSiblings());
+                person.setMaxOlderSiblingsSpouse(mother.getMaxOlderSiblingsSpouse());
+                person.setMaxYoungerSiblings(mother.getMaxYoungerSiblings());
+                person.setMaxYoungerSiblingsSpouse(mother.getMaxYoungerSiblingsSpouse());
             }
+
         }
         return person;
     }
 
-    private void addWomanParents(AncestorPerson person, String parentId) {
-        if (person.getAncestorLine().size() < generationLimit) {
-            Couple parents = getFamilyData().getSpouseMap().get(parentId);
+    private void addWomanParents(AncestorPerson person, String parentId, int generation) {
+        Couple parents = getFamilyData().getSpouseMap().get(parentId);
 
-            if (parents != null) {
-                person.setParents(new AncestorCouple(parents));
+        if (person != null && parents != null) {
+            person.setParents(new AncestorCouple(parents));
 
-                if (parents.getWife() != null) {
-                    AncestorPerson mother = fromPersonWithManParents(parents.getWife());
-                    mother.addChildrenCode(person.getAncestorLine());
-                    person.setMother(mother);
+            if (parents.getWife() != null) {
+                AncestorPerson mother = fromPersonWithManParents(parents.getWife(), generation);
+                mother.addChildrenCode(person.getAncestorLine());
+                person.setMother(mother);
 
-                    person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), mother.getOlderSiblings().size()));
-                    person.setMaxOlderSiblingsSpouse(Math.max(person.getMaxOlderSiblingsSpouse(), mother.getMaxOlderSiblingsSpouse()));
-                    person.setMaxYoungerSiblings(Math.max(person.getMaxYoungerSiblings(), mother.getYoungerSiblings().size()));
-                    person.setMaxYoungerSiblingsSpouse(Math.max(person.getMaxYoungerSiblingsSpouse(), mother.getMaxYoungerSiblingsSpouse()));
-                }
-
+                person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), mother.getOlderSiblings().size()));
+                person.setMaxOlderSiblingsSpouse(Math.max(person.getMaxOlderSiblingsSpouse(), mother.getMaxOlderSiblingsSpouse()));
+                person.setMaxYoungerSiblings(Math.max(person.getMaxYoungerSiblings(), mother.getYoungerSiblings().size()));
+                person.setMaxYoungerSiblingsSpouse(Math.max(person.getMaxYoungerSiblingsSpouse(), mother.getMaxYoungerSiblingsSpouse()));
             }
+
         }
     }
 

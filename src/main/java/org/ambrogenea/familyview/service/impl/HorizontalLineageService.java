@@ -58,21 +58,30 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
 
     @Override
     public void generateMotherFamily(Position childPosition, AncestorPerson person) {
-        addVerticalLineToParents(childPosition);
-        Position motherPosition = addFather(childPosition, person.getMother());
+        if (person.getMother() != null) {
+            addVerticalLineToParents(childPosition);
 
-        if (person.getFather() != null) {
-            addMother(childPosition, person.getFather(), person.getParents().getMarriageDate());
+            Position motherPosition;
+            if (person.getFather() != null) {
+                addFather(childPosition, person.getFather());
+                motherPosition = addMother(childPosition, person.getMother(), person.getParents().getMarriageDate());
+
+                if (configuration.isShowSiblings()) {
+//                    addSiblingsAroundFather(motherPosition, person.getMother());
+                }
+            } else {
+                motherPosition = addFather(childPosition, person.getMother());
+
+                if (configuration.isShowSiblings()) {
+                    addSiblingsAroundMother(motherPosition, person.getMother());
+                }
+            }
+
+            if (configuration.isShowHeraldry()) {
+                addHeraldry(childPosition, person.getSimpleBirthPlace());
+            }
+
+            generateFathersFamily(motherPosition, person.getMother());
         }
-
-        if (configuration.isShowSiblings()) {
-            addSiblingsAroundMother(motherPosition, person.getMother());
-        }
-
-        if (configuration.isShowHeraldry()) {
-            addHeraldry(childPosition, person.getSimpleBirthPlace());
-        }
-
-        generateFathersFamily(motherPosition, person.getMother());
     }
 }

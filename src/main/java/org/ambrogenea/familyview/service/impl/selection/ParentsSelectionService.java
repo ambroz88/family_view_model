@@ -19,7 +19,7 @@ public class ParentsSelectionService extends CommonSelectionService implements S
         setGenerationLimit(generationLimit);
 
         Person person = getFamilyData().getPersonById(personId);
-        AncestorPerson ancestorPerson = fromPersonWithManParents(person);
+        AncestorPerson ancestorPerson = fromPersonWithManParents(person, 1);
         AncestorPerson ancestorPersonCopy = fromPersonWithWomanParents(person);
         ancestorPerson.setMother(ancestorPersonCopy.getMother());
 

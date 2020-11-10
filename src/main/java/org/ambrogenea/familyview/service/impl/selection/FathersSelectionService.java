@@ -18,7 +18,7 @@ public class FathersSelectionService extends CommonSelectionService implements S
     public AncestorPerson select(String personId, int generationLimit) {
         setGenerationLimit(generationLimit);
         Person person = getFamilyData().getPersonById(personId);
-        return fromPersonWithManParents(person);
+        return fromPersonWithManParents(person, 1);
     }
 
 }
