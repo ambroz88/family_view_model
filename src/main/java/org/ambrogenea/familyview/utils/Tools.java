@@ -1,10 +1,7 @@
 package org.ambrogenea.familyview.utils;
 
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDate;
 import java.util.Properties;
 
 import org.ambrogenea.familyview.domain.Person;
@@ -29,63 +26,6 @@ public final class Tools {
         return plainText;
     }
 
-    public static String getYear(String date) {
-        String[] dateParts = date.split(" ");
-        return dateParts[dateParts.length - 1];
-    }
-
-    public static String translateDateToCzech(String date) {
-        String dateCzech = date.replace("ABT", "asi").replace("BEF", "před").replace("TO", "před").replace("AFT", "po");
-        dateCzech = dateCzech.replace("JAN", "led").replace("FEB", "úno").replace("MAR", "bře");
-        dateCzech = dateCzech.replace("APR", "dub").replace("MAY", "kvě").replace("JUN", "črn");
-        dateCzech = dateCzech.replace("JUL", "črc").replace("AUG", "srp").replace("SEP", "zář");
-        dateCzech = dateCzech.replace("OCT", "říj").replace("NOV", "lis").replace("DEC", "pro");
-        return dateCzech;
-    }
-
-    public static String putYearToNewLine(String date) {
-        int spaceIndex = date.lastIndexOf(" ");
-
-        return date.substring(0, spaceIndex) + "\n" + date.substring(spaceIndex + 1);
-    }
-
-    public static boolean isEarlier(String dateBefore, String dateAfter) {
-        String date1norm = normalizeDate(dateBefore);
-        String date2norm = normalizeDate(dateAfter);
-
-        Date date1 = convertDateString(date1norm);
-        Date date2 = convertDateString(date2norm);
-
-        if (date1 != null && date2 != null) {
-            return date1.compareTo(date2) < 0;
-        }
-        return false;
-    }
-
-    public static Date convertDateString(String stringDate) {
-        String dateNorm = normalizeDate(stringDate);
-
-        SimpleDateFormat format1 = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-        SimpleDateFormat format2 = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-        SimpleDateFormat format3 = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
-
-        Date date;
-        try {
-            date = format1.parse(dateNorm);
-        } catch (ParseException ex) {
-            try {
-                date = format2.parse(dateNorm);
-            } catch (ParseException ex1) {
-                try {
-                    date = format3.parse(dateNorm);
-                } catch (ParseException ex2) {
-                    date = null;
-                }
-            }
-        }
-        return date;
-    }
-
     public static String cityShortVersion(String placeName) {
         String filePath;
         URL fileURL = Tools.class.getResource("/text/CityShortcuts.properties");
@@ -103,18 +43,14 @@ public final class Tools {
         return placeName;
     }
 
-    private static String normalizeDate(String stringDate) {
-        return stringDate.replace("ABT ", "").replace("BEF ", "").replace("TO ", "");
-    }
-
     public static PersonRecord generateSamplePerson() {
         PersonRecord samplePerson = new PersonRecord(Sex.MALE, true);
         samplePerson.setFirstName("Vítězslav");
         samplePerson.setSurname("Konipásek");
-        samplePerson.setBirthDate("24 AUG 1869");
-        samplePerson.setBirthPlace("České Budějovice");
-        samplePerson.setDeathDate("30 DEC 1924");
-        samplePerson.setDeathPlace("České Budějovice");
+        samplePerson.getBirthDatePlace().setDate(LocalDate.of(1869, 8, 24));
+        samplePerson.getBirthDatePlace().setPlace("České Budějovice");
+        samplePerson.getDeathDatePlace().setDate(LocalDate.of(1924, 12, 30));
+        samplePerson.getDeathDatePlace().setPlace("České Budějovice");
         samplePerson.setOccupation("pekařský mistr");
         samplePerson.setLiving(false);
 
@@ -125,8 +61,8 @@ public final class Tools {
         PersonRecord samplePerson = new PersonRecord(Sex.FEMALE, false);
         samplePerson.setFirstName("Julie");
         samplePerson.setSurname("Konipásková");
-        samplePerson.setBirthDate("18 JAN 1901");
-        samplePerson.setBirthPlace("České Budějovice");
+        samplePerson.getBirthDatePlace().setDate(LocalDate.of(1901, 1, 18));
+        samplePerson.getBirthDatePlace().setPlace("České Budějovice");
         samplePerson.setLiving(true);
 
         return samplePerson;

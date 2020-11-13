@@ -75,7 +75,7 @@ public class PersonConfiguration {
         showResidence = false;
         showTemple = false;
 
-        locale = new Locale("en");
+        locale = new Locale("cs");
     }
 
     public FamilyData getFamilyData() {

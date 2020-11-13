@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import org.ambrogenea.familyview.domain.DatePlace;
 import org.ambrogenea.familyview.domain.Person;
 import org.ambrogenea.familyview.domain.Personalize;
 import org.ambrogenea.familyview.domain.Residence;
@@ -21,18 +22,16 @@ public class AncestorPerson implements Personalize {
 
     private final String id;
 
-    private String firstName;
-    private String surname;
+    private final String firstName;
+    private final String surname;
     private Sex sex;
-    private String birthDate;
-    private String birthPlace;
-    private String deathDate;
-    private String deathPlace;
-    private String occupation;
+    private DatePlace birthDatePlace;
+    private DatePlace deathDatePlace;
+    private final String occupation;
     private boolean living;
     private boolean directLineage;
 
-    private ArrayList<Residence> residenceList;
+    private final ArrayList<Residence> residenceList;
 
     private AncestorCouple parents;
     private LinkedList<AncestorCouple> spouses;
@@ -55,10 +54,8 @@ public class AncestorPerson implements Personalize {
             this.surname = person.getSurname();
             this.sex = person.getSex();
             this.living = person.isLiving();
-            this.birthDate = person.getBirthDate();
-            this.birthPlace = person.getBirthPlace();
-            this.deathDate = person.getDeathDate();
-            this.deathPlace = person.getDeathPlace();
+            this.birthDatePlace = person.getBirthDatePlace();
+            this.deathDatePlace = person.getDeathDatePlace();
             this.occupation = person.getOccupation();
             this.residenceList = new ArrayList<>(person.getResidenceList());
 
@@ -81,10 +78,8 @@ public class AncestorPerson implements Personalize {
             this.id = "";
             firstName = "";
             surname = "";
-            birthDate = "";
-            birthPlace = "";
-            deathDate = "";
-            deathPlace = "";
+            birthDatePlace = new DatePlace();
+            deathDatePlace = new DatePlace();
             occupation = "";
             residenceList = new ArrayList<>();
             initEmpty();
@@ -97,10 +92,8 @@ public class AncestorPerson implements Personalize {
         this.surname = person.getSurname();
         this.sex = person.getSex();
         this.living = person.isLiving();
-        this.birthDate = person.getBirthDate();
-        this.birthPlace = person.getBirthPlace();
-        this.deathDate = person.getDeathDate();
-        this.deathPlace = person.getDeathPlace();
+        this.birthDatePlace = person.getBirthDatePlace();
+        this.deathDatePlace = person.getDeathDatePlace();
         this.occupation = person.getOccupation();
         this.residenceList = new ArrayList<>(person.getResidenceList());
 
@@ -398,7 +391,7 @@ public class AncestorPerson implements Personalize {
         if (spouse != null) {
             if (!this.spouses.isEmpty()) {
                 AncestorCouple lastCouple = this.spouses.get(spouses.size() - 1);
-                if (Tools.isEarlier(spouse.getMarriageDateEnglish(), lastCouple.getMarriageDateEnglish())) {
+                if (spouse.getDatePlace().getDate().isBefore(lastCouple.getDatePlace().getDate())) {
                     this.spouses.add(this.spouses.size() - 1, new AncestorCouple(spouse));
                 } else {
                     this.spouses.add(new AncestorCouple(spouse));
@@ -429,14 +422,17 @@ public class AncestorPerson implements Personalize {
         return id;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public String getSurname() {
         return surname;
     }
 
+    @Override
     public String getName() {
         if (getFirstName().isEmpty()) {
             return getSurname();
@@ -446,32 +442,25 @@ public class AncestorPerson implements Personalize {
         return getFirstName() + " " + getSurname();
     }
 
+    @Override
     public Sex getSex() {
         return sex;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public DatePlace getBirthDatePlace() {
+        return birthDatePlace;
     }
 
-    public String getBirthPlace() {
-        return birthPlace;
+    public void setBirthDatePlace(DatePlace birthDatePlace) {
+        this.birthDatePlace = birthDatePlace;
     }
 
-    public String getSimpleBirthPlace() {
-        return birthPlace.split(",")[0];
+    public DatePlace getDeathDatePlace() {
+        return deathDatePlace;
     }
 
-    public String getDeathDate() {
-        return deathDate;
-    }
-
-    public String getDeathPlace() {
-        return deathPlace;
-    }
-
-    public String getSimpleDeathPlace() {
-        return deathPlace.split(",")[0];
+    public void setDeathDatePlace(DatePlace deathDatePlace) {
+        this.deathDatePlace = deathDatePlace;
     }
 
     public String getOccupation() {
@@ -488,7 +477,7 @@ public class AncestorPerson implements Personalize {
 
     @Override
     public String toString() {
-        return getName() + " *" + getBirthDate() + "; parents: " + getParents();
+        return getName() + " *" + getBirthDatePlace().getDate() + "; parents: " + getParents();
     }
 
 }

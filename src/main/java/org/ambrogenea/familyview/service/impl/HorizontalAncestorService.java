@@ -75,12 +75,12 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
                 Position labelPosition = fatherPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2,
                         -getConfiguration().getMarriageLabelHeight() / 2);
                 addLabel(labelPosition, motherPosition.getX() - fatherPosition.getX() - getConfiguration().getAdultImageWidth(),
-                        child.getParents().getMarriageDate());
+                        child.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
                 addAllParents(fatherPosition, child.getFather());
             }
 
             if (getConfiguration().isShowHeraldry()) {
-                addHeraldry(childPosition, child.getSimpleBirthPlace());
+                addHeraldry(childPosition, child.getBirthDatePlace().getSimplePlace());
             }
 
             addPerson(motherPosition, child.getMother());

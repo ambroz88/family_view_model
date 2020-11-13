@@ -21,12 +21,13 @@ public class CloseFamilyTreeService implements TreeService {
         if (configuration.isShowParents() && (rootPerson.getParents() != null && !rootPerson.getParents().isEmpty())) {
             if (rootPerson.getFather() != null) {
                 ancestorService.addFather(rootPosition, rootPerson.getFather());
-                ancestorService.addMother(rootPosition, rootPerson.getMother(), rootPerson.getParents().getMarriageDate());
+                ancestorService.addMother(rootPosition, rootPerson.getMother(),
+                        rootPerson.getParents().getDatePlace().getLocalizedDate(configuration.getLocale()));
             } else {
                 ancestorService.addFather(rootPosition, rootPerson.getMother());
             }
             if (configuration.isShowHeraldry() && !rootPerson.getParents().isEmpty()) {
-                ancestorService.addHeraldry(rootPosition, rootPerson.getSimpleBirthPlace());
+                ancestorService.addHeraldry(rootPosition, rootPerson.getBirthDatePlace().getSimplePlace());
             }
             ancestorService.addVerticalLineToParents(rootPosition);
         }

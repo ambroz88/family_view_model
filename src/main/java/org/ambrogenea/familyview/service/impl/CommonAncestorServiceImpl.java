@@ -233,7 +233,8 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 -getConfiguration().getMarriageLabelHeight() / 2
         );
 
-        addLabel(label, getConfiguration().getMarriageLabelWidth(), person.getParents().getMarriageDate());
+        addLabel(label, getConfiguration().getMarriageLabelWidth(),
+                person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
         return new Position(childPosition.getX(), fatherPosition.getY());
     }
 
@@ -251,7 +252,8 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 spousePosition = spousePosition.addXAndY(spouseDistance, 0);
                 label = label.addXAndY(spouseDistance, 0);
                 addPerson(spousePosition, person.getSpouse(index));
-                addLabel(label, getConfiguration().getMarriageLabelWidth(), person.getSpouseCouple(index).getMarriageDate());
+                addLabel(label, getConfiguration().getMarriageLabelWidth(),
+                        person.getSpouseCouple(index).getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
             }
 
             return spousePosition;
@@ -267,7 +269,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     @Override
     public void addChildrenHeraldry(Position childPosition, AncestorCouple spouseCouple) {
-        String birthPlace = spouseCouple.getChildren().get(0).getSimpleBirthPlace();
+        String birthPlace = spouseCouple.getChildren().get(0).getBirthDatePlace().getSimplePlace();
         addHeraldry(childPosition, birthPlace);
     }
 

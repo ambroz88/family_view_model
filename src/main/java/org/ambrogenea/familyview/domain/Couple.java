@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.utils.Tools;
 
 /**
  *
@@ -17,8 +16,7 @@ public class Couple {
 
     private Person wife;
     private Person husband;
-    private String marriageDate;
-    private String marriagePlace;
+    private DatePlace datePlace;
 
     public Couple() {
         initEmpty();
@@ -38,8 +36,7 @@ public class Couple {
     private void initEmpty() {
         childrenID = new ArrayList<>();
         children = new ArrayList<>();
-        marriageDate = "";
-        marriagePlace = "";
+        datePlace = new DatePlace();
     }
 
     public void addSpouse(Person person) {
@@ -58,24 +55,12 @@ public class Couple {
         this.husband = husband;
     }
 
-    public String getMarriageDate() {
-        return Tools.translateDateToCzech(marriageDate);
+    public DatePlace getDatePlace() {
+        return datePlace;
     }
 
-    public String getMarriageDateEnglish() {
-        return marriageDate;
-    }
-
-    public void setMarriageDate(String date) {
-        this.marriageDate = date;
-    }
-
-    public String getMarriagePlace() {
-        return marriagePlace;
-    }
-
-    public void setMarriagePlace(String place) {
-        this.marriagePlace = place;
+    public void setDatePlace(DatePlace datePlace) {
+        this.datePlace = datePlace;
     }
 
     public Person getSpouse(Sex sex) {

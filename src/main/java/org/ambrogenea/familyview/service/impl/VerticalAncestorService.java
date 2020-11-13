@@ -52,7 +52,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         addLine(childPosition, linePosition, Relation.DIRECT);
 
         if (configuration.isShowHeraldry()) {
-            addHeraldry(childPosition, child.getSimpleBirthPlace());
+            addHeraldry(childPosition, child.getBirthDatePlace().getSimplePlace());
         }
     }
 
@@ -145,11 +145,12 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
                 addAllParents(motherPosition, child.getMother());
 
                 addLabel(new Position(fatherX, labelY - configuration.getMarriageLabelHeight() / 2),
-                        configuration.getMarriageLabelWidth(), child.getParents().getMarriageDate());
+                        configuration.getMarriageLabelWidth(),
+                        child.getParents().getDatePlace().getLocalizedDate(configuration.getLocale()));
                 addLine(new Position(fatherX, labelY), childPosition, Relation.DIRECT);
 
                 if (configuration.isShowHeraldry()) {
-                    addHeraldry(new Position(fatherX, childY), child.getSimpleBirthPlace());
+                    addHeraldry(new Position(fatherX, childY), child.getBirthDatePlace().getSimplePlace());
                 }
             }
 

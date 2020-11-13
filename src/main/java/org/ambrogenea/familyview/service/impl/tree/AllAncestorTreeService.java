@@ -45,7 +45,7 @@ public class AllAncestorTreeService implements TreeService {
             int parentsY = child.getY() - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
 
             if (configuration.isShowHeraldry()) {
-                specificAncestorService.addHeraldry(child, rootPerson.getSimpleBirthPlace());
+                specificAncestorService.addHeraldry(child, rootPerson.getBirthDatePlace().getSimplePlace());
             }
 
             int shiftX = configuration.getAdultImageWidth() / 4;
@@ -68,7 +68,8 @@ public class AllAncestorTreeService implements TreeService {
 
             int halfAdult = configuration.getAdultImageWidth() / 2;
             int labelWidth = motherX - fatherX - configuration.getAdultImageWidth();
-            specificAncestorService.addLabel(new Position(fatherX + halfAdult, parentsY - configuration.getMarriageLabelHeight() / 2), labelWidth, rootPerson.getParents().getMarriageDate());
+            specificAncestorService.addLabel(new Position(fatherX + halfAdult, parentsY - configuration.getMarriageLabelHeight() / 2), labelWidth,
+                    rootPerson.getParents().getDatePlace().getLocalizedDate(configuration.getLocale()));
 
             int newChildX = (fatherX + motherX) / 2;
             Position newChild = new Position(newChildX, child.getY());

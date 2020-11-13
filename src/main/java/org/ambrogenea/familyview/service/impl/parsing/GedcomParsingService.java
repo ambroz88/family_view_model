@@ -71,9 +71,9 @@ public class GedcomParsingService implements ParsingService {
                     }
 
                 } else if (info.getType().equals(InfoType.DATE) && lastType.equals(InfoType.MARRIAGE)) {
-                    couple.setMarriageDate(info.getValue());
+                    couple.getDatePlace().parseDateText(info.getValue());
                 } else if (info.getType().equals(InfoType.PLACE) && lastType.equals(InfoType.MARRIAGE)) {
-                    couple.setMarriagePlace(info.getValue());
+                    couple.getDatePlace().setPlace(info.getValue());
                 }
             }
 

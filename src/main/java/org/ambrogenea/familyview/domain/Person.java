@@ -1,12 +1,10 @@
 package org.ambrogenea.familyview.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.ambrogenea.familyview.dto.parsing.Information;
 import org.ambrogenea.familyview.enums.InfoType;
 import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.utils.Tools;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -18,10 +16,8 @@ public class Person implements Personalize {
     private String firstName;
     private String surname;
     private Sex sex;
-    private String birthDate;
-    private String birthPlace;
-    private String deathDate;
-    private String deathPlace;
+    private DatePlace birthDatePlace;
+    private DatePlace deathDatePlace;
     private String occupation;
     private String parentID;
     private boolean living;
@@ -44,10 +40,8 @@ public class Person implements Personalize {
             this.surname = person.getSurname();
             this.sex = person.getSex();
             this.living = person.isLiving();
-            this.birthDate = person.getBirthDate();
-            this.birthPlace = person.getBirthPlace();
-            this.deathDate = person.getDeathDate();
-            this.deathPlace = person.getDeathPlace();
+            this.birthDatePlace = person.getBirthDatePlace();
+            this.deathDatePlace = person.getDeathDatePlace();
             this.occupation = person.getOccupation();
             this.residenceList = new ArrayList<>(person.getResidenceList());
             this.fatherId = person.getFatherId();
@@ -68,10 +62,8 @@ public class Person implements Personalize {
 
         firstName = "";
         surname = "";
-        birthDate = "";
-        birthPlace = "";
-        deathDate = "";
-        deathPlace = "";
+        birthDatePlace = new DatePlace();
+        deathDatePlace = new DatePlace();
         occupation = "";
 
         fatherId = "";
@@ -134,28 +126,20 @@ public class Person implements Personalize {
         this.sex = sex;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public DatePlace getBirthDatePlace() {
+        return birthDatePlace;
     }
 
-    public String getBirthDateCzech() {
-        return Tools.translateDateToCzech(birthDate);
+    public void setBirthDatePlace(DatePlace birthDatePlace) {
+        this.birthDatePlace = birthDatePlace;
     }
 
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public DatePlace getDeathDatePlace() {
+        return deathDatePlace;
     }
 
-    public String getBirthPlace() {
-        return birthPlace;
-    }
-
-    public String getSimpleBirthPlace() {
-        return birthPlace.split(",")[0];
-    }
-
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
+    public void setDeathDatePlace(DatePlace deathDatePlace) {
+        this.deathDatePlace = deathDatePlace;
     }
 
     public void setLiving(boolean living) {
@@ -164,32 +148,6 @@ public class Person implements Personalize {
 
     public boolean isLiving() {
         return living;
-    }
-
-    public String getDeathDate() {
-        return deathDate;
-    }
-
-    public String getDeathDateCzech() {
-        return Tools.translateDateToCzech(deathDate);
-    }
-
-    public void setDeathDate(String deathDate) {
-        if (!"DECEASED".equals(deathDate)) {
-            this.deathDate = deathDate;
-        }
-    }
-
-    public String getDeathPlace() {
-        return deathPlace;
-    }
-
-    public String getSimpleDeathPlace() {
-        return deathPlace.split(",")[0];
-    }
-
-    public void setDeathPlace(String deathPlace) {
-        this.deathPlace = deathPlace;
     }
 
     public String getOccupation() {
@@ -244,33 +202,6 @@ public class Person implements Personalize {
         this.motherId = motherId;
     }
 
-    public boolean isChild() {
-        return isYoungerThan(8);
-    }
-
-    public boolean isTeenager() {
-        return isYoungerThan(18);
-    }
-
-    public int getAge() {
-        double ageInYears = -1;
-        if (!getBirthDate().isEmpty() && !getDeathDate().isEmpty()) {
-            Date birth = Tools.convertDateString(getBirthDate());
-            Date death = Tools.convertDateString(getDeathDate());
-
-            if (birth != null && death != null) {
-                long ageInMillis = death.getTime() - birth.getTime();
-                ageInYears = ageInMillis / 1000.0 / 3600.0 / 24.0 / 365.0;
-            }
-        }
-        return (int) ageInYears;
-    }
-
-    private boolean isYoungerThan(int ageLimit) {
-        int deathAge = getAge();
-        return deathAge < ageLimit && deathAge != -1;
-    }
-
     public void setInformation(Information info, InfoType lastType) {
         if (info.getType().equals(InfoType.FIRST_NAME)) {
             setFirstName(info.getValue());
@@ -284,17 +215,19 @@ public class Person implements Personalize {
             setLiving(false);
         } else if (info.getType().equals(InfoType.DATE)) {
             if (lastType.equals(InfoType.BIRTH)) {
-                setBirthDate(info.getValue());
+                getBirthDatePlace().parseDateText(info.getValue());
             } else if (lastType.equals(InfoType.DEATH)) {
-                setDeathDate(info.getValue());
+                if (!info.getValue().equals("DECEASED")) {
+                    getDeathDatePlace().parseDateText(info.getValue());
+                }
             } else if (lastType.equals(InfoType.RESIDENCE)) {
                 getLastResidence().setDate(info.getValue());
             }
         } else if (info.getType().equals(InfoType.PLACE)) {
             if (lastType.equals(InfoType.BIRTH)) {
-                setBirthPlace(info.getValue());
+                getBirthDatePlace().setPlace(info.getValue());
             } else if (lastType.equals(InfoType.DEATH)) {
-                setDeathPlace(info.getValue());
+                getDeathDatePlace().setPlace(info.getValue());
             }
         } else if (info.getType().equals(InfoType.OCCUPATION)) {
             setOccupation(info.getValue());

@@ -3,8 +3,8 @@ package org.ambrogenea.familyview.dto;
 import java.util.ArrayList;
 
 import org.ambrogenea.familyview.domain.Couple;
+import org.ambrogenea.familyview.domain.DatePlace;
 import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.utils.Tools;
 
 /**
  *
@@ -17,8 +17,7 @@ public class AncestorCouple {
 
     private AncestorPerson wife;
     private AncestorPerson husband;
-    private String marriageDate;
-    private String marriagePlace;
+    private DatePlace datePlace;
 
     public AncestorCouple() {
         initEmpty();
@@ -52,8 +51,7 @@ public class AncestorCouple {
             }
             this.childrenID = couple.getChildrenIndexes();
             this.children = new ArrayList<>(couple.getChildren());
-            this.marriageDate = couple.getMarriageDateEnglish();
-            this.marriagePlace = couple.getMarriagePlace();
+            this.datePlace = couple.getDatePlace();
         } else {
             initEmpty();
         }
@@ -70,8 +68,7 @@ public class AncestorCouple {
             }
             this.childrenID = couple.getChildrenIndexes();
             this.children = new ArrayList<>(couple.getChildren());
-            this.marriageDate = couple.getMarriageDateEnglish();
-            this.marriagePlace = couple.getMarriagePlace();
+            this.datePlace = couple.getDatePlace();
         } else {
             initEmpty();
         }
@@ -80,8 +77,7 @@ public class AncestorCouple {
     private void initEmpty() {
         childrenID = new ArrayList<>();
         children = new ArrayList<>();
-        marriageDate = "";
-        marriagePlace = "";
+        datePlace = new DatePlace();
     }
 
     public void setWife(AncestorPerson wife) {
@@ -92,24 +88,12 @@ public class AncestorCouple {
         this.husband = husband;
     }
 
-    public String getMarriageDate() {
-        return Tools.translateDateToCzech(marriageDate);
+    public DatePlace getDatePlace() {
+        return datePlace;
     }
 
-    public String getMarriageDateEnglish() {
-        return marriageDate;
-    }
-
-    public void setMarriageDate(String date) {
-        this.marriageDate = date;
-    }
-
-    public String getMarriagePlace() {
-        return marriagePlace;
-    }
-
-    public void setMarriagePlace(String place) {
-        this.marriagePlace = place;
+    public void setDatePlace(DatePlace datePlace) {
+        this.datePlace = datePlace;
     }
 
     public AncestorPerson getSpouse(Sex sex) {

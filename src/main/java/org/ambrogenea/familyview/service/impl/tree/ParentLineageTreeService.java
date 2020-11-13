@@ -79,7 +79,8 @@ public class ParentLineageTreeService implements TreeService {
 
         Position LabelPosition = fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2, -configuration.getMarriageLabelHeight() / 2);
         int labelWidth = motherX - LabelPosition.getX() - configuration.getAdultImageWidth() / 2;
-        lineageService.addLabel(LabelPosition, labelWidth, rootPerson.getParents().getMarriageDate());
+        lineageService.addLabel(LabelPosition, labelWidth,
+                rootPerson.getParents().getDatePlace().getLocalizedDate(configuration.getLocale()));
         lineageService.addLine(childPosition, new Position(centerXPosition, LabelPosition.getY() + configuration.getMarriageLabelHeight()), Relation.DIRECT);
     }
 

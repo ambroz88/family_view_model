@@ -1,14 +1,14 @@
 package org.ambrogenea.familyview.dto.tree;
 
+import java.time.Period;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import org.ambrogenea.familyview.domain.DatePlace;
 import org.ambrogenea.familyview.domain.Personalize;
 import org.ambrogenea.familyview.domain.Residence;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.utils.Tools;
 
 public class PersonRecord implements Personalize {
 
@@ -19,12 +19,8 @@ public class PersonRecord implements Personalize {
 
     private String firstName;
     private String surname;
-    private String birthDate;
-    private String birthPlace;
-    private String simpleBirthPlace;
-    private String deathDate;
-    private String deathPlace;
-    private String simpleDeathPlace;
+    private DatePlace birthDatePlace;
+    private DatePlace deathDatePlace;
     private String occupation;
     private boolean living;
     private Position position;
@@ -34,12 +30,8 @@ public class PersonRecord implements Personalize {
         this.sex = sex;
         this.firstName = "";
         this.surname = "";
-        this.birthDate = "";
-        this.birthPlace = "";
-        this.simpleBirthPlace = "";
-        this.deathDate = "";
-        this.deathPlace = "";
-        this.simpleDeathPlace = "";
+        this.birthDatePlace = new DatePlace();
+        this.deathDatePlace = new DatePlace();
         this.occupation = "";
         this.directLineage = directLineage;
         this.residences = new ArrayList<>();
@@ -51,12 +43,8 @@ public class PersonRecord implements Personalize {
         firstName = person.getFirstName();
         surname = person.getSurname();
         sex = person.getSex();
-        birthDate = person.getBirthDate();
-        birthPlace = person.getBirthPlace();
-        simpleBirthPlace = person.getSimpleBirthPlace();
-        deathDate = person.getDeathDate();
-        deathPlace = person.getDeathPlace();
-        simpleDeathPlace = person.getSimpleDeathPlace();
+        birthDatePlace = person.getBirthDatePlace();
+        deathDatePlace = person.getDeathDatePlace();
         occupation = person.getOccupation();
         living = person.isLiving();
         directLineage = person.isDirectLineage();
@@ -92,36 +80,20 @@ public class PersonRecord implements Personalize {
         return sex;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public DatePlace getBirthDatePlace() {
+        return birthDatePlace;
     }
 
-    public String getBirthDateCzech() {
-        return Tools.translateDateToCzech(birthDate);
+    public void setBirthDatePlace(DatePlace birthDatePlace) {
+        this.birthDatePlace = birthDatePlace;
     }
 
-    public String getBirthPlace() {
-        return birthPlace;
+    public DatePlace getDeathDatePlace() {
+        return deathDatePlace;
     }
 
-    public String getSimpleBirthPlace() {
-        return simpleBirthPlace;
-    }
-
-    public String getDeathDate() {
-        return deathDate;
-    }
-
-    public String getDeathDateCzech() {
-        return Tools.translateDateToCzech(deathDate);
-    }
-
-    public String getDeathPlace() {
-        return deathPlace;
-    }
-
-    public String getSimpleDeathPlace() {
-        return simpleDeathPlace;
+    public void setDeathDatePlace(DatePlace deathDatePlace) {
+        this.deathDatePlace = deathDatePlace;
     }
 
     public String getOccupation() {
@@ -153,17 +125,12 @@ public class PersonRecord implements Personalize {
     }
 
     public int getAge() {
-        double ageInYears = -1;
-        if (!getBirthDate().isEmpty() && !getDeathDate().isEmpty()) {
-            Date birth = Tools.convertDateString(getBirthDate());
-            Date death = Tools.convertDateString(getDeathDate());
-
-            if (birth != null && death != null) {
-                long ageInMillis = death.getTime() - birth.getTime();
-                ageInYears = ageInMillis / 1000.0 / 3600.0 / 24.0 / 365.0;
-            }
+        int ageInYears = -1;
+        if (getBirthDatePlace().getDate() != null && getDeathDatePlace().getDate() != null) {
+            ageInYears = Period.between(getBirthDatePlace().getDate(),
+                    getDeathDatePlace().getDate()).getYears();
         }
-        return (int) ageInYears;
+        return ageInYears;
     }
 
     private boolean isYoungerThan(int ageLimit) {
@@ -177,30 +144,6 @@ public class PersonRecord implements Personalize {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
-    }
-
-    public void setSimpleBirthPlace(String simpleBirthPlace) {
-        this.simpleBirthPlace = simpleBirthPlace;
-    }
-
-    public void setDeathDate(String deathDate) {
-        this.deathDate = deathDate;
-    }
-
-    public void setDeathPlace(String deathPlace) {
-        this.deathPlace = deathPlace;
-    }
-
-    public void setSimpleDeathPlace(String simpleDeathPlace) {
-        this.simpleDeathPlace = simpleDeathPlace;
     }
 
     public void setOccupation(String occupation) {

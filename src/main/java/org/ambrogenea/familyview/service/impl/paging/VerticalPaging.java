@@ -2,8 +2,8 @@ package org.ambrogenea.familyview.service.impl.paging;
 
 import static org.ambrogenea.familyview.constant.Spaces.*;
 
-import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.Paging;
 
@@ -20,8 +20,20 @@ public class VerticalPaging implements Paging {
 
     @Override
     public int calculateAllAncestorsX(AncestorPerson person) {
-        return (int) ((config.getCoupleWidth() + config.getAdultImageWidth() / 2)
-            * person.getFather().getLastParentsCount());
+        int minimalX = config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
+        if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
+            int childrenWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0);
+            int childrenX = childrenWidth / 2 - config.getHalfSpouseLabelSpace();
+            minimalX = Math.max(minimalX, childrenX + SIBLINGS_GAP);
+        }
+
+        if (person.getFather() != null) {
+            minimalX = Math.max(minimalX, config.getCoupleWidth() / 2 + SIBLINGS_GAP);
+            int fathersX = (int) ((config.getCoupleWidth() + config.getAdultImageWidth() / 2) * person.getFather().getLastParentsCount());
+            return Math.max(fathersX, minimalX);
+        } else {
+            return minimalX;
+        }
     }
 
     @Override
@@ -189,8 +201,8 @@ public class VerticalPaging implements Paging {
     @Override
     public int calculateLineageY(AncestorPerson person, int pageHeight) {
         int positionY = pageHeight - (VERTICAL_GAP + config.getAdultImageHeight()) / 2;
-        if (config.isShowSpouses() && person.getSpouseCouple() != null &&
-            config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
+        if (config.isShowSpouses() && person.getSpouseCouple() != null
+                && config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
             positionY = positionY - (VERTICAL_GAP + config.getSiblingImageHeight());
         }
         return positionY;
@@ -201,12 +213,12 @@ public class VerticalPaging implements Paging {
         int pageHeight;
         if (config.getAdultDiagram().equals(Diagrams.PERGAMEN)) {
             pageHeight = config.getAdultImageHeight() + 2 * SIBLINGS_GAP
-                + (2 * config.getAdultImageHeight() - (int) (config.getAdultImageHeight() * 0.2) + config.getMarriageLabelHeight() + VERTICAL_GAP)
-                * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
+                    + (2 * config.getAdultImageHeight() - (int) (config.getAdultImageHeight() * 0.2) + config.getMarriageLabelHeight() + VERTICAL_GAP)
+                    * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
         } else {
             pageHeight = config.getAdultImageHeight() + 2 * SIBLINGS_GAP
-                + (2 * config.getAdultImageHeight() + config.getMarriageLabelHeight() + VERTICAL_GAP)
-                * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
+                    + (2 * config.getAdultImageHeight() + config.getMarriageLabelHeight() + VERTICAL_GAP)
+                    * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
         }
 
         if (config.isShowSpouses() && person.getSpouse() != null) {

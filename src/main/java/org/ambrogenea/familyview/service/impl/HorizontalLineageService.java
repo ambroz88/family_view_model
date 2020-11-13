@@ -30,11 +30,12 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
 
             addVerticalLineToParents(child);
             if (getConfiguration().isShowHeraldry()) {
-                addHeraldry(child, person.getSimpleBirthPlace());
+                addHeraldry(child, person.getBirthDatePlace().getSimplePlace());
             }
 
             if (person.getFather() != null) {
-                addMother(child, person.getMother(), person.getParents().getMarriageDate());
+                addMother(child, person.getMother(),
+                        person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
 
                 Position fatherPosition = addFather(child, person.getFather());
 
@@ -64,7 +65,8 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
             Position motherPosition;
             if (person.getFather() != null) {
                 addFather(childPosition, person.getFather());
-                motherPosition = addMother(childPosition, person.getMother(), person.getParents().getMarriageDate());
+                motherPosition = addMother(childPosition, person.getMother(),
+                        person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
 
                 if (configuration.isShowSiblings()) {
 //                    addSiblingsAroundFather(motherPosition, person.getMother());
@@ -78,7 +80,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
             }
 
             if (configuration.isShowHeraldry()) {
-                addHeraldry(childPosition, person.getSimpleBirthPlace());
+                addHeraldry(childPosition, person.getBirthDatePlace().getSimplePlace());
             }
 
             generateFathersFamily(motherPosition, person.getMother());

@@ -30,11 +30,12 @@ public class VerticalLineageService extends VerticalAncestorService implements L
 
             addVerticalLineToParents(child);
             if (getConfiguration().isShowHeraldry()) {
-                addHeraldry(child, person.getSimpleBirthPlace());
+                addHeraldry(child, person.getBirthDatePlace().getSimplePlace());
             }
 
             if (person.getFather() != null) {
-                addMother(child, person.getMother(), person.getParents().getMarriageDate());
+                addMother(child, person.getMother(),
+                        person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
 
                 Position fatherPosition = addFather(child, person.getFather());
 
@@ -61,7 +62,8 @@ public class VerticalLineageService extends VerticalAncestorService implements L
         Position motherPosition = addFather(childPosition, person.getMother());
 
         if (person.getFather() != null) {
-            addMother(childPosition, person.getFather(), person.getParents().getMarriageDate());
+            addMother(childPosition, person.getFather(),
+                    person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
         }
 
         if (configuration.isShowSiblings()) {
@@ -69,7 +71,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
         }
 
         if (configuration.isShowHeraldry()) {
-            addHeraldry(childPosition, person.getSimpleBirthPlace());
+            addHeraldry(childPosition, person.getBirthDatePlace().getSimplePlace());
         }
 
         generateFathersFamily(motherPosition, person.getMother());
