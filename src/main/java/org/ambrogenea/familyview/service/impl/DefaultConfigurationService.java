@@ -110,7 +110,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
             configuration.setAdultImageWidth(adultImageWidth);
             configuration.setMarriageLabelWidth(Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2));
             configuration.setWideMarriageLabel(3 * getParentImageSpace());
-            setSiblingImageWidth(adultImageWidth);
             firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
         }
     }
@@ -123,7 +122,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getAdultImageHeightAlternative() {
         int imageHeight = getAdultImageHeight();
-        if (getAdultDiagram().equals(Diagrams.PERGAMEN)) {
+        if (getAdultDiagram().equals(Diagrams.SCROLL)) {
             imageHeight = (int) (imageHeight * 0.8);
         }
         return imageHeight;
@@ -134,7 +133,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getAdultImageHeight();
         if (Math.abs(oldValue - adultImageHeight) > 4) {
             configuration.setAdultImageHeight(adultImageHeight);
-            setSiblingImageHeight(adultImageHeight);
             firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageHeight);
         }
     }
@@ -279,7 +277,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
     public void setAdultBottomOffset(int adultVerticalOffset) {
         int oldValue = getAdultBottomOffset();
         configuration.setAdultBottomOffset(adultVerticalOffset);
-        setSiblingBottomOffset(adultVerticalOffset);
         firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
     }
 
@@ -287,7 +284,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
     public void setAdultTopOffset(int adultVerticalOffset) {
         int oldValue = getAdultTopOffset();
         configuration.setAdultTopOffset(adultVerticalOffset);
-        setSiblingBottomOffset(adultVerticalOffset);
         firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
     }
 

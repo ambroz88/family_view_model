@@ -59,8 +59,8 @@ public class PersonConfiguration {
         adultFontSize = 14;
         siblingFontSize = 13;
 
-        adultDiagram = Diagrams.PERGAMEN;
-        siblingDiagram = Diagrams.PERGAMEN;
+        adultDiagram = Diagrams.SCROLL;
+        siblingDiagram = Diagrams.SCROLL;
         labelShape = LabelShape.OVAL;
         adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
         adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";

@@ -211,7 +211,7 @@ public class VerticalPaging implements Paging {
     @Override
     public int calculateLineageHeight(AncestorPerson person) {
         int pageHeight;
-        if (config.getAdultDiagram().equals(Diagrams.PERGAMEN)) {
+        if (config.getAdultDiagram().equals(Diagrams.SCROLL)) {
             pageHeight = config.getAdultImageHeight() + 2 * SIBLINGS_GAP
                     + (2 * config.getAdultImageHeight() - (int) (config.getAdultImageHeight() * 0.2) + config.getMarriageLabelHeight() + VERTICAL_GAP)
                     * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
