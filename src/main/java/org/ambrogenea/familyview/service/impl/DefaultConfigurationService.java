@@ -264,51 +264,27 @@ public final class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public int getAdultBottomOffset() {
-        return configuration.getAdultBottomOffset();
+    public int getAdultVerticalShift() {
+        return configuration.getAdultVerticalShift();
     }
 
     @Override
-    public int getAdultTopOffset() {
-        return configuration.getAdultTopOffset();
+    public void setAdultVerticalShift(int adultVerticalShift) {
+        int oldValue = getAdultVerticalShift();
+        configuration.setAdultVerticalShift(adultVerticalShift);
+        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalShift);
     }
 
     @Override
-    public void setAdultBottomOffset(int adultVerticalOffset) {
-        int oldValue = getAdultBottomOffset();
-        configuration.setAdultBottomOffset(adultVerticalOffset);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
+    public int getSiblingVerticalShift() {
+        return configuration.getSiblingVerticalShift();
     }
 
     @Override
-    public void setAdultTopOffset(int adultVerticalOffset) {
-        int oldValue = getAdultTopOffset();
-        configuration.setAdultTopOffset(adultVerticalOffset);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalOffset);
-    }
-
-    @Override
-    public int getSiblingBottomOffset() {
-        return configuration.getSiblingBottomOffset();
-    }
-
-    @Override
-    public int getSiblingTopOffset() {
-        return configuration.getSiblingTopOffset();
-    }
-
-    @Override
-    public void setSiblingBottomOffset(int siblingVerticalOffset) {
-        int oldValue = getSiblingBottomOffset();
-        configuration.setSiblingBottomOffset(siblingVerticalOffset);
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalOffset);
-    }
-
-    @Override
-    public void setSiblingTopOffset(int siblingVerticalOffset) {
-        int oldValue = getSiblingTopOffset();
-        configuration.setSiblingTopOffset(siblingVerticalOffset);
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalOffset);
+    public void setSiblingVerticalShift(int siblingVerticalShift) {
+        int oldValue = getSiblingVerticalShift();
+        configuration.setSiblingVerticalShift(siblingVerticalShift);
+        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalShift);
     }
 
     @Override

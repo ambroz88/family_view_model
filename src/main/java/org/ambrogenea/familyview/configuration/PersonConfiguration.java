@@ -17,15 +17,15 @@ public class PersonConfiguration {
 
     private int adultImageWidth;
     private int adultImageHeight;
+    private int adultVerticalShift;
+    private int adultFontSize;
+
     private int wideMarriageLabel;
     private int marriageLabelWidth;
-    private int adultTopOffset;
-    private int adultBottomOffset;
+
     private int siblingImageWidth;
     private int siblingImageHeight;
-    private int siblingTopOffset;
-    private int siblingBottomOffset;
-    private int adultFontSize;
+    private int siblingVerticalShift;
     private int siblingFontSize;
 
     private Diagrams adultDiagram;
@@ -50,12 +50,10 @@ public class PersonConfiguration {
         adultImageHeight = 140;
         marriageLabelWidth = Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 4 * 3);
         wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
-        adultTopOffset = 10;
-        adultBottomOffset = 10;
+        adultVerticalShift = 0;
         siblingImageWidth = 170;
         siblingImageHeight = 120;
-        siblingBottomOffset = 10;
-        siblingTopOffset = 10;
+        siblingVerticalShift = 0;
         adultFontSize = 14;
         siblingFontSize = 13;
 
@@ -126,20 +124,12 @@ public class PersonConfiguration {
         this.marriageLabelWidth = marriageLabelWidth;
     }
 
-    public int getAdultTopOffset() {
-        return adultTopOffset;
+    public int getAdultVerticalShift() {
+        return adultVerticalShift;
     }
 
-    public void setAdultTopOffset(int adultTopOffset) {
-        this.adultTopOffset = adultTopOffset;
-    }
-
-    public int getAdultBottomOffset() {
-        return adultBottomOffset;
-    }
-
-    public void setAdultBottomOffset(int adultBottomOffset) {
-        this.adultBottomOffset = adultBottomOffset;
+    public void setAdultVerticalShift(int adultVerticalShift) {
+        this.adultVerticalShift = adultVerticalShift;
     }
 
     public int getSiblingImageWidth() {
@@ -158,20 +148,12 @@ public class PersonConfiguration {
         this.siblingImageHeight = siblingImageHeight;
     }
 
-    public int getSiblingTopOffset() {
-        return siblingTopOffset;
+    public int getSiblingVerticalShift() {
+        return siblingVerticalShift;
     }
 
-    public void setSiblingTopOffset(int siblingTopOffset) {
-        this.siblingTopOffset = siblingTopOffset;
-    }
-
-    public int getSiblingBottomOffset() {
-        return siblingBottomOffset;
-    }
-
-    public void setSiblingBottomOffset(int siblingBottomOffset) {
-        this.siblingBottomOffset = siblingBottomOffset;
+    public void setSiblingVerticalShift(int siblingVerticalShift) {
+        this.siblingVerticalShift = siblingVerticalShift;
     }
 
     public int getAdultFontSize() {

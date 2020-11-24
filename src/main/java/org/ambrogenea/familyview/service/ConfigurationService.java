@@ -86,21 +86,13 @@ public interface ConfigurationService {
 
     String getSiblingWomanImagePath();
 
-    int getAdultBottomOffset();
+    int getAdultVerticalShift();
 
-    int getAdultTopOffset();
+    void setAdultVerticalShift(int adultVerticalShift);
 
-    void setAdultBottomOffset(int adultVerticalOffset);
+    int getSiblingVerticalShift();
 
-    void setAdultTopOffset(int adultVerticalOffset);
-
-    int getSiblingBottomOffset();
-
-    int getSiblingTopOffset();
-
-    void setSiblingBottomOffset(int siblingVerticalOffset);
-
-    void setSiblingTopOffset(int siblingVerticalOffset);
+    void setSiblingVerticalShift(int siblingVerticalShift);
 
     boolean isShowSiblings();
 
