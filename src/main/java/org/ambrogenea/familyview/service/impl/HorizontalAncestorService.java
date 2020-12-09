@@ -39,16 +39,10 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 
     @Override
     public void addFirstParents(Position childPosition, AncestorPerson child) {
-        addGrandParents(childPosition, child);
-    }
-
-    @Override
-    public void addGrandParents(Position childPosition, AncestorPerson child) {
         addAllParents(childPosition, child);
     }
 
-    @Override
-    public void addAllParents(Position childPosition, AncestorPerson child) {
+    private void addAllParents(Position childPosition, AncestorPerson child) {
         if (child.getMother() != null) {
             int verticalShift = -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP;
             double motherParentsCount = Math.min(child.getMother().getInnerParentsCount(), child.getMother().getLastParentsCount());

@@ -11,10 +11,6 @@ public interface SpecificAncestorService extends CommonAncestorService {
 
     void addFirstParents(Position childPosition, AncestorPerson child);
 
-    void addGrandParents(Position childPosition, AncestorPerson child);
-
-    void addAllParents(Position childPosition, AncestorPerson child);
-
     void addSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild);
 
     void addSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX);

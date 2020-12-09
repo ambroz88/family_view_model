@@ -43,10 +43,10 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         Position coupleCenterPosition = addParents(childPosition, child);
 
         Position fatherPosition = coupleCenterPosition.addXAndY(-configuration.getHalfSpouseLabelSpace() - 3, 0);
-        addGrandParents(fatherPosition, child.getFather());
+        addParentsFromHorizontal(fatherPosition, child.getFather());
 
         Position motherPosition = coupleCenterPosition.addXAndY(configuration.getHalfSpouseLabelSpace() + 3, 0);
-        addGrandParents(motherPosition, child.getMother());
+        addParentsFromHorizontal(motherPosition, child.getMother());
 
         Position linePosition = new Position(childPosition.getX(), fatherPosition.getY());
         addLine(childPosition, linePosition, Relation.DIRECT);
@@ -56,36 +56,83 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         }
     }
 
-    @Override
-    public void addGrandParents(Position childPosition, AncestorPerson child) {
-        addAllParents(childPosition, child);
-//        if (child.getMother() != null) {
-//            if (child.getFather() == null) {
-//                Position motherPosition = childPosition.addXAndY(0, -configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP);
-//                addPerson(motherPosition, child.getMother());
-//                addAllParents(motherPosition, child.getMother());
-//                addLine(motherPosition, childPosition, Relation.DIRECT);
-//            } else {
-//                Position coupleCenterPosition = addParents(childPosition, child);
-//
-//                Position fatherPosition = coupleCenterPosition.addXAndY(-configuration.getHalfSpouseLabelSpace(), 0);
-//                addAllParents(fatherPosition, child.getFather());
-//
-//                Position motherPosition = coupleCenterPosition.addXAndY(configuration.getHalfSpouseLabelSpace(), 0);
-//                addAllParents(motherPosition, child.getMother());
-//
-//                Position linePosition = new Position(childPosition.getX(), fatherPosition.getY());
-//                addLine(linePosition, childPosition, Relation.DIRECT);
-//
-//                if (configuration.isShowHeraldry()) {
-//                    addHeraldry(childPosition, child.getSimpleBirthPlace());
-//                }
-//            }
-//        }
+    private void addParentsFromHorizontal(Position childPosition, AncestorPerson child) {
+        if (child.getMother() != null) {
+            int fatherX;
+            int motherX;
+            int childX = childPosition.getX();
+            int childY = childPosition.getY();
+
+            int parentY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
+
+            if (child.getFather() == null) {
+                Position motherPosition = childPosition.addXAndY(0, -configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                addPerson(motherPosition, child.getMother());
+                addAllParents(motherPosition, child.getMother(), new Position());
+                addLine(motherPosition, childPosition, Relation.DIRECT);
+            } else {
+                Position shiftPosition = new Position(-configuration.getMarriageLabelWidth(),
+                        configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight());
+                if (child.getSex().equals(Sex.FEMALE)) {
+                    fatherX = calculateFatherXHorizontal(child, childX);
+                    motherX = fatherX + configuration.getAdultImageWidth() + configuration.getMarriageLabelWidth();
+                } else {
+                    motherX = calculateMotherXHorizontal(child, childX);
+                    fatherX = motherX - configuration.getAdultImageWidth() - configuration.getMarriageLabelWidth();
+                }
+
+                Position fatherPosition = new Position(fatherX, parentY);
+                addPerson(fatherPosition, child.getFather());
+                addAllParents(fatherPosition, child.getFather(), shiftPosition);
+
+                Position motherPosition = new Position(motherX, parentY);
+                addPerson(motherPosition, child.getMother());
+                addAllParents(motherPosition, child.getMother(), shiftPosition);
+
+                Position linePosition = fatherPosition.addXAndY((configuration.getAdultImageWidth() + configuration.getMarriageLabelWidth()) / 2, 0);
+                addLabel(fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2, -configuration.getMarriageLabelHeight() / 2),
+                        configuration.getMarriageLabelWidth(),
+                        child.getParents().getDatePlace().getLocalizedDate(configuration.getLocale()));
+                addLine(linePosition, childPosition, Relation.DIRECT);
+
+                if (configuration.isShowHeraldry()) {
+                    addHeraldry(new Position(linePosition.getX(), childPosition.getY()), child.getBirthDatePlace().getSimplePlace());
+                }
+            }
+        }
     }
 
-    @Override
-    public void addAllParents(Position childPosition, AncestorPerson child) {
+    private int calculateFatherXHorizontal(AncestorPerson child, int childX) {
+        int fatherX;
+        if (child.getFather().getAncestorGenerations() > 0) {
+
+            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
+            double fatherParentsCount = child.getFather().getLastParentsCount();
+            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 2 * 3;
+            fatherX = childX + generationsWidth;
+
+        } else {
+            fatherX = childX;
+        }
+        return fatherX;
+    }
+
+    private int calculateMotherXHorizontal(AncestorPerson child, int childX) {
+        int motherX;
+        if (child.getMother().getAncestorGenerations() > 0) {
+
+            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
+            double motherParentsCount = child.getMother().getLastParentsCount();
+            int generationsWidth = (int) (motherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 2 * 3;
+            motherX = childX - generationsWidth;
+
+        } else {
+            motherX = childX;
+        }
+        return motherX;
+    }
+
+    private void addAllParents(Position childPosition, AncestorPerson child, Position femaleShift) {
         if (child.getMother() != null) {
             int fatherY;
             int motherY;
@@ -93,44 +140,39 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
             int motherX;
             int childX = childPosition.getX();
             int childY = childPosition.getY();
+            int heraldryShiftY = 0;
 
             if (child.getFather() == null) {
-                //TODO: generate mother only
-//                motherX = childX;
-            } else {
-                int shiftX = configuration.getAdultImageWidth() / 4;
+                motherX = calculateFatherX(child.getMother(), childX);
+                motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
+                        - configuration.getAdultImageHeightAlternative() - configuration.getMarriageLabelHeight();
 
+                Position motherPosition = new Position(motherX, motherY);
+                addPerson(motherPosition, child.getMother());
+                addAllParents(motherPosition, child.getMother(), new Position());
+
+                addLine(motherPosition, childPosition, Relation.DIRECT);
+
+                if (configuration.isShowHeraldry()) {
+                    addHeraldry(new Position(motherX, childY - heraldryShiftY), child.getBirthDatePlace().getSimplePlace());
+                }
+            } else {
+                int verticalFemaleShift = configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight();
                 if (child.getSex().equals(Sex.FEMALE)) {
                     fatherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
-                            - 2 * configuration.getAdultImageHeightAlternative() - 2 * configuration.getMarriageLabelHeight();
+                            - 2 * verticalFemaleShift + femaleShift.getY();
                     motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
-                            - configuration.getAdultImageHeightAlternative() - configuration.getMarriageLabelHeight();
+                            - verticalFemaleShift + femaleShift.getY();
 
-                    double fatherParentsCount;
-                    if (child.getFather().getAncestorGenerations() > 1) {
-                        fatherParentsCount = child.getFather().getLastParentsCount();
-                        fatherX = childX + configuration.getAdultImageWidth() - shiftX
-                                + (int) ((configuration.getCoupleWidth() - shiftX) * fatherParentsCount);
-                    } else {
-                        fatherParentsCount = (child.getFather().getAncestorGenerations());
-                        fatherX = childX + configuration.getAdultImageWidth() - shiftX
-                                + (int) ((configuration.getAdultImageWidth() * 0.75) * fatherParentsCount);
-                    }
+                    fatherX = calculateFatherX(child.getFather(), childX) + femaleShift.getX();
                     motherX = fatherX + configuration.getMarriageLabelWidth();
+                    heraldryShiftY = verticalFemaleShift;
                 } else {
                     fatherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
-                            - configuration.getAdultImageHeightAlternative() - configuration.getMarriageLabelHeight();
+                            - verticalFemaleShift;
                     motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
 
-                    double motherParentsCount;
-                    if (child.getMother().getAncestorGenerations() > 1) {
-                        motherParentsCount = child.getMother().getLastParentsCount();
-                        motherX = childX - configuration.getAdultImageWidth() + shiftX
-                                - (int) ((configuration.getCoupleWidth() - shiftX) * motherParentsCount);
-                    } else {
-                        motherParentsCount = (child.getMother().getAncestorGenerations());
-                        motherX = childX - (int) ((configuration.getCoupleWidth() - shiftX) * motherParentsCount);
-                    }
+                    motherX = calculateMotherX(child.getMother(), childX);
                     fatherX = motherX - configuration.getMarriageLabelWidth();
                 }
 
@@ -138,11 +180,11 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
 
                 Position fatherPosition = new Position(fatherX, fatherY);
                 addPerson(fatherPosition, child.getFather());
-                addAllParents(fatherPosition, child.getFather());
+                addAllParents(fatherPosition, child.getFather(), new Position());
 
                 Position motherPosition = new Position(motherX, motherY);
                 addPerson(motherPosition, child.getMother());
-                addAllParents(motherPosition, child.getMother());
+                addAllParents(motherPosition, child.getMother(), new Position());
 
                 addLabel(new Position(fatherX, labelY - configuration.getMarriageLabelHeight() / 2),
                         configuration.getMarriageLabelWidth(),
@@ -150,11 +192,41 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
                 addLine(new Position(fatherX, labelY), childPosition, Relation.DIRECT);
 
                 if (configuration.isShowHeraldry()) {
-                    addHeraldry(new Position(fatherX, childY), child.getBirthDatePlace().getSimplePlace());
+                    addHeraldry(new Position(fatherX, childY - heraldryShiftY), child.getBirthDatePlace().getSimplePlace());
                 }
             }
 
         }
+    }
+
+    private int calculateFatherX(AncestorPerson father, int childX) {
+        int fatherX;
+        if (father.getAncestorGenerations() > 0) {
+
+            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
+            double fatherParentsCount = father.getLastParentsCount();
+            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 4 * 3;
+            fatherX = childX + generationsWidth;
+
+        } else {
+            fatherX = childX + configuration.getAdultImageWidth() / 4 * 3;
+        }
+        return fatherX;
+    }
+
+    private int calculateMotherX(AncestorPerson mother, int childX) {
+        int motherX;
+        if (mother.getAncestorGenerations() > 0) {
+
+            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
+            double motherParentsCount = mother.getLastParentsCount();
+            int generationsWidth = (int) (motherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 4 * 3;
+            motherX = childX - generationsWidth;
+
+        } else {
+            motherX = childX;
+        }
+        return motherX;
     }
 
     @Override

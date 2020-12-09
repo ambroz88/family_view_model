@@ -42,6 +42,8 @@ public class AncestorPerson implements Personalize {
     private int maxYoungerSiblingsSpouse;
     private int maxOlderSiblingsSpouse;
     private int ancestorGenerations;
+    private int fatherGenerations;
+    private int motherGenerations;
     private double lastParentsCount;
     private double innerParentsCount;
     private int maxOlderSiblings;
@@ -64,6 +66,8 @@ public class AncestorPerson implements Personalize {
             innerParentsCount = person.getInnerParentsCount();
             this.ancestorLine = new ArrayList<>(person.getAncestorLine());
             this.ancestorGenerations = person.getAncestorGenerations();
+            this.fatherGenerations = person.getFatherGenerations();
+            this.motherGenerations = person.getMotherGenerations();
             Collections.copy(person.getYoungerSiblings(), youngerSiblings);
             Collections.copy(person.getOlderSiblings(), olderSiblings);
             maxYoungerSiblingsSpouse = person.getMaxYoungerSiblingsSpouse();
@@ -106,6 +110,8 @@ public class AncestorPerson implements Personalize {
         directLineage = true;
 
         ancestorGenerations = 0;
+        fatherGenerations = 0;
+        motherGenerations = 0;
         lastParentsCount = 0;
         innerParentsCount = 0;
         ancestorLine = new ArrayList<>();
@@ -147,10 +153,15 @@ public class AncestorPerson implements Personalize {
                 innerParentsCount = getFather().getLastParentsCount();
             }
 
+            fatherGenerations = fatherGenerations + Math.max(1, father.getFatherGenerations());
             if (getMother() == null) {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
-            } else if (getMother() != null && getFather().getAncestorGenerations() >= getMother().getAncestorGenerations()) {
-                ancestorGenerations = getFather().getAncestorGenerations() + 1;
+            } else if (getMother() != null) {
+
+                if (getFather().getAncestorGenerations() >= getMother().getAncestorGenerations()) {
+                    ancestorGenerations = getFather().getAncestorGenerations() + 1;
+                }
+                motherGenerations = motherGenerations + Math.max(1, getMother().getMotherGenerations());
             }
 
             setMaxOlderSiblings(getFather().getMaxOlderSiblings());
@@ -179,10 +190,15 @@ public class AncestorPerson implements Personalize {
                 innerParentsCount = getMother().getLastParentsCount();
             }
 
+            motherGenerations = motherGenerations + Math.max(1, mother.getMotherGenerations());
             if (getFather() == null) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
-            } else if (getFather() != null && getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
-                ancestorGenerations = getMother().getAncestorGenerations() + 1;
+            } else if (getFather() != null) {
+
+                if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
+                    ancestorGenerations = getMother().getAncestorGenerations() + 1;
+                }
+                fatherGenerations = fatherGenerations + Math.max(1, getFather().getFatherGenerations());
             }
         }
     }
@@ -232,6 +248,14 @@ public class AncestorPerson implements Personalize {
 
     public int getAncestorGenerations() {
         return ancestorGenerations;
+    }
+
+    public int getFatherGenerations() {
+        return fatherGenerations;
+    }
+
+    public int getMotherGenerations() {
+        return motherGenerations;
     }
 
     public double getLastParentsCount() {
