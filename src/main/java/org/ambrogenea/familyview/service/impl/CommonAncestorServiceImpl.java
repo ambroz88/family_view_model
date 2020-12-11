@@ -229,11 +229,11 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         addPerson(fatherPosition, person.getFather());
         addPerson(motherPosition, person.getMother());
         Position label = fatherPosition.addXAndY(
-                getConfiguration().getAdultImageWidth() / 2,
+                getConfiguration().getAdultImageWidth() / 2 + Spaces.LABEL_GAP,
                 -getConfiguration().getMarriageLabelHeight() / 2
         );
 
-        addLabel(label, getConfiguration().getMarriageLabelWidth(),
+        addLabel(label, getConfiguration().getMarriageLabelWidth() - 2 * Spaces.LABEL_GAP,
                 person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
         return new Position(childPosition.getX(), fatherPosition.getY());
     }

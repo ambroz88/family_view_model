@@ -10,8 +10,11 @@ import org.ambrogenea.familyview.service.SpecificAncestorService;
 
 public class VerticalAncestorService extends CommonAncestorServiceImpl implements SpecificAncestorService {
 
+    private int parentsWidth;
+
     public VerticalAncestorService(ConfigurationService configuration) {
         super(configuration);
+        parentsWidth = configuration.getCoupleWidth() + (int) (configuration.getAdultImageWidth() / 3.0);
     }
 
     @Override
@@ -30,10 +33,10 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
 
     @Override
     public Position addFather(Position childPosition, AncestorPerson father) {
-        int fatherY = childPosition.getY() - getConfiguration().getAdultImageHeightAlternative()
+        int fatherYShift = -getConfiguration().getAdultImageHeightAlternative()
                 - getConfiguration().getAdultImageHeight()
                 - getConfiguration().getMarriageLabelHeight() - Spaces.VERTICAL_GAP;
-        Position fatherPosition = new Position(childPosition.getX(), fatherY);
+        Position fatherPosition = childPosition.addXAndY(0, fatherYShift);
         addPerson(fatherPosition, father);
         return fatherPosition;
     }
@@ -89,9 +92,12 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
                 addPerson(motherPosition, child.getMother());
                 addAllParents(motherPosition, child.getMother(), shiftPosition);
 
-                Position linePosition = fatherPosition.addXAndY((configuration.getAdultImageWidth() + configuration.getMarriageLabelWidth()) / 2, 0);
-                addLabel(fatherPosition.addXAndY(configuration.getAdultImageWidth() / 2, -configuration.getMarriageLabelHeight() / 2),
-                        configuration.getMarriageLabelWidth(),
+                Position linePosition = fatherPosition.addXAndY(
+                        (configuration.getAdultImageWidth() + configuration.getMarriageLabelWidth()) / 2, 0);
+                addLabel(fatherPosition.addXAndY(
+                        configuration.getAdultImageWidth() / 2 + Spaces.LABEL_GAP,
+                        -configuration.getMarriageLabelHeight() / 2),
+                        configuration.getMarriageLabelWidth() - 2 * Spaces.LABEL_GAP,
                         child.getParents().getDatePlace().getLocalizedDate(configuration.getLocale()));
                 addLine(linePosition, childPosition, Relation.DIRECT);
 
@@ -106,10 +112,9 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         int fatherX;
         if (child.getFather().getAncestorGenerations() > 0) {
 
-            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
             double fatherParentsCount = child.getFather().getLastParentsCount();
-            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 2 * 3;
-            fatherX = childX + generationsWidth;
+            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            fatherX = childX + generationsWidth - configuration.getMarriageLabelWidth();
 
         } else {
             fatherX = childX;
@@ -121,10 +126,9 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         int motherX;
         if (child.getMother().getAncestorGenerations() > 0) {
 
-            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
             double motherParentsCount = child.getMother().getLastParentsCount();
-            int generationsWidth = (int) (motherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 2 * 3;
-            motherX = childX - generationsWidth;
+            int generationsWidth = (int) (motherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            motherX = childX - generationsWidth + configuration.getMarriageLabelWidth();
 
         } else {
             motherX = childX;
@@ -203,13 +207,12 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         int fatherX;
         if (father.getAncestorGenerations() > 0) {
 
-            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
             double fatherParentsCount = father.getLastParentsCount();
-            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 4 * 3;
+            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
             fatherX = childX + generationsWidth;
 
         } else {
-            fatherX = childX + configuration.getAdultImageWidth() / 4 * 3;
+            fatherX = childX + (int) (configuration.getAdultImageWidth() / 3.0 * 2);
         }
         return fatherX;
     }
@@ -218,9 +221,8 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
         int motherX;
         if (mother.getAncestorGenerations() > 0) {
 
-            int parentsWidth = configuration.getCoupleWidth() + configuration.getAdultImageWidth() / 2;
             double motherParentsCount = mother.getLastParentsCount();
-            int generationsWidth = (int) (motherParentsCount * parentsWidth) - configuration.getAdultImageWidth() / 4 * 3;
+            int generationsWidth = (int) (motherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
             motherX = childX - generationsWidth;
 
         } else {

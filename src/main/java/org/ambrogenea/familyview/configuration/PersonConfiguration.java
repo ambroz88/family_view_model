@@ -48,7 +48,7 @@ public class PersonConfiguration {
     public PersonConfiguration() {
         adultImageWidth = 200;
         adultImageHeight = 140;
-        marriageLabelWidth = Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 4 * 3);
+        marriageLabelWidth = Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, (int) (adultImageWidth / 3.0 * 2));
         wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
         adultVerticalShift = 0;
         siblingImageWidth = 170;

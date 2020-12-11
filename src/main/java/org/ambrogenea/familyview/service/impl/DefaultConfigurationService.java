@@ -83,7 +83,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getCoupleWidth() {
         if (isShowCouplesVertical()) {
-            return 2 * getAdultImageWidth() - (int) (0.25 * getAdultImageWidth());
+            return (int) (getAdultImageWidth() / 3.0 * 5);
         } else {
             return 2 * getAdultImageWidth() + getMarriageLabelWidth();
         }
@@ -108,7 +108,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getAdultImageWidth();
         if (Math.abs(oldValue - adultImageWidth) > 4) {
             configuration.setAdultImageWidth(adultImageWidth);
-            configuration.setMarriageLabelWidth(Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, adultImageWidth / 3 * 2));
+            configuration.setMarriageLabelWidth(Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, (int) (adultImageWidth / 3.0 * 2)));
             configuration.setWideMarriageLabel(3 * getParentImageSpace());
             firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
         }
