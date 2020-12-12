@@ -216,22 +216,21 @@ public class VerticalPaging implements Paging {
         int pageHeight;
         if (config.getAdultDiagram().equals(Diagrams.SCROLL)) {
             pageHeight = config.getAdultImageHeight() + 2 * SIBLINGS_GAP
-                    + (2 * config.getAdultImageHeight() - (int) (config.getAdultImageHeight() * 0.2) + config.getMarriageLabelHeight() + VERTICAL_GAP)
-                    * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
+                    + (2 * config.getAdultImageHeight() + VERTICAL_GAP)
+                    * Math.min(person.getAncestorGenerations(), config.getGenerationCount() - 1);
         } else {
             pageHeight = config.getAdultImageHeight() + 2 * SIBLINGS_GAP
                     + (2 * config.getAdultImageHeight() + config.getMarriageLabelHeight() + VERTICAL_GAP)
-                    * Math.min(person.getAncestorGenerations(), config.getGenerationCount());
+                    * Math.min(person.getAncestorGenerations(), config.getGenerationCount() - 1);
         }
 
         if (config.isShowSpouses() && person.getSpouse() != null) {
-            pageHeight = pageHeight + config.getAdultImageHeightAlternative() + config.getMarriageLabelHeight();
             if (config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
                 pageHeight = pageHeight + config.getSiblingImageHeight() + VERTICAL_GAP + SIBLINGS_GAP;
             }
         }
 
-        return pageHeight;
+        return pageHeight + TITLE_HEIGHT;
     }
 
 }

@@ -3,9 +3,8 @@ package org.ambrogenea.familyview.utils;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.ambrogenea.familyview.dto.PageSetup;
 import org.ambrogenea.familyview.dto.tree.Position;
-import org.ambrogenea.familyview.service.DefaultPageSetup;
-import org.ambrogenea.familyview.service.PageSetup;
 
 /**
  *
@@ -26,10 +25,11 @@ public class Calculation {
     public static PageSetup standardizePageSetup(PageSetup setup) {
         int newWidth = getStandardPixelSize(setup.getWidth());
         int newHeight = getStandardPixelSize(setup.getHeight());
+        int deltaY = (newHeight - setup.getHeight()) / 2;
         int newX = setup.getRootPosition().getX() + (newWidth - setup.getWidth()) / 2;
-        int newY = setup.getRootPosition().getY() + (newHeight - setup.getHeight()) / 2;
+        int newY = setup.getRootPosition().getY() + deltaY;
 
-        return new DefaultPageSetup(newWidth, newHeight, new Position(newX, newY));
+        return new PageSetup(newWidth, newHeight, deltaY, new Position(newX, newY));
     }
 
     private static int getStandardPixelSize(int sizeInPixels) {
@@ -43,7 +43,7 @@ public class Calculation {
                 break;
             }
         }
-
+        System.out.println("paper size: " + standardCmSize);
         return (int) (standardCmSize * DPI / 2.54);
     }
 

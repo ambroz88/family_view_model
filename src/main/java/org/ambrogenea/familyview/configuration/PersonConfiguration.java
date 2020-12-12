@@ -46,16 +46,16 @@ public class PersonConfiguration {
     private boolean showTemple;
 
     public PersonConfiguration() {
-        adultImageWidth = 200;
-        adultImageHeight = 140;
+        adultImageWidth = 190;
+        adultImageHeight = 130;
         marriageLabelWidth = Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, (int) (adultImageWidth / 3.0 * 2));
         wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
         adultVerticalShift = 0;
         siblingImageWidth = 170;
         siblingImageHeight = 120;
         siblingVerticalShift = 0;
-        adultFontSize = 14;
-        siblingFontSize = 13;
+        adultFontSize = 12;
+        siblingFontSize = 11;
 
         adultDiagram = Diagrams.SCROLL;
         siblingDiagram = Diagrams.SCROLL;

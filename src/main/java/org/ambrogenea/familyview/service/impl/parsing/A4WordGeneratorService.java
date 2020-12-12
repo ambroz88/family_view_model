@@ -10,9 +10,9 @@ import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.DocumentGeneratorService;
 import org.ambrogenea.familyview.service.TreeService;
-import org.ambrogenea.familyview.service.impl.paging.CloseFamilyPageSetup;
+import org.ambrogenea.familyview.service.impl.paging.FatherLineagePageSetup;
 import org.ambrogenea.familyview.service.impl.selection.FathersSelectionService;
-import org.ambrogenea.familyview.service.impl.tree.CloseFamilyTreeService;
+import org.ambrogenea.familyview.service.impl.tree.FatherLineageTreeService;
 import org.ambrogenea.familyview.utils.Tools;
 import org.ambrogenea.familyview.word.WordGenerator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -69,11 +69,11 @@ public class A4WordGeneratorService implements DocumentGeneratorService {
     private DocumentInputs generateFamilyTree(AncestorPerson actualPerson) {
         DocumentInputs input = new DocumentInputs();
 
-        CloseFamilyPageSetup setup = new CloseFamilyPageSetup(configuration, actualPerson);
+        FatherLineagePageSetup setup = new FatherLineagePageSetup(configuration);
         input.setGenerationsShown(Tools.calculateGenerations(actualPerson, configuration));
 
-        TreeService closeFamilyTreeService = new CloseFamilyTreeService();
-        input.setTreeModel(closeFamilyTreeService.generateTreeModel(actualPerson, setup, configuration));
+        TreeService closeFamilyTreeService = new FatherLineageTreeService();
+        input.setTreeModel(closeFamilyTreeService.generateTreeModel(actualPerson, setup.createPageSetup(actualPerson), configuration));
         return input;
     }
 

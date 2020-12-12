@@ -12,6 +12,4 @@ public interface IsolatedTreeCreator {
 
     TreeModel generateParentLineageCreator(ConfigurationService configurationService, String personId);
 
-    TreeModel generateCloseFamilyCreator(ConfigurationService configurationService, String personId);
-
 }

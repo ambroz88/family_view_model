@@ -26,7 +26,7 @@ public final class Configuration extends PersonConfiguration {
         showCouplesVertical = false;
         showHeraldry = true;
         resetMode = false;
-        generationCount = 10;
+        generationCount = 7;
     }
 
     public boolean isShowParentLineage() {

@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.Residence;
+import org.ambrogenea.familyview.dto.PageSetup;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.service.ConfigurationService;
-import org.ambrogenea.familyview.service.PageSetup;
 
 public class TreeModel {
 
