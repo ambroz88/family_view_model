@@ -29,8 +29,7 @@ public class VerticalPaging implements Paging {
 
         if (person.getFather() != null) {
             minimalX = Math.max(minimalX, config.getCoupleWidth() / 2 + SIBLINGS_GAP);
-            int fathersX = (int) ((config.getCoupleWidth() + config.getAdultImageWidth() / 2) * person.getFather().getLastParentsCount())
-                    + config.getMarriageLabelWidth() / 2;
+            int fathersX = (int) ((config.getCoupleWidth() + config.getAdultImageWidth() / 3.0) * person.getFather().getLastParentsCount()) /*+ config.getMarriageLabelWidth() / 2*/;
             return Math.max(fathersX, minimalX);
         } else {
             return minimalX;
@@ -40,8 +39,8 @@ public class VerticalPaging implements Paging {
     @Override
     public int calculateAllAncestorsWidth(AncestorPerson person) {
         return (int) ((config.getCoupleWidth()
-                + config.getAdultImageWidth() / 2) * person.getLastParentsCount()
-                + config.getMarriageLabelWidth());
+                + config.getAdultImageWidth() / 3.0) * person.getLastParentsCount()
+                + (config.getAdultImageWidth() + config.getMarriageLabelWidth()) / 2);
     }
 
     @Override
