@@ -1,5 +1,6 @@
 package org.ambrogenea.familyview.service.impl;
 
+import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.enums.Relation;
@@ -75,6 +76,18 @@ public class VerticalLineageService extends VerticalAncestorService implements L
         }
 
         generateFathersFamily(motherPosition, person.getMother());
+    }
+
+    @Override
+    public Position calculateMotherPosition(Position fatherPosition, AncestorPerson rootPerson) {
+        int fathersSiblings = rootPerson.getFather().getMaxYoungerSiblings();
+        int mothersSiblings = rootPerson.getMother().getMaxOlderSiblings();
+        int siblingsAmount = fathersSiblings + mothersSiblings;
+        int siblingsWidth = siblingsAmount * (configuration.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP)
+                + 2 * Spaces.SIBLINGS_GAP + configuration.getCoupleWidth() / 2;
+        return fatherPosition.addXAndY(
+                configuration.getAdultImageWidth() + Math.max(siblingsWidth, configuration.getWideMarriageLabel()),
+                0);
     }
 
 }

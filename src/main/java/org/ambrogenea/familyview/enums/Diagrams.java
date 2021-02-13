@@ -5,13 +5,14 @@ package org.ambrogenea.familyview.enums;
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public enum Diagrams {
-    SCROLL, HERALDRY, STICKY_NOTES, WAVE, DOUBLE_WAVE;
+    SCROLL, HERALDRY, STICKY_NOTES, WAVE, DOUBLE_WAVE, OVAL;
 
     private static final String SCROLL_STRING = "scroll";
     private static final String HERALDRY_STRING = "heraldry";
     private static final String STICKY_NOTES_STRING = "stickyNotes";
     private static final String WAVE_STRING = "wave";
     private static final String DOUBLE_WAVE_STRING = "doubleWave";
+    private static final String OVAL_STRING = "oval";
 
     public static Diagrams fromString(String name) {
         switch (name) {
@@ -23,6 +24,8 @@ public enum Diagrams {
                 return WAVE;
             case DOUBLE_WAVE_STRING:
                 return DOUBLE_WAVE;
+            case OVAL_STRING:
+                return OVAL;
             default:
                 return SCROLL;
         }
@@ -41,6 +44,8 @@ public enum Diagrams {
                 return WAVE_STRING;
             case DOUBLE_WAVE:
                 return DOUBLE_WAVE_STRING;
+            case OVAL:
+                return OVAL_STRING;
             default:
                 return "None";
         }

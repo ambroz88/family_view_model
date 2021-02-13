@@ -93,7 +93,11 @@ public class AncestorPerson implements Personalize {
     public AncestorPerson(Person person) {
         this.id = person.getId();
         this.firstName = person.getFirstName();
-        this.surname = person.getSurname();
+        if (person.getMarriageName() != null) {
+            this.surname = person.getMarriageName();
+        } else {
+            this.surname = person.getSurname();
+        }
         this.sex = person.getSex();
         this.living = person.isLiving();
         this.birthDatePlace = person.getBirthDatePlace();
@@ -236,6 +240,14 @@ public class AncestorPerson implements Personalize {
             return null;
         }
         return parents.getWife();
+    }
+
+    public boolean hasNoParents() {
+        return getFather() == null && getMother() == null;
+    }
+
+    public boolean hasBothParents() {
+        return getFather() != null && getMother() != null;
     }
 
     public boolean isDirectLineage() {

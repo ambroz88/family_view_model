@@ -3,6 +3,7 @@ package org.ambrogenea.familyview.service.impl;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.service.ConfigurationService;
@@ -10,7 +11,7 @@ import org.ambrogenea.familyview.service.SpecificAncestorService;
 
 public class VerticalAncestorService extends CommonAncestorServiceImpl implements SpecificAncestorService {
 
-    private int parentsWidth;
+    private final int parentsWidth;
 
     public VerticalAncestorService(ConfigurationService configuration) {
         super(configuration);
@@ -21,13 +22,18 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     public Position addMother(Position childPosition, AncestorPerson mother, String marriageDate) {
         Position motherPosition = childPosition.addXAndY(
                 getConfiguration().getMarriageLabelWidth(), -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+        int labelYShift = 0;
+        if (configuration.getAdultDiagram() != Diagrams.SCROLL) {
+            labelYShift = Spaces.LABEL_GAP;
+        }
 
         Position label = new Position(childPosition.getX(), motherPosition.getY()
                 - getConfiguration().getAdultImageHeightAlternative() / 2
-                - getConfiguration().getMarriageLabelHeight());
+                - getConfiguration().getMarriageLabelHeight() + labelYShift);
 
         addLabel(label, getConfiguration().getMarriageLabelWidth(), marriageDate);
-        addPerson(motherPosition, mother);
+//        addPerson(motherPosition, mother);
+        addPerson(motherPosition.addXAndY(0, 3 * labelYShift), mother);
         return motherPosition;
     }
 

@@ -86,4 +86,17 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
             generateFathersFamily(motherPosition, person.getMother());
         }
     }
+
+    @Override
+    public Position calculateMotherPosition(Position fatherPosition, AncestorPerson rootPerson) {
+        int fathersSiblings = rootPerson.getFather().getMaxYoungerSiblings();
+        int mothersSiblings = rootPerson.getMother().getMaxOlderSiblings();
+        int siblingsAmount = fathersSiblings + mothersSiblings;
+        int siblingsWidth = siblingsAmount * (configuration.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + 2 * Spaces.SIBLINGS_GAP;
+        int parentWidth = rootPerson.getMother().getFatherGenerations() * configuration.getParentImageSpace();
+        return fatherPosition.addXAndY(
+                configuration.getAdultImageWidth() + Math.max(siblingsWidth + parentWidth, configuration.getWideMarriageLabel()),
+                0);
+    }
+
 }

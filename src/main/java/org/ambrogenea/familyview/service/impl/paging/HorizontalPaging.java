@@ -2,6 +2,7 @@ package org.ambrogenea.familyview.service.impl.paging;
 
 import static org.ambrogenea.familyview.constant.Spaces.*;
 
+import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.Paging;
@@ -43,33 +44,27 @@ public class HorizontalPaging implements Paging {
     @Override
     public int calculateParentLineageWidth(AncestorPerson person) {
         int pageWidth = calculateFatherLineageWidth(person);
-        pageWidth = pageWidth + config.getWideMarriageLabel() + config.getAdultImageWidth();
+        pageWidth = pageWidth + config.getCoupleWidth() / 2;
 
         if (config.isShowSiblings()) {
-            pageWidth = pageWidth + calculateFatherSiblingsWidth(person);
-
-            if (person.getMother().getMaxOlderSiblings() > 0) {
-                //mother parent lineage width
-                pageWidth = pageWidth + config.getParentImageSpace() * (Math.min(person.getMother().getAncestorGenerations(), config.getGenerationCount()) - 1) + config.getCoupleWidth() - config.getParentImageSpace() + SIBLINGS_GAP;
-            }
             pageWidth = pageWidth + calculateMotherSiblingsWidth(person.getMother());
         }
 
-        return pageWidth;
+        return Math.max(pageWidth, config.getWideMarriageLabel() + 2 * (config.getAdultImageWidth() + Spaces.SIBLINGS_GAP));
     }
 
     @Override
     public int calculateFatherLineageX(AncestorPerson person) {
         int ancestorGeneration = 0;
         if (person.getFather() != null && person.getFather().getAncestorGenerations() > 0) {
-            ancestorGeneration = person.getFather().getAncestorGenerations() + 1;
+            ancestorGeneration = person.getFather().getAncestorGenerations();
         } else if (person.getMother() != null) {
-            ancestorGeneration = person.getMother().getAncestorGenerations() + 1;
+            ancestorGeneration = person.getMother().getAncestorGenerations();
         }
 
         int childrenShift = 0;
         int siblingsShift = 0;
-        int positionX = config.getParentImageSpace() * Math.min(ancestorGeneration, config.getGenerationCount()) + config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
+        int positionX = config.getParentImageSpace() * Math.min(ancestorGeneration, config.getGenerationCount() - 1) + config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
 
         if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
             int childrenWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0);

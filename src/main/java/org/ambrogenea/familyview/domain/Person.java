@@ -15,6 +15,7 @@ public class Person implements Personalize {
 
     private String firstName;
     private String surname;
+    private String marriageName;
     private Sex sex;
     private DatePlace birthDatePlace;
     private DatePlace deathDatePlace;
@@ -90,6 +91,14 @@ public class Person implements Personalize {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getMarriageName() {
+        return marriageName;
+    }
+
+    public void setMarriageName(String marriageName) {
+        this.marriageName = marriageName;
     }
 
     @Override
@@ -209,6 +218,8 @@ public class Person implements Personalize {
             setSurname(info.getValue());
         } else if (info.getType().equals(InfoType.NAME)) {
             setName(info.getValue());
+        } else if (info.getType().equals(InfoType.MARRIAGE_NAME)) {
+            setMarriageName(info.getValue());
         } else if (info.getType().equals(InfoType.SEX)) {
             setSex(Sex.getSex(info.getValue()));
         } else if (info.getType().equals(InfoType.DEATH)) {

@@ -45,9 +45,7 @@ public class VerticalPaging implements Paging {
 
     @Override
     public int calculateParentLineageWidth(AncestorPerson person) {
-        calculateFatherLineageWidth(person);
-
-        int pageWidth = config.getAdultImageWidth() + config.getCoupleWidth() + HORIZONTAL_GAP;
+        int pageWidth = config.getWideMarriageLabel() / 2 + 2 * (config.getCoupleWidth() + HORIZONTAL_GAP);
 
         if (config.isShowSiblings()) {
             pageWidth = pageWidth + calculateFatherSiblingsWidth(person);
