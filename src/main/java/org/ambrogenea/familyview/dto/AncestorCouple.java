@@ -1,6 +1,7 @@
 package org.ambrogenea.familyview.dto;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ambrogenea.familyview.domain.Couple;
 import org.ambrogenea.familyview.domain.DatePlace;
@@ -18,6 +19,7 @@ public class AncestorCouple {
     private AncestorPerson wife;
     private AncestorPerson husband;
     private DatePlace datePlace;
+    private DescendentTreeInfo descendentTreeInfo;
 
     public AncestorCouple() {
         initEmpty();
@@ -49,35 +51,35 @@ public class AncestorCouple {
                 this.wife = new AncestorPerson(couple.getWife());
                 this.wife.setDirectLineage(true);
             }
-            this.childrenID = couple.getChildrenIndexes();
-            this.children = new ArrayList<>(couple.getChildren());
+            this.childrenID = new ArrayList<>(couple.getChildrenIndexes());
+            this.children = new ArrayList<>();
             this.datePlace = couple.getDatePlace();
+            this.descendentTreeInfo = new DescendentTreeInfo();
         } else {
             initEmpty();
         }
     }
 
-    public AncestorCouple(AncestorCouple couple) {
-        if (couple != null) {
-            if (couple.getHusband() != null) {
-                this.husband = new AncestorPerson(couple.getHusband());
-            }
-
-            if (couple.getWife() != null) {
-                this.wife = new AncestorPerson(couple.getWife());
-            }
-            this.childrenID = couple.getChildrenIndexes();
-            this.children = new ArrayList<>(couple.getChildren());
-            this.datePlace = couple.getDatePlace();
-        } else {
-            initEmpty();
-        }
-    }
-
+//    public AncestorCouple(AncestorCouple couple) {
+//        if (couple != null) {
+//            if (couple.getHusband() != null) {
+//                this.husband = new AncestorPerson(couple.getHusband());
+//            }
+//
+//            if (couple.getWife() != null) {
+//                this.wife = new AncestorPerson(couple.getWife());
+//            }
+//            this.children = new ArrayList<>(couple.getChildren());
+//            this.datePlace = couple.getDatePlace();
+//        } else {
+//            initEmpty();
+//        }
+//    }
     private void initEmpty() {
         childrenID = new ArrayList<>();
         children = new ArrayList<>();
         datePlace = new DatePlace();
+        descendentTreeInfo = new DescendentTreeInfo();
     }
 
     public void setWife(AncestorPerson wife) {
@@ -132,8 +134,40 @@ public class AncestorCouple {
         return children;
     }
 
+    public void setChildren(List<AncestorPerson> children) {
+        this.children = new ArrayList<>();
+        int actualSingles = 0;
+        int actualCouples = 0;
+        for (AncestorPerson child : children) {
+            this.children.add(child);
+            int generationsCount;
+            if (child.getSpouseCouples().isEmpty()) {
+                generationsCount = 1;
+                actualSingles++;
+            } else {
+                generationsCount = 1 + child.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
+                actualCouples += Math.max(1, child.getSpouseCouple().getDescendentTreeInfo().getMaxCouplesCount());
+            }
+            getDescendentTreeInfo().addChildGenerations(generationsCount);
+        }
+
+        getDescendentTreeInfo().setMaxSinglesCount(actualSingles);
+        getDescendentTreeInfo().setMaxCouplesCount(actualCouples);
+    }
+
     public void addChildren(AncestorPerson child) {
         this.children.add(child);
+        int generationsCount;
+        if (child.getSpouseCouples().isEmpty()) {
+            generationsCount = 1;
+        } else {
+            generationsCount = 1 + child.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
+        }
+        getDescendentTreeInfo().addChildGenerations(generationsCount);
+    }
+
+    public DescendentTreeInfo getDescendentTreeInfo() {
+        return descendentTreeInfo;
     }
 
     public boolean isEmpty() {

@@ -38,50 +38,20 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
     }
 
     @Override
-    public void addFirstParents(Position childPosition, AncestorPerson child) {
-        addAllParents(childPosition, child);
-    }
+    public Position addSpouse(Position rootPosition, AncestorPerson root) {
+        if (root.getSpouseCouple() != null) {
+            Position label = rootPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2,
+                    -getConfiguration().getMarriageLabelHeight() / 2);
+            addLabel(label, getConfiguration().getMarriageLabelWidth(),
+                    root.getSpouseCouple().getDatePlace().getLocalizedDate(getConfiguration().getLocale())
+            );
 
-    private void addAllParents(Position childPosition, AncestorPerson child) {
-        if (child.getMother() != null) {
-            int verticalShift = -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP;
-            double motherParentsCount = Math.min(child.getMother().getInnerParentsCount(), child.getMother().getLastParentsCount());
-
-            Position motherPosition;
-            if (child.getFather() == null) {
-                motherPosition = childPosition.addXAndY(0, verticalShift);
-            } else {
-                double fatherParentsCount = Math.min(child.getFather().getInnerParentsCount(), child.getFather().getLastParentsCount());
-
-                Position fatherPosition;
-                if (motherParentsCount == 0 || fatherParentsCount == 0) {
-                    fatherPosition = childPosition.addXAndY(-getConfiguration().getHalfSpouseLabelSpace(), verticalShift);
-                    motherPosition = childPosition.addXAndY(getConfiguration().getHalfSpouseLabelSpace(), verticalShift);
-                } else {
-                    double motherParentWidth = (getConfiguration().getCoupleWidth() + Spaces.SIBLINGS_GAP) * motherParentsCount;
-                    double fatherParentWidth = (getConfiguration().getCoupleWidth() + Spaces.SIBLINGS_GAP) * fatherParentsCount;
-                    int halfParentWidth = (int) (fatherParentWidth + motherParentWidth) / 2;
-                    fatherPosition = childPosition.addXAndY(-halfParentWidth, verticalShift);
-                    motherPosition = childPosition.addXAndY(halfParentWidth, verticalShift);
-                }
-
-                addPerson(fatherPosition, child.getFather());
-                Position labelPosition = fatherPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2 + Spaces.LABEL_GAP,
-                        -getConfiguration().getMarriageLabelHeight() / 2);
-                addLabel(labelPosition,
-                        motherPosition.getX() - fatherPosition.getX() - getConfiguration().getAdultImageWidth() - 2 * Spaces.LABEL_GAP,
-                        child.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale())
-                );
-                addAllParents(fatherPosition, child.getFather());
-            }
-
-            if (getConfiguration().isShowHeraldry()) {
-                addHeraldry(childPosition, child.getBirthDatePlace().getSimplePlace());
-            }
-
-            addPerson(motherPosition, child.getMother());
-            addAllParents(motherPosition, child.getMother());
-            addVerticalLineToParents(childPosition);
+            Position spousePosition = rootPosition.addXAndY(getConfiguration().getSpouseDistance(),
+                    getConfiguration().getCoupleVerticalDifference());
+            addPerson(spousePosition, root.getSpouse());
+            return spousePosition;
+        } else {
+            return rootPosition;
         }
     }
 

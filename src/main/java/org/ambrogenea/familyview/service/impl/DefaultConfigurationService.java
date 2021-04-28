@@ -100,7 +100,11 @@ public final class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public int getCoupleVerticalDifference() {
-        return getAdultImageHeightAlternative() + getMarriageLabelHeight();
+        if (isShowCouplesVertical()) {
+            return getAdultImageHeightAlternative() + getMarriageLabelHeight();
+        } else {
+            return 0;
+        }
     }
 
     @Override

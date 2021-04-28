@@ -230,4 +230,23 @@ public class VerticalPaging implements Paging {
         return pageHeight + TITLE_HEIGHT;
     }
 
+    @Override
+    public int calculateAllDescendentHeight(AncestorPerson person) {
+        int pageHeight = (config.getAdultImageHeight() + VERTICAL_GAP);
+
+        if (person.getSpouseCouple() != null) {
+            if (config.getAdultDiagram().equals(Diagrams.SCROLL)) {
+                pageHeight += config.getAdultImageHeight() + 2 * SIBLINGS_GAP
+                        + (2 * config.getAdultImageHeight() + VERTICAL_GAP)
+                        * person.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
+            } else {
+                pageHeight += config.getAdultImageHeight() + 2 * SIBLINGS_GAP
+                        + (2 * config.getAdultImageHeight() + config.getMarriageLabelHeight() + VERTICAL_GAP)
+                        * person.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
+            }
+        }
+
+        return pageHeight;
+    }
+
 }

@@ -2,7 +2,6 @@ package org.ambrogenea.familyview.domain;
 
 import java.util.ArrayList;
 
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.Sex;
 
 /**
@@ -12,7 +11,6 @@ import org.ambrogenea.familyview.enums.Sex;
 public class Couple {
 
     private ArrayList<String> childrenID;
-    private ArrayList<AncestorPerson> children;
 
     private Person wife;
     private Person husband;
@@ -35,11 +33,10 @@ public class Couple {
 
     private void initEmpty() {
         childrenID = new ArrayList<>();
-        children = new ArrayList<>();
         datePlace = new DatePlace();
     }
 
-    public void addSpouse(Person person) {
+    public final void addSpouse(Person person) {
         if (person.getSex().equals(Sex.MALE)) {
             setHusband(person);
         } else if (person.getSex().equals(Sex.FEMALE)) {
@@ -93,14 +90,6 @@ public class Couple {
 
     public void addChildrenIndex(String childID) {
         this.childrenID.add(childID);
-    }
-
-    public ArrayList<AncestorPerson> getChildren() {
-        return children;
-    }
-
-    public void addChildren(AncestorPerson child) {
-        this.children.add(child);
     }
 
     public boolean isEmpty() {

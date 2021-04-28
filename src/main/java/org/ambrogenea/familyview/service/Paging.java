@@ -30,4 +30,5 @@ public interface Paging {
 
     int calculateMotherSiblingsWidth(AncestorPerson mother);
 
+    int calculateAllDescendentHeight(AncestorPerson person);
 }

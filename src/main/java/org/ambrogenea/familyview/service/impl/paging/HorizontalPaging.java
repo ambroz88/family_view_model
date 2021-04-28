@@ -219,4 +219,16 @@ public class HorizontalPaging implements Paging {
         return pageHeight + TITLE_HEIGHT;
     }
 
+    @Override
+    public int calculateAllDescendentHeight(AncestorPerson person) {
+        int pageHeight = (config.getAdultImageHeight() + VERTICAL_GAP);
+
+        if (person.getSpouseCouple() != null) {
+            pageHeight += person.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount()
+                    * (config.getAdultImageHeight() + VERTICAL_GAP);
+        }
+
+        return pageHeight;
+    }
+
 }

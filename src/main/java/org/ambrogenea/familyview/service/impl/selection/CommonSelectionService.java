@@ -1,8 +1,8 @@
 package org.ambrogenea.familyview.service.impl.selection;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ambrogenea.familyview.domain.Couple;
 import org.ambrogenea.familyview.domain.FamilyData;
@@ -22,20 +22,34 @@ public class CommonSelectionService {
         this.familyData = familyData;
     }
 
-    protected LinkedList<AncestorCouple> addSpouse(List<String> spouseId) {
-        LinkedList<AncestorCouple> spouses = new LinkedList<>();
-        spouseId.stream()
-                .map(coupleID -> familyData.getSpouseMap().get(coupleID))
-                .filter(dbSpouse -> (dbSpouse != null))
-                .map(dbSpouse -> new AncestorCouple(dbSpouse))
-                .map(spouse -> {
-                    addChildren(spouse);
-                    return spouse;
+    protected List<AncestorCouple> addSpouseWithChildren(ArrayList<String> spouseId) {
+        return spouseId.stream()
+                .map(coupleID -> {
+                    Couple dbCouple = familyData.getSpouseMap().get(coupleID);
+                    if (dbCouple != null) {
+                        AncestorCouple couple = new AncestorCouple(dbCouple);
+                        addChildren(couple);
+                        return couple;
+                    } else {
+                        return null;
+                    }
                 })
-                .forEachOrdered(spouse -> {
-                    spouses.add(spouse);
-                });
-        return spouses;
+                .filter(couple -> (couple != null))
+                .collect(Collectors.toList());
+    }
+
+    protected List<AncestorCouple> addSpouse(ArrayList<String> spouseId) {
+        return spouseId.stream()
+                .map(coupleID -> {
+                    Couple dbCouple = familyData.getSpouseMap().get(coupleID);
+                    if (dbCouple != null) {
+                        return new AncestorCouple(dbCouple);
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(couple -> (couple != null))
+                .collect(Collectors.toList());
     }
 
     protected void addSiblings(AncestorPerson person, String parentId) {
@@ -50,7 +64,7 @@ public class CommonSelectionService {
                 dbPerson = familyData.getPersonById(children.get(position));
                 sibling = new AncestorPerson(dbPerson);
                 sibling.setDirectLineage(false);
-                sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID()));
+                sibling.setSpouseCouples(addSpouseWithChildren(dbPerson.getSpouseID()));
 
                 person.addOlderSibling(sibling);
                 if (sibling.getSpouse() != null) {
@@ -64,7 +78,7 @@ public class CommonSelectionService {
                 dbPerson = familyData.getPersonById(children.get(position));
                 sibling = new AncestorPerson(dbPerson);
                 sibling.setDirectLineage(false);
-                sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID()));
+                sibling.setSpouseCouples(addSpouseWithChildren(dbPerson.getSpouseID()));
 
                 person.addYoungerSibling(sibling);
                 if (sibling.getSpouse() != null) {
@@ -78,7 +92,7 @@ public class CommonSelectionService {
     protected AncestorPerson fromPersonWithManParents(Person person, int generation) {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
-        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
 
         if (generation + 1 <= generationLimit) {
             addSiblings(ancestorPerson, person.getParentID());
@@ -90,7 +104,7 @@ public class CommonSelectionService {
     protected AncestorPerson fromPersonWithWomanParents(Person person) {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
-        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
         if (2 <= generationLimit) {
             addSiblings(ancestorPerson, person.getParentID());
             addWomanParents(ancestorPerson, person.getParentID(), 2);
@@ -98,7 +112,37 @@ public class CommonSelectionService {
         return ancestorPerson;
     }
 
-    private AncestorPerson addManParents(AncestorPerson person, String parentId, int generation) {
+    protected AncestorPerson fromPersonWithAllDescendents(Person person, int generation) {
+        AncestorPerson ancestorPerson = new AncestorPerson(person);
+        ancestorPerson.setDirectLineage(true);
+        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        if (generation + 1 <= generationLimit) {
+            ancestorPerson.getSpouseCouples()
+                    .forEach(spouseCouple -> {
+                        addChildrenToCouple(spouseCouple, generation + 1);
+                    });
+        }
+        return ancestorPerson;
+    }
+
+    private void addChildrenToCouple(AncestorCouple spouseCouple, int generation) {
+        List<AncestorPerson> children = spouseCouple.getChildrenIndexes()
+                .stream()
+                .map(childId -> {
+                    Person dbChild = getFamilyData().getPersonById(childId);
+                    if (dbChild != null) {
+                        return fromPersonWithAllDescendents(dbChild, generation);
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(updatedChild -> (updatedChild != null))
+                .collect(Collectors.toList());
+
+        spouseCouple.setChildren(children);
+    }
+
+    private void addManParents(AncestorPerson person, String parentId, int generation) {
         Couple parents = getFamilyData().getSpouseMap().get(parentId);
 
         if (person != null && parents != null) {
@@ -120,7 +164,6 @@ public class CommonSelectionService {
             }
 
         }
-        return person;
     }
 
     private void addWomanParents(AncestorPerson person, String parentId, int generation) {
@@ -149,7 +192,7 @@ public class CommonSelectionService {
             Person child = familyData.getPersonById(childId);
             if (child != null) {
                 childAncestor = new AncestorPerson(child);
-                childAncestor.setSpouseCouples(addSpouse(child.getSpouseID()));
+                childAncestor.setSpouseCouples(addSpouseWithChildren(child.getSpouseID()));
                 childAncestor.setDirectLineage(false);
                 spouse.addChildren(childAncestor);
             }

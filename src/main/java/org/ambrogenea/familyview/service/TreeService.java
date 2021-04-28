@@ -6,6 +6,6 @@ import org.ambrogenea.familyview.dto.tree.TreeModel;
 
 public interface TreeService {
 
-    TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService config);
+    TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration);
 
 }

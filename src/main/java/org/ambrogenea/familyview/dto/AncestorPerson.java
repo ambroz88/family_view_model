@@ -3,6 +3,7 @@ package org.ambrogenea.familyview.dto;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.ambrogenea.familyview.domain.DatePlace;
 import org.ambrogenea.familyview.domain.Person;
@@ -34,7 +35,7 @@ public class AncestorPerson implements Personalize {
     private final ArrayList<Residence> residenceList;
 
     private AncestorCouple parents;
-    private LinkedList<AncestorCouple> spouses;
+    private List<AncestorCouple> spouses;
 
     private ArrayList<Integer> ancestorLine;
     private LinkedList<AncestorPerson> youngerSiblings;
@@ -93,7 +94,7 @@ public class AncestorPerson implements Personalize {
     public AncestorPerson(Person person) {
         this.id = person.getId();
         this.firstName = person.getFirstName();
-        if (person.getMarriageName() != null) {
+        if (person.getMarriageName() != null && person.getSurname() == null) {
             this.surname = person.getMarriageName();
         } else {
             this.surname = person.getSurname();
@@ -415,33 +416,32 @@ public class AncestorPerson implements Personalize {
         }
     }
 
-    public LinkedList<AncestorCouple> getSpouseCouples() {
+    public List<AncestorCouple> getSpouseCouples() {
         return spouses;
     }
 
-    public void setSpouseCouples(LinkedList<AncestorCouple> spouses) {
-        this.spouses = spouses;
+    public void setSpouseCouples(List<AncestorCouple> spouses) {
+        this.spouses = new ArrayList<>(spouses);
     }
 
-    public void addSpouseCouple(AncestorCouple spouse) {
-        if (spouse != null) {
-            if (!this.spouses.isEmpty()) {
-                AncestorCouple lastCouple = this.spouses.get(spouses.size() - 1);
-                if (spouse.getDatePlace().getDate().isBefore(lastCouple.getDatePlace().getDate())) {
-                    this.spouses.add(this.spouses.size() - 1, new AncestorCouple(spouse));
-                } else {
-                    this.spouses.add(new AncestorCouple(spouse));
-                }
-            } else {
-                this.spouses.add(new AncestorCouple(spouse));
-            }
-        }
-    }
-
+//    public void addSpouseCouple(AncestorCouple spouse) {
+//        if (spouse != null) {
+//            if (!this.spouses.isEmpty()) {
+//                AncestorCouple lastCouple = this.spouses.get(spouses.size() - 1);
+//                if (spouse.getDatePlace().getDate().isBefore(lastCouple.getDatePlace().getDate())) {
+//                    this.spouses.add(this.spouses.size() - 1, new AncestorCouple(spouse));
+//                } else {
+//                    this.spouses.add(new AncestorCouple(spouse));
+//                }
+//            } else {
+//                this.spouses.add(new AncestorCouple(spouse));
+//            }
+//        }
+//    }
     public int getChildrenCount(int wifeNumber) {
         int count = 0;
         if (getSpouseCouple(wifeNumber) != null) {
-            count = getSpouseCouple(wifeNumber).getChildrenIndexes().size();
+            count = getSpouseCouple(wifeNumber).getChildren().size();
         }
         return count;
     }
@@ -449,7 +449,7 @@ public class AncestorPerson implements Personalize {
     public int getAllChildrenCount() {
         int count = 0;
         for (AncestorCouple spouse : getSpouseCouples()) {
-            count = count + spouse.getChildrenIndexes().size();
+            count = count + spouse.getChildren().size();
         }
         return count;
     }

@@ -23,7 +23,7 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
         Person person = getFamilyData().getPersonById(personId);
         AncestorPerson ancestorPerson = fromPersonWithParents(person, 1);
 
-        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
         return ancestorPerson;
     }
 
