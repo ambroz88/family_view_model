@@ -288,7 +288,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
     }
 
     @Override
-    public Position generateAllDescendents(Position rootPosition, List<AncestorCouple> couples) {
+    public Position generateAllDescendents(Position rootPosition, List<AncestorCouple> couples, int descendetsWidth) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

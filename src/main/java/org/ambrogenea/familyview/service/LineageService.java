@@ -14,7 +14,7 @@ public interface LineageService extends SpecificAncestorService {
 
     void generateMotherFamily(Position childPosition, AncestorPerson person);
 
-    Position generateAllDescendents(Position rootPosition, List<AncestorCouple> couples);
+    Position generateAllDescendents(Position rootPosition, List<AncestorCouple> couples, int descendentsWidth);
 
     void addFirstParents(Position childPosition, AncestorPerson child);
 

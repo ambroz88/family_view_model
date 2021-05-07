@@ -400,6 +400,16 @@ public class AncestorPerson implements Personalize {
         }
     }
 
+    public int getSpouseCount() {
+        int count = 0;
+        for (AncestorCouple spouse : spouses) {
+            if (!spouse.isSingle()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public AncestorCouple getSpouseCouple() {
         if (spouses.isEmpty()) {
             return null;

@@ -153,37 +153,57 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
     }
 
     @Override
-    public Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples) {
-        int allChildrenCoupleCount = calculateCouplesCount(spouseCouples);
-        int allChildrenSinglesCount = calculateSinglesCount(spouseCouples);
-        int descendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.SIBLINGS_GAP)
-                + allChildrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP);
-        Position actualChildPosition = firstChildPosition.addXAndY(
-                0,
+    public Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth) {
+        Position actualChildPosition = firstChildPosition.addXAndY(0,
                 configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP
         );
 
+        int descendentsWidth;
         for (AncestorCouple spouseCouple : spouseCouples) {
-            Position nextChildPosition = addCoupleFamily(actualChildPosition, spouseCouple, descendentsWidth);
-            actualChildPosition = new Position(nextChildPosition);
+            int childrenCoupleCount = spouseCouple.getDescendentTreeInfo().getMaxCouplesCount();
+            int childrenSinglesCount = spouseCouple.getDescendentTreeInfo().getMaxSinglesCount();
+            descendentsWidth = childrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
+                    + childrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP);
+
+            actualChildPosition = actualChildPosition.addXAndY(descendentsWidth / 2, 0);
+            actualChildPosition = addCoupleFamily(actualChildPosition, spouseCouple, descendentsWidth);
         }
 
-        return firstChildPosition.addXAndY(descendentsWidth /*+ configuration.getAdultImageWidth() / 2 - Spaces.SIBLINGS_GAP*/, 0);
+        return firstChildPosition.addXAndY(Math.max(configuration.getAdultImageWidth(), allDescendentsWidth), 0);
     }
 
     @Override
-    public Position addCoupleFamily(Position startChildPosition, AncestorCouple couple, int descendentsWidth) {
-        Position actualChildPosition = new Position(startChildPosition);
+    public Position addCoupleFamily(Position parentCentralPosition, AncestorCouple couple, int descendentsWidth) {
+        Position actualChildPosition = parentCentralPosition.addXAndY(-descendentsWidth / 2, 0);
+
         for (AncestorPerson child : couple.getChildren()) {
-            Position startNextGeneration = generateAllDescendents(actualChildPosition, child.getSpouseCouples());
-            int centerX = (startNextGeneration.getX() - actualChildPosition.getX()) / 2;
-            Position parent = actualChildPosition.addXAndY(centerX/* - configuration.getSpouseDistance() / 2*/, 0);
+            int allChildrenCoupleCount = calculateCouplesCount(child.getSpouseCouples());
+            int allChildrenSinglesCount = calculateSinglesCount(child.getSpouseCouples());
+            int allDescendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
+                    + allChildrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP);
+            int childWidth = child.getSpouseCount() * configuration.getCoupleWidth();
+
+            boolean widerParents = false;
+            if (allDescendentsWidth < childWidth) {
+                actualChildPosition = actualChildPosition.addXAndY((childWidth - allDescendentsWidth) / 2, 0);
+                widerParents = true;
+            }
+            Position endGenerationPosition = generateAllDescendents(actualChildPosition, child.getSpouseCouples(), allDescendentsWidth);
+            int centerX = (endGenerationPosition.getX() - actualChildPosition.getX()) / 2;
+            Position parent;
+            if (child.getSpouse() != null || widerParents) {
+                parent = actualChildPosition.addXAndY(centerX - configuration.getSpouseDistance() / 2, 0);
+            } else {
+                parent = actualChildPosition.addXAndY(centerX, 0);
+            }
+
             addPerson(parent, child);
             Position spousePosition = addSpouse(parent, child);
-            if (startNextGeneration.getX() > spousePosition.getX()) {
-                actualChildPosition = startNextGeneration.addXAndY(configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP, 0);
+
+            if (endGenerationPosition.getX() > spousePosition.getX()) {
+                actualChildPosition = endGenerationPosition.addXAndY(Spaces.HORIZONTAL_GAP, 0);
             } else {
-                actualChildPosition = spousePosition.addXAndY(configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP, 0);
+                actualChildPosition = spousePosition.addXAndY(configuration.getAdultImageWidth() / 2 + Spaces.SIBLINGS_GAP, 0);
             }
         }
         return actualChildPosition;

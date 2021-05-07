@@ -28,7 +28,9 @@ public class AllDescendentsTreeService implements TreeService {
 
         specificAncestorService.addRootSpouses(rootPosition, rootPerson);
 
-        specificAncestorService.generateAllDescendents(new Position(Spaces.SIBLINGS_GAP, rootPosition.getY()), rootPerson.getSpouseCouples());
+        specificAncestorService.generateAllDescendents(new Position(Spaces.SIBLINGS_GAP, rootPosition.getY()),
+                rootPerson.getSpouseCouples(), pageSetup.getWidth() - Spaces.SIBLINGS_GAP
+        );
 
         TreeModel treeModel = specificAncestorService.getTreeModel();
         treeModel.setPageSetup(pageSetup);

@@ -122,6 +122,10 @@ public class AncestorCouple {
         return wife != null;
     }
 
+    public boolean isSingle() {
+        return !hasHusband() || !hasWife();
+    }
+
     public ArrayList<String> getChildrenIndexes() {
         return childrenID;
     }
@@ -141,10 +145,12 @@ public class AncestorCouple {
         for (AncestorPerson child : children) {
             this.children.add(child);
             int generationsCount;
-            if (child.getSpouse() == null) {
+
+            if (child.getSpouseCouples().isEmpty()) {
                 actualSingles++;
             } else {
-                actualCouples += Math.max(1, child.getSpouseCouple().getDescendentTreeInfo().getMaxCouplesCount());
+                actualCouples += child.getSpouseCouple().getDescendentTreeInfo().getMaxCouplesCount();
+                actualSingles += child.getSpouseCouple().getDescendentTreeInfo().getMaxSinglesCount();
             }
 
             if (child.getSpouseCouple() == null) {
@@ -155,8 +161,13 @@ public class AncestorCouple {
             getDescendentTreeInfo().addChildGenerations(generationsCount);
         }
 
-        getDescendentTreeInfo().setMaxSinglesCount(actualSingles);
-        getDescendentTreeInfo().setMaxCouplesCount(actualCouples);
+        if (!isSingle() && (actualSingles <= 2 && actualCouples <= 1)) {
+            getDescendentTreeInfo().setMaxSinglesCount(0);
+            getDescendentTreeInfo().setMaxCouplesCount(1);
+        } else {
+            getDescendentTreeInfo().setMaxSinglesCount(actualSingles);
+            getDescendentTreeInfo().setMaxCouplesCount(actualCouples);
+        }
     }
 
     public void addChildren(AncestorPerson child) {
