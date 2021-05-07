@@ -228,7 +228,7 @@ public class HorizontalPaging implements Paging {
                     * (config.getAdultImageHeight() + VERTICAL_GAP);
         }
 
-        return pageHeight;
+        return pageHeight + TITLE_HEIGHT;
     }
 
 }

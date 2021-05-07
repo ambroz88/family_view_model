@@ -39,7 +39,7 @@ public class HorizontalAncestorService extends CommonAncestorServiceImpl impleme
 
     @Override
     public Position addSpouse(Position rootPosition, AncestorPerson root) {
-        if (root.getSpouseCouple() != null) {
+        if (root.getSpouse() != null) {
             Position label = rootPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2,
                     -getConfiguration().getMarriageLabelHeight() / 2);
             addLabel(label, getConfiguration().getMarriageLabelWidth(),

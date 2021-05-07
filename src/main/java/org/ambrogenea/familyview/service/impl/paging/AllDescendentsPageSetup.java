@@ -1,5 +1,7 @@
 package org.ambrogenea.familyview.service.impl.paging;
 
+import static org.ambrogenea.familyview.constant.Spaces.TITLE_HEIGHT;
+
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.DescendentTreeInfo;
@@ -39,11 +41,12 @@ public class AllDescendentsPageSetup implements Pageable {
     private int calculateXPosition(AncestorPerson personModel) {
         DescendentTreeInfo treeInfo = personModel.getSpouseCouple().getDescendentTreeInfo();
         return (treeInfo.getMaxCouplesCount() * (config.getCoupleWidth() + Spaces.SIBLINGS_GAP)
-                + treeInfo.getMaxSinglesCount() * (config.getAdultImageWidth() + Spaces.SIBLINGS_GAP)) / 2;
+                + treeInfo.getMaxSinglesCount() * (config.getAdultImageWidth() + Spaces.SIBLINGS_GAP)) / 2
+                - config.getSpouseDistance() / 2 + Spaces.SIBLINGS_GAP;
     }
 
     private int calculateYPosition() {
-        return config.getAdultImageHeight() / 2 + Spaces.SIBLINGS_GAP;
+        return TITLE_HEIGHT + config.getAdultImageHeight() / 2 + Spaces.SIBLINGS_GAP;
     }
 
     private int calculatePageHeight(AncestorPerson personModel) {
@@ -52,7 +55,7 @@ public class AllDescendentsPageSetup implements Pageable {
 
     private int calculatePageWidth(AncestorPerson personModel) {
         DescendentTreeInfo treeInfo = personModel.getSpouseCouple().getDescendentTreeInfo();
-        return treeInfo.getMaxCouplesCount() * (config.getCoupleWidth() + Spaces.SIBLINGS_GAP)
+        return Spaces.SIBLINGS_GAP + treeInfo.getMaxCouplesCount() * (config.getCoupleWidth() + Spaces.SIBLINGS_GAP)
                 + treeInfo.getMaxSinglesCount() * (config.getAdultImageWidth() + Spaces.SIBLINGS_GAP);
     }
 

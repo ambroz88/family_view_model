@@ -141,12 +141,16 @@ public class AncestorCouple {
         for (AncestorPerson child : children) {
             this.children.add(child);
             int generationsCount;
-            if (child.getSpouseCouples().isEmpty()) {
-                generationsCount = 1;
+            if (child.getSpouse() == null) {
                 actualSingles++;
             } else {
-                generationsCount = 1 + child.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
                 actualCouples += Math.max(1, child.getSpouseCouple().getDescendentTreeInfo().getMaxCouplesCount());
+            }
+
+            if (child.getSpouseCouple() == null) {
+                generationsCount = 1;
+            } else {
+                generationsCount = 1 + child.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
             }
             getDescendentTreeInfo().addChildGenerations(generationsCount);
         }

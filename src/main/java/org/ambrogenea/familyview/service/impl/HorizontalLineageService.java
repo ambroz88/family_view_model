@@ -153,13 +153,13 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
     }
 
     @Override
-    public Position generateAllDescendents(Position rootPosition, List<AncestorCouple> spouseCouples) {
+    public Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples) {
         int allChildrenCoupleCount = calculateCouplesCount(spouseCouples);
         int allChildrenSinglesCount = calculateSinglesCount(spouseCouples);
         int descendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.SIBLINGS_GAP)
                 + allChildrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP);
-        Position actualChildPosition = rootPosition.addXAndY(
-                descendentsWidth / 2,
+        Position actualChildPosition = firstChildPosition.addXAndY(
+                0,
                 configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP
         );
 
@@ -168,46 +168,39 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
             actualChildPosition = new Position(nextChildPosition);
         }
 
-        return rootPosition.addXAndY(descendentsWidth, 0);
+        return firstChildPosition.addXAndY(descendentsWidth /*+ configuration.getAdultImageWidth() / 2 - Spaces.SIBLINGS_GAP*/, 0);
     }
 
     @Override
-    public Position addCoupleFamily(Position parentPosition, AncestorCouple couple, int descendentsWidth) {
-        Position startChildPosition = parentPosition.addXAndY(-descendentsWidth / 2, 0);
+    public Position addCoupleFamily(Position startChildPosition, AncestorCouple couple, int descendentsWidth) {
+        Position actualChildPosition = new Position(startChildPosition);
         for (AncestorPerson child : couple.getChildren()) {
-            Position startNextGeneration = generateAllDescendents(startChildPosition, child.getSpouseCouples());
-            int centerX = (startNextGeneration.getX() - startChildPosition.getX()) / 2;
-            Position parent = startChildPosition.addXAndY(centerX - configuration.getSpouseDistance() / 2, 0);
+            Position startNextGeneration = generateAllDescendents(actualChildPosition, child.getSpouseCouples());
+            int centerX = (startNextGeneration.getX() - actualChildPosition.getX()) / 2;
+            Position parent = actualChildPosition.addXAndY(centerX/* - configuration.getSpouseDistance() / 2*/, 0);
             addPerson(parent, child);
             Position spousePosition = addSpouse(parent, child);
             if (startNextGeneration.getX() > spousePosition.getX()) {
-                startChildPosition = startNextGeneration.addXAndY(configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP, 0);
+                actualChildPosition = startNextGeneration.addXAndY(configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP, 0);
             } else {
-                startChildPosition = spousePosition.addXAndY(configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP, 0);
+                actualChildPosition = spousePosition.addXAndY(configuration.getAdultImageWidth() + Spaces.SIBLINGS_GAP, 0);
             }
         }
-        return startChildPosition;
+        return actualChildPosition;
     }
 
     private int calculateCouplesCount(List<AncestorCouple> spouseCouples) {
-//        int maxDescendentCouples = 0;
-//        maxDescendentCouples = spouseCouples.stream()
         return (int) spouseCouples.stream()
-                .map(spouseCouple -> spouseCouple.getDescendentTreeInfo()/*.getMaxCouplesCount()*/)
-                //                .reduce(maxDescendentCouples, Integer::sum);
+                .map(spouseCouple -> spouseCouple.getDescendentTreeInfo())
                 .collect(Collectors.summarizingInt(DescendentTreeInfo::getMaxCouplesCount))
                 .getSum();
-//        return maxDescendentCouples;
     }
 
     private int calculateSinglesCount(List<AncestorCouple> spouseCouples) {
-//        int maxDescendentSingles = 0;
         return (int) spouseCouples.stream()
-                .map(spouseCouple -> spouseCouple.getDescendentTreeInfo()/*.getMaxSinglesCount()*/)
-                //                .reduce(maxDescendentSingles, Integer::sum);
+                .map(spouseCouple -> spouseCouple.getDescendentTreeInfo())
                 .collect(Collectors.summarizingInt(DescendentTreeInfo::getMaxSinglesCount))
                 .getSum();
-//        return maxDescendentSingles;
     }
 
 }

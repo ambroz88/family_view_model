@@ -1,5 +1,6 @@
 package org.ambrogenea.familyview.service.impl.tree;
 
+import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.PageSetup;
 import org.ambrogenea.familyview.dto.tree.Position;
@@ -27,7 +28,7 @@ public class AllDescendentsTreeService implements TreeService {
 
         specificAncestorService.addRootSpouses(rootPosition, rootPerson);
 
-        specificAncestorService.generateAllDescendents(new Position(0, rootPosition.getY()), rootPerson.getSpouseCouples());
+        specificAncestorService.generateAllDescendents(new Position(Spaces.SIBLINGS_GAP, rootPosition.getY()), rootPerson.getSpouseCouples());
 
         TreeModel treeModel = specificAncestorService.getTreeModel();
         treeModel.setPageSetup(pageSetup);
