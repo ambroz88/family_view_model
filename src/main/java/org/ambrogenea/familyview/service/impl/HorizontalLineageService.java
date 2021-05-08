@@ -8,6 +8,7 @@ import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.DescendentTreeInfo;
 import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 
@@ -175,8 +176,10 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
     @Override
     public Position addCoupleFamily(Position parentCentralPosition, AncestorCouple couple, int descendentsWidth) {
         Position actualChildPosition = parentCentralPosition.addXAndY(-descendentsWidth / 2, 0);
+        List<AncestorPerson> children = couple.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            AncestorPerson child = children.get(i);
 
-        for (AncestorPerson child : couple.getChildren()) {
             int allChildrenCoupleCount = calculateCouplesCount(child.getSpouseCouples());
             int allChildrenSinglesCount = calculateSinglesCount(child.getSpouseCouples());
             int allDescendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
@@ -188,6 +191,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
                 actualChildPosition = actualChildPosition.addXAndY((childWidth - allDescendentsWidth) / 2, 0);
                 widerParents = true;
             }
+
             Position endGenerationPosition = generateAllDescendents(actualChildPosition, child.getSpouseCouples(), allDescendentsWidth);
             int centerX = (endGenerationPosition.getX() - actualChildPosition.getX()) / 2;
             Position parent;
@@ -200,6 +204,9 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
             addPerson(parent, child);
             Position spousePosition = addSpouse(parent, child);
 
+            addLineToChildren(child, parent);
+            addLineFromChildren(children.size(), i, parent, parentCentralPosition);
+
             if (endGenerationPosition.getX() > spousePosition.getX()) {
                 actualChildPosition = endGenerationPosition.addXAndY(Spaces.HORIZONTAL_GAP, 0);
             } else {
@@ -207,6 +214,38 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
             }
         }
         return actualChildPosition;
+    }
+
+    private void addLineFromChildren(int childrenCount, int childrenIndex, Position childPosition, Position parentCentralPosition) {
+        if (childrenCount == 1 || (childrenCount > 2 && childrenIndex > 0 && childrenIndex < childrenCount - 1)) {
+            addLine(childPosition,
+                    childPosition.addXAndY(0, -(configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+        } else {
+            addLine(childPosition,
+                    parentCentralPosition.addXAndY(0, -(configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+        }
+    }
+
+    private void addLineToChildren(AncestorPerson child, Position parent) {
+        if (child.getSpouseCouple() != null && child.getSpouse() == null) {
+            addLine(parent,
+                    parent.addXAndY(0, (configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+            addHeraldry(parent.addXAndY(0, configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP), child.getBirthDatePlace().getSimplePlace());
+        } else if (child.getSpouseCouple() != null && !child.getSpouseCouple().getChildren().isEmpty()) {
+            addLine(parent.addXAndY(configuration.getSpouseDistance() / 2, 0),
+                    parent.addXAndY(configuration.getSpouseDistance() / 2, (configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+            addHeraldry(parent.addXAndY(configuration.getSpouseDistance() / 2,
+                    configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP), child.getBirthDatePlace().getSimplePlace()
+            );
+        }
     }
 
     private int calculateCouplesCount(List<AncestorCouple> spouseCouples) {

@@ -5,6 +5,7 @@ import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.PageSetup;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
+import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.TreeService;
@@ -25,8 +26,19 @@ public class AllDescendentsTreeService implements TreeService {
 
         Position rootPosition = pageSetup.getRootPosition();
         specificAncestorService.addRootPerson(rootPosition, rootPerson);
-
         specificAncestorService.addRootSpouses(rootPosition, rootPerson);
+
+        if (rootPerson.getSpouseCouple() != null && rootPerson.getSpouse() == null) {
+            specificAncestorService.addLine(rootPosition,
+                    rootPosition.addXAndY(0, (configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+        } else if (rootPerson.getSpouseCouple() != null && !rootPerson.getSpouseCouple().getChildren().isEmpty()) {
+            specificAncestorService.addLine(rootPosition.addXAndY(configuration.getSpouseDistance() / 2, 0),
+                    rootPosition.addXAndY(configuration.getSpouseDistance() / 2, (configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+        }
 
         specificAncestorService.generateAllDescendents(new Position(Spaces.SIBLINGS_GAP, rootPosition.getY()),
                 rootPerson.getSpouseCouples(), pageSetup.getWidth() - Spaces.SIBLINGS_GAP

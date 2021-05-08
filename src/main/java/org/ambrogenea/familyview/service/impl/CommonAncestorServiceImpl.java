@@ -161,7 +161,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             if (heraldry != null) {
                 try {
                     BufferedImage heraldryImage = ImageIO.read(heraldry);
-                    Position heraldryPosition = childPosition.addXAndY(0, -(configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
+                    Position heraldryPosition = childPosition.addXAndY(0, -(configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
 
                     treeModel.getImages().add(new ImageModel(heraldryImage, heraldryPosition, Spaces.VERTICAL_GAP / 2));
                 } catch (IOException ex) {
@@ -221,10 +221,10 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     @Override
     public Position addParents(Position childPosition, AncestorPerson person) {
         Position fatherPosition = childPosition.addXAndY(-getConfiguration().getHalfSpouseLabelSpace(),
-                -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                -getConfiguration().getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
 
         Position motherPosition = childPosition.addXAndY(getConfiguration().getHalfSpouseLabelSpace(),
-                -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                -getConfiguration().getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
 
         addPerson(fatherPosition, person.getFather());
         addPerson(motherPosition, person.getMother());
