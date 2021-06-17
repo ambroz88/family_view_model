@@ -174,25 +174,25 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
     }
 
     @Override
-    public Position addCoupleFamily(Position parentCentralPosition, AncestorCouple couple, int descendentsWidth) {
-        Position actualChildPosition = parentCentralPosition.addXAndY(-descendentsWidth / 2, 0);
+    public Position addCoupleFamily(Position parentCentralPosition, AncestorCouple couple, int allDescendentsWidth) {
+        Position actualChildPosition = parentCentralPosition.addXAndY(-allDescendentsWidth / 2, 0);
         List<AncestorPerson> children = couple.getChildren();
         for (int i = 0; i < children.size(); i++) {
             AncestorPerson child = children.get(i);
 
             int allChildrenCoupleCount = calculateCouplesCount(child.getSpouseCouples());
             int allChildrenSinglesCount = calculateSinglesCount(child.getSpouseCouples());
-            int allDescendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
+            int descendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
                     + allChildrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP);
             int childWidth = child.getSpouseCount() * configuration.getCoupleWidth();
 
             boolean widerParents = false;
-            if (allDescendentsWidth < childWidth) {
-                actualChildPosition = actualChildPosition.addXAndY((childWidth - allDescendentsWidth) / 2, 0);
+            if (descendentsWidth < childWidth) {
+                actualChildPosition = actualChildPosition.addXAndY((childWidth - descendentsWidth) / 2, 0);
                 widerParents = true;
             }
 
-            Position endGenerationPosition = generateAllDescendents(actualChildPosition, child.getSpouseCouples(), allDescendentsWidth);
+            Position endGenerationPosition = generateAllDescendents(actualChildPosition, child.getSpouseCouples(), descendentsWidth);
             int centerX = (endGenerationPosition.getX() - actualChildPosition.getX()) / 2;
             Position parent;
             if (child.getSpouse() != null || widerParents) {

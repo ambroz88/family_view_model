@@ -45,14 +45,13 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
 
     @Override
     public Position addSpouse(Position rootPosition, AncestorPerson root) {
-        if (root.getSpouseCouple() != null) {
+        if (root.getSpouse() != null) {
             int labelYShift = 0;
             if (configuration.getAdultDiagram() != Diagrams.SCROLL) {
                 labelYShift = Spaces.LABEL_GAP;
             }
             Position label = rootPosition.addXAndY(0,
-                    -getConfiguration().getAdultImageHeightAlternative() / 2
-                    - getConfiguration().getMarriageLabelHeight() + labelYShift);
+                    getConfiguration().getAdultImageHeightAlternative() / 2 - labelYShift);
             addLabel(label, getConfiguration().getMarriageLabelWidth(),
                     root.getSpouseCouple().getDatePlace().getLocalizedDate(getConfiguration().getLocale())
             );

@@ -1,10 +1,12 @@
 package org.ambrogenea.familyview.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.DescendentTreeInfo;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.enums.Sex;
@@ -122,16 +124,16 @@ public class VerticalLineageService extends VerticalAncestorService implements L
             int childX = childPosition.getX();
             int childY = childPosition.getY();
 
-            int parentY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
+            int parentY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP;
 
             if (child.getFather() == null) {
-                Position motherPosition = childPosition.addXAndY(0, -configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                Position motherPosition = childPosition.addXAndY(0, -configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
                 addPerson(motherPosition, child.getMother());
                 addAllParents(motherPosition, child.getMother(), new Position());
                 addLine(motherPosition, childPosition, Relation.DIRECT);
             } else {
                 Position shiftPosition = new Position(-configuration.getMarriageLabelWidth(),
-                        configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight());
+                        configuration.getAdultImageHeightAlternative()/* + configuration.getMarriageLabelHeight()*/);
                 if (child.getSex().equals(Sex.FEMALE)) {
                     fatherX = calculateFatherXHorizontal(child, childX);
                     motherX = fatherX + configuration.getAdultImageWidth() + configuration.getMarriageLabelWidth();
@@ -219,18 +221,18 @@ public class VerticalLineageService extends VerticalAncestorService implements L
             } else {
                 int verticalFemaleShift = configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight();
                 if (child.getSex().equals(Sex.FEMALE)) {
-                    fatherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
+                    fatherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP
                             - 2 * verticalFemaleShift + femaleShift.getY();
-                    motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
+                    motherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP
                             - verticalFemaleShift + femaleShift.getY();
 
                     fatherX = calculateFatherX(child.getFather(), childX) + femaleShift.getX();
                     motherX = fatherX + configuration.getMarriageLabelWidth();
                     heraldryShiftY = verticalFemaleShift;
                 } else {
-                    fatherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
+                    fatherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP
                             - verticalFemaleShift;
-                    motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
+                    motherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP;
 
                     motherX = calculateMotherX(child.getMother(), childX);
                     fatherX = motherX - configuration.getMarriageLabelWidth();
@@ -288,12 +290,115 @@ public class VerticalLineageService extends VerticalAncestorService implements L
     }
 
     @Override
-    public Position generateAllDescendents(Position rootPosition, List<AncestorCouple> couples, int descendetsWidth) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth) {
+        int verticalShift = 2 * configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP + configuration.getMarriageLabelHeight();
+        Position actualChildPosition = firstChildPosition.addXAndY(0, verticalShift);
+
+        int descendentsWidth;
+        for (AncestorCouple spouseCouple : spouseCouples) {
+            int childrenCoupleCount = spouseCouple.getDescendentTreeInfo().getMaxCouplesCount();
+            int childrenSinglesCount = spouseCouple.getDescendentTreeInfo().getMaxSinglesCount();
+            descendentsWidth = childrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
+                    + childrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP);
+
+            actualChildPosition = actualChildPosition.addXAndY(descendentsWidth / 2, 0);
+            actualChildPosition = addCoupleFamily(actualChildPosition, spouseCouple, descendentsWidth);
+        }
+
+        return firstChildPosition.addXAndY(Math.max(configuration.getAdultImageWidth(), allDescendentsWidth), 0);
     }
 
     @Override
-    public Position addCoupleFamily(Position firstChildPosition, AncestorCouple couple, int descendentsWidth) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Position addCoupleFamily(Position parentCentralPosition, AncestorCouple couple, int allDescendentsWidth) {
+        Position actualChildPosition = parentCentralPosition.addXAndY(-allDescendentsWidth / 2, 0);
+        List<AncestorPerson> children = couple.getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            AncestorPerson child = children.get(i);
+
+            int allChildrenCoupleCount = calculateCouplesCount(child.getSpouseCouples());
+            int allChildrenSinglesCount = calculateSinglesCount(child.getSpouseCouples());
+            int descendentsWidth = allChildrenCoupleCount * (configuration.getCoupleWidth() + Spaces.HORIZONTAL_GAP)
+                    + allChildrenSinglesCount * (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP);
+            int childWidth = child.getSpouseCount() * configuration.getCoupleWidth();
+
+            boolean widerParents = false;
+            if (descendentsWidth < childWidth) {
+                actualChildPosition = actualChildPosition.addXAndY((childWidth - descendentsWidth) / 2, 0);
+                widerParents = true;
+            }
+
+            Position endGenerationPosition = generateAllDescendents(actualChildPosition, child.getSpouseCouples(), descendentsWidth);
+            int centerX = (endGenerationPosition.getX() - actualChildPosition.getX()) / 2;
+            Position parentPosition;
+            if (child.getSpouse() != null || widerParents) {
+                parentPosition = actualChildPosition.addXAndY(centerX - configuration.getSpouseDistance() / 2, 0);
+            } else {
+                parentPosition = actualChildPosition.addXAndY(centerX, 0);
+            }
+
+            addPerson(parentPosition, child);
+            Position spousePosition = addSpouse(parentPosition, child);
+
+            addLineToChildren(child, parentPosition);
+            addLineFromChildren(children.size(), i, parentPosition, parentCentralPosition);
+
+            if (endGenerationPosition.getX() > spousePosition.getX()) {
+                actualChildPosition = endGenerationPosition.addXAndY(Spaces.HORIZONTAL_GAP, 0);
+            } else {
+                actualChildPosition = spousePosition.addXAndY(configuration.getAdultImageWidth() / 2 + Spaces.SIBLINGS_GAP, 0);
+            }
+        }
+        return actualChildPosition;
     }
+
+    private void addLineFromChildren(int childrenCount, int childrenIndex, Position childPosition, Position parentCentralPosition) {
+        if (childrenCount == 1 || (childrenCount > 2 && childrenIndex > 0 && childrenIndex < childrenCount - 1)) {
+            addLine(childPosition,
+                    childPosition.addXAndY(0, -(configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+        } else {
+            addLine(childPosition,
+                    parentCentralPosition.addXAndY(0, -(configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
+                    Relation.DIRECT
+            );
+        }
+    }
+
+    private void addLineToChildren(AncestorPerson child, Position parentPosition) {
+        if (child.getSpouseCouple() != null && child.getSpouse() == null) {
+            addLine(parentPosition,
+                    parentPosition.addXAndY(0, (configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2
+                            + configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight()
+                    ),
+                    Relation.DIRECT
+            );
+            addHeraldry(parentPosition.addXAndY(0,
+                    configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP + configuration.getMarriageLabelHeight()), child.getBirthDatePlace().getSimplePlace());
+        } else if (child.getSpouseCouple() != null && !child.getSpouseCouple().getChildren().isEmpty()) {
+            Position labelPosition = parentPosition.addXAndY(0, configuration.getAdultImageHeightAlternative() / 2 + configuration.getMarriageLabelHeight() / 2);
+            addLine(labelPosition,
+                    labelPosition.addXAndY(0, (2 * configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP + configuration.getMarriageLabelHeight()) / 2),
+                    Relation.DIRECT
+            );
+            addHeraldry(labelPosition.addXAndY(0,
+                    configuration.getAdultImageHeightAlternative() + (Spaces.VERTICAL_GAP + configuration.getMarriageLabelHeight()) / 2), child.getBirthDatePlace().getSimplePlace()
+            );
+        }
+    }
+
+    private int calculateCouplesCount(List<AncestorCouple> spouseCouples) {
+        return (int) spouseCouples.stream()
+                .map(spouseCouple -> spouseCouple.getDescendentTreeInfo())
+                .collect(Collectors.summarizingInt(DescendentTreeInfo::getMaxCouplesCount))
+                .getSum();
+    }
+
+    private int calculateSinglesCount(List<AncestorCouple> spouseCouples) {
+        return (int) spouseCouples.stream()
+                .map(spouseCouple -> spouseCouple.getDescendentTreeInfo())
+                .collect(Collectors.summarizingInt(DescendentTreeInfo::getMaxSinglesCount))
+                .getSum();
+    }
+
 }
