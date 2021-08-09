@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Locale;
 
 import org.ambrogenea.familyview.domain.FamilyData;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
@@ -38,6 +39,10 @@ public interface ConfigurationService {
 
     int getCoupleWidth();
 
+    int getGapBetweenCouples();
+
+    int getAllAncestorsCoupleIncrease();
+
     int getSpouseDistance();
 
     int getCoupleVerticalDifference();
@@ -57,6 +62,10 @@ public interface ConfigurationService {
     int getSiblingImageHeight();
 
     void setSiblingImageHeight(int siblingImageHeight);
+
+    int getChildrenShift(AncestorPerson person);
+
+    int getParentGenerationWidth(AncestorPerson person);
 
     int getAdultFontSize();
 

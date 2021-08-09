@@ -29,7 +29,8 @@ public class VerticalPaging implements Paging {
 
         if (person.getFather() != null) {
             minimalX = Math.max(minimalX, config.getCoupleWidth() / 2 + SIBLINGS_GAP);
-            int fathersX = (int) ((config.getCoupleWidth() + config.getAdultImageWidth() / 3.0) * person.getFather().getLastParentsCount()) /*+ config.getMarriageLabelWidth() / 2*/;
+            int fathersX = (int) ((config.getCoupleWidth() + config.getGapBetweenCouples()) * person.getFather().getLastParentsCount()
+                    + config.getAllAncestorsCoupleIncrease() / 2.0);
             return Math.max(fathersX, minimalX);
         } else {
             return minimalX;
@@ -38,9 +39,8 @@ public class VerticalPaging implements Paging {
 
     @Override
     public int calculateAllAncestorsWidth(AncestorPerson person) {
-        return (int) ((config.getCoupleWidth()
-                + config.getAdultImageWidth() / 3.0) * person.getLastParentsCount()
-                + (config.getAdultImageWidth() + config.getMarriageLabelWidth()) / 2);
+        return (int) ((config.getCoupleWidth() + config.getGapBetweenCouples())
+                * person.getLastParentsCount() + config.getAllAncestorsCoupleIncrease());
     }
 
     @Override
@@ -63,10 +63,10 @@ public class VerticalPaging implements Paging {
     @Override
     public int calculateFatherLineageX(AncestorPerson person) {
         int positionX = config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
+        int parentWidth = config.getParentGenerationWidth(person);
+        int childrenShift = config.getChildrenShift(person);
+
         int siblingsShift = 0;
-
-        int childrenShift = getChildrenShift(person, positionX);
-
         if (config.isShowSiblings()) {
             if (person.getMaxOlderSiblings() > 0) {
                 int olderSiblingsCount;
@@ -76,38 +76,40 @@ public class VerticalPaging implements Paging {
                     olderSiblingsCount = person.getMaxOlderSiblings();
                 }
 
-                siblingsShift = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * olderSiblingsCount + HORIZONTAL_GAP;
+                siblingsShift = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * olderSiblingsCount;
+
                 if (config.isShowSiblingSpouses()) {
                     siblingsShift = siblingsShift + person.getMaxOlderSiblingsSpouse() * (config.getMarriageLabelWidth() + config.getSiblingImageWidth());
                 }
             }
         }
 
-        return positionX + Math.max(siblingsShift, childrenShift);
+        return positionX + Math.max(parentWidth + siblingsShift, childrenShift);
     }
 
     @Override
     public int calculateFatherLineageWidth(AncestorPerson person) {
         int pageWidth = config.getCoupleWidth() + 2 * SIBLINGS_GAP;
+        int parentWidth = config.getParentGenerationWidth(person);
+        int childrenWidth = config.getChildrenShift(person) - config.getCoupleWidth() / 2;
 
+        int siblingsWidth = 0;
         if (config.isShowSiblings()) {
-            pageWidth = pageWidth + calculateFatherSiblingsWidth(person);
+            siblingsWidth = calculateFatherSiblingsWidth(person);
         }
 
+        int spouseWidth = 0;
         if (config.isShowSpouses() && person.getSpouseCouple() != null) {
 
             int extraSpouseCount = person.getSpouseCouples().size() - 1;
             if (extraSpouseCount > 0) {
-                pageWidth = pageWidth + (config.getCoupleWidth() - config.getAdultImageWidth() / 2) * extraSpouseCount;
-            }
-
-            if (config.isShowChildren() && !person.getSpouseCouple().getChildren().isEmpty()) {
-                int childrenWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0);
-                if (childrenWidth > pageWidth) {
-                    pageWidth = childrenWidth;
-                }
+                spouseWidth = config.getSpouseLabelSpace() * extraSpouseCount;
             }
         }
+
+        pageWidth = pageWidth + Math.max(siblingsWidth,
+                Math.max(parentWidth, childrenWidth / 2) + Math.max(spouseWidth, childrenWidth / 2)
+        );
 
         if (config.isShowResidence()) {
             pageWidth = pageWidth + RESIDENCE_SIZE;
@@ -121,7 +123,7 @@ public class VerticalPaging implements Paging {
         int positionX = config.getAdultImageWidth() / 2 + SIBLINGS_GAP;
         int siblingsShift = 0;
 
-        int childrenShift = getChildrenShift(person, positionX);
+        int childrenShift = config.getChildrenShift(person) / 2 - positionX;
 
         if (config.isShowSiblings()) {
             if (person.getMaxOlderSiblings() > 0) {
@@ -133,15 +135,6 @@ public class VerticalPaging implements Paging {
         }
 
         return positionX + Math.max(siblingsShift, childrenShift);
-    }
-
-    private int getChildrenShift(AncestorPerson person, int rootPositionX) {
-        int childrenShift = 0;
-        if (config.isShowSpouses() && config.isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
-            int childrenWidth = (config.getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0);
-            childrenShift = childrenWidth / 2 - rootPositionX;
-        }
-        return childrenShift;
     }
 
     @Override

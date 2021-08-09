@@ -4,9 +4,12 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Locale;
 
+import static org.ambrogenea.familyview.constant.Spaces.HORIZONTAL_GAP;
+
 import org.ambrogenea.familyview.configuration.Configuration;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.FamilyData;
+import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
@@ -72,7 +75,11 @@ public final class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public int getSpouseLabelSpace() {
+        if (isShowCouplesVertical()) {
+            return getCoupleWidth() - getAdultImageWidth() / 2;
+        }
         return getAdultImageWidth() + getMarriageLabelWidth();
+
     }
 
     @Override
@@ -86,6 +93,24 @@ public final class DefaultConfigurationService implements ConfigurationService {
             return (int) (getAdultImageWidth() / 3.0 * 5);
         } else {
             return 2 * getAdultImageWidth() + getMarriageLabelWidth();
+        }
+    }
+
+    @Override
+    public int getGapBetweenCouples() {
+        if (isShowCouplesVertical()) {
+            return (int) (getAdultImageWidth() / 3.0);
+        } else {
+            return Spaces.SIBLINGS_GAP;
+        }
+    }
+
+    @Override
+    public int getAllAncestorsCoupleIncrease() {
+        if (isShowCouplesVertical()) {
+            return 2 * getMarriageLabelWidth();
+        } else {
+            return 0;
         }
     }
 
@@ -166,6 +191,31 @@ public final class DefaultConfigurationService implements ConfigurationService {
         if (Math.abs(oldValue - siblingImageHeight) > 4) {
             configuration.setSiblingImageHeight(siblingImageHeight);
             firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageHeight);
+        }
+    }
+
+    @Override
+    public int getChildrenShift(AncestorPerson person) {
+        int childrenShift = 0;
+        if (isShowSpouses() && isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
+            childrenShift = ((getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0)
+                    - getCoupleWidth()) / 2;
+        }
+        return childrenShift;
+    }
+
+    @Override
+    public int getParentGenerationWidth(AncestorPerson person) {
+        if (isShowCouplesVertical()) {
+            return 0;
+        } else {
+            int ancestorGeneration = 0;
+            if (person.getFather() != null && person.getFather().getAncestorGenerations() > 0) {
+                ancestorGeneration = person.getFather().getAncestorGenerations();
+            } else if (person.getMother() != null) {
+                ancestorGeneration = person.getMother().getAncestorGenerations();
+            }
+            return getParentImageSpace() * Math.min(ancestorGeneration + 1, getGenerationCount());
         }
     }
 
