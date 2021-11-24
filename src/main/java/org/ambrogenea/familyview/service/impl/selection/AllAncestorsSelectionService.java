@@ -54,6 +54,11 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
                     mother.addChildrenCode(person.getAncestorLine());
                     person.setMother(mother);
                 }
+
+                if (parents.hasHusband() && parents.hasWife()) {
+                    person.getFather().getSpouseCouples().add(new AncestorCouple(person.getFather(), person.getMother()));
+                    person.getMother().getSpouseCouples().add(new AncestorCouple(person.getFather(), person.getMother()));
+                }
             }
 
         }

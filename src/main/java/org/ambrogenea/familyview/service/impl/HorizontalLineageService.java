@@ -51,7 +51,7 @@ public class HorizontalLineageService extends HorizontalAncestorService implemen
 
                 generateFathersFamily(fatherPosition, person.getFather());
             } else {
-                Position motherPosition = child.addXAndY(0, getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                Position motherPosition = child.addXAndY(0, -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
                 addPerson(motherPosition, person.getMother());
 
                 generateFathersFamily(motherPosition, person.getMother());

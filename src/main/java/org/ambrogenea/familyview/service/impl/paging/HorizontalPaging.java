@@ -46,7 +46,7 @@ public class HorizontalPaging implements Paging {
     @Override
     public int calculateParentLineageWidth(AncestorPerson person) {
         int pageWidth = calculateFatherLineageWidth(person);
-        pageWidth = pageWidth + config.getCoupleWidth() / 2;
+        pageWidth = pageWidth + config.getCoupleWidth() + (config.getWideMarriageLabel() - config.getAdultImageWidth());
 
         if (config.isShowSiblings()) {
             pageWidth = pageWidth + calculateMotherSiblingsWidth(person.getMother());
@@ -79,7 +79,7 @@ public class HorizontalPaging implements Paging {
             }
         }
 
-        return positionX + Math.max(parentWidth + siblingsShift, childrenShift);
+        return positionX + Math.max(Math.max(parentWidth, siblingsShift), childrenShift);
     }
 
     @Override
