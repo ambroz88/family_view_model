@@ -51,7 +51,8 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 -(configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
 
         int olderSiblingCount = rootChild.getOlderSiblings().size();
-        Position siblingPosition = new Position(rootSiblingPosition.getX() - Spaces.SIBLINGS_GAP, rootSiblingPosition.getY());
+        int widthDifference = configuration.getAdultImageWidth() - configuration.getSiblingImageWidth();
+        Position siblingPosition = rootSiblingPosition.addXAndY(-widthDifference / 2 - (Spaces.SIBLINGS_GAP - Spaces.HORIZONTAL_GAP), 0);
 
         for (int i = olderSiblingCount - 1; i >= 0; i--) {
             sibling = rootChild.getOlderSiblings().get(i);
@@ -77,7 +78,8 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 -(configuration.getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
 
         int youngerSiblingsCount = rootChild.getYoungerSiblings().size();
-        Position siblingPosition = new Position(rootSiblingPosition.getX() + Spaces.SIBLINGS_GAP, rootSiblingPosition.getY());
+        int widthDifference = configuration.getAdultImageWidth() - configuration.getSiblingImageWidth();
+        Position siblingPosition = rootSiblingPosition.addXAndY(widthDifference / 2 + (Spaces.SIBLINGS_GAP - Spaces.HORIZONTAL_GAP), 0);
 
         for (int i = 0; i < youngerSiblingsCount; i++) {
             sibling = rootChild.getYoungerSiblings().get(i);
