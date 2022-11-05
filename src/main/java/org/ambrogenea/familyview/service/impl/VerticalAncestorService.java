@@ -17,7 +17,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     @Override
     public Position addMother(Position childPosition, AncestorPerson mother, String marriageDate) {
         Position motherPosition = childPosition.addXAndY(
-                getConfiguration().getMarriageLabelWidth(), -getConfiguration().getAdultImageHeight() - Spaces.VERTICAL_GAP);
+                getConfiguration().getMarriageLabelWidth(), -getConfiguration().getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
         int labelYShift = 0;
         if (configuration.getAdultDiagram() != Diagrams.SCROLL) {
             labelYShift = Spaces.LABEL_GAP;
@@ -36,7 +36,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
     @Override
     public Position addFather(Position childPosition, AncestorPerson father) {
         int fatherYShift = -getConfiguration().getAdultImageHeightAlternative()
-                - getConfiguration().getAdultImageHeight()
+                - getConfiguration().getAdultImageHeightAlternative()
                 - getConfiguration().getMarriageLabelHeight() - Spaces.VERTICAL_GAP;
         Position fatherPosition = childPosition.addXAndY(0, fatherYShift);
         addPerson(fatherPosition, father);
@@ -98,7 +98,7 @@ public class VerticalAncestorService extends CommonAncestorServiceImpl implement
 
     @Override
     public void addVerticalLineToParents(Position child) {
-        int endY = child.getY() - getConfiguration().getAdultImageHeight()
+        int endY = child.getY() - getConfiguration().getAdultImageHeightAlternative()
                 - getConfiguration().getAdultImageHeightAlternative() / 2
                 - configuration.getMarriageLabelHeight() / 2 - Spaces.VERTICAL_GAP;
         addLine(child, new Position(child.getX(), endY), Relation.DIRECT);

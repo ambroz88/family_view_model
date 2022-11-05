@@ -183,7 +183,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 Position coupleCenterPosition = fatherPosition.addXAndY(getConfiguration().getHalfSpouseLabelSpace(), 0);
 
                 Position heraldryPosition = coupleCenterPosition.addXAndY(
-                        0, (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
+                        0, (getConfiguration().getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
 
                 addLine(heraldryPosition, coupleCenterPosition, Relation.SIDE);
 
@@ -200,7 +200,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
         Position childrenPosition = heraldryPosition.addXAndY(
                 getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2,
-                (getConfiguration().getAdultImageHeight() + Spaces.VERTICAL_GAP) / 2);
+                (getConfiguration().getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
 
         if (getConfiguration().isShowHeraldry()) {
             addChildrenHeraldry(new Position(heraldryPosition.getX(), childrenPosition.getY()), spouseCouple);

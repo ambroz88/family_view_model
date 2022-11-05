@@ -19,7 +19,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
 
     public VerticalLineageService(ConfigurationService configuration) {
         super(configuration);
-        parentsWidth = configuration.getCoupleWidth() + (int) (configuration.getAdultImageWidth() / 3.0);
+        parentsWidth = configuration.getCoupleWidth() + Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, configuration.getAdultImageWidth()) / 3;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
 
             if (child.getFather() == null) {
                 double motherParentsCount = child.getMother().getInnerParentsCount();
-                motherX = (int) (motherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+                motherX = (int) (motherParentsCount * parentsWidth) - configuration.getMarriageLabelWidth();
 
                 Position motherPosition = childPosition.addXAndY(-motherX + configuration.getCoupleWidth() / 2, -configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
                 addPerson(motherPosition, child.getMother());
@@ -175,7 +175,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
         if (child.getFather().getAncestorGenerations() > 0) {
 
             double fatherParentsCount = child.getFather().getLastParentsCount();
-            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - configuration.getMarriageLabelWidth();
             fatherX = childX + generationsWidth - configuration.getMarriageLabelWidth();
 
         } else {
@@ -189,7 +189,7 @@ public class VerticalLineageService extends VerticalAncestorService implements L
         if (child.getMother().getAncestorGenerations() > 0) {
 
             double motherParentsCount = child.getMother().getLastParentsCount();
-            int generationsWidth = (int) (motherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            int generationsWidth = (int) (motherParentsCount * parentsWidth) - configuration.getMarriageLabelWidth();
             motherX = childX - generationsWidth + configuration.getMarriageLabelWidth();
 
         } else {
@@ -210,10 +210,15 @@ public class VerticalLineageService extends VerticalAncestorService implements L
 
             if (child.getFather() == null) {
                 double motherParentsCount = child.getMother().getInnerParentsCount();
-                motherX = (int) -(motherParentsCount * parentsWidth) + (int) (configuration.getAdultImageWidth() / 3.0 * 2);
-                motherY = -configuration.getAdultImageHeight() - configuration.getAdultImageHeightAlternative() - configuration.getMarriageLabelHeight() - Spaces.VERTICAL_GAP;
+                if (child.getSex().equals(Sex.FEMALE)) {
+                    motherX = calculateFatherX(child.getMother(), childX) + femaleShift.getX();
+                    motherY = childY - 2 * configuration.getCoupleVerticalDifference() - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
+                } else {
+                    motherX = childX - (int) (motherParentsCount * parentsWidth) + configuration.getMarriageLabelWidth();
+                    motherY = childY - configuration.getCoupleVerticalDifference() - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
+                }
 
-                Position motherPosition = childPosition.addXAndY(motherX, motherY);
+                Position motherPosition = new Position(motherX, motherY);
                 addPerson(motherPosition, child.getMother());
                 addAllParents(motherPosition, child.getMother(), new Position());
 
@@ -226,24 +231,20 @@ public class VerticalLineageService extends VerticalAncestorService implements L
                 int verticalFemaleShift = configuration.getAdultImageHeightAlternative() + configuration.getMarriageLabelHeight();
                 if (child.getSex().equals(Sex.FEMALE)) {
                     if (child.getSpouse() == null) {
-                        fatherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP
-                                - verticalFemaleShift + femaleShift.getY();
                         motherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP
                                 + femaleShift.getY();
                         fatherX = childX - configuration.getMarriageLabelWidth();
                     } else {
-                        fatherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
-                                - verticalFemaleShift - configuration.getAdultImageHeight() + femaleShift.getY();
-                        motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
-                                - verticalFemaleShift + femaleShift.getY();
+                        motherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP
+                                - configuration.getCoupleVerticalDifference() + femaleShift.getY();
                         fatherX = calculateFatherX(child.getFather(), childX) + femaleShift.getX();
                     }
+                    fatherY = motherY - configuration.getCoupleVerticalDifference();
                     motherX = fatherX + configuration.getMarriageLabelWidth();
-                    heraldryShiftY = verticalFemaleShift;
+                    heraldryShiftY = verticalFemaleShift - femaleShift.getY();
                 } else {
-                    fatherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP
-                            - verticalFemaleShift;
-                    motherY = childY - configuration.getAdultImageHeight() - Spaces.VERTICAL_GAP;
+                    motherY = childY - configuration.getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP;
+                    fatherY = motherY - configuration.getCoupleVerticalDifference();
 
                     if (child.getSpouse() == null) {
                         motherX = childX;
@@ -279,13 +280,11 @@ public class VerticalLineageService extends VerticalAncestorService implements L
     private int calculateFatherX(AncestorPerson father, int childX) {
         int fatherX;
         if (father.getAncestorGenerations() > 0) {
-
             double fatherParentsCount = father.getLastParentsCount();
-            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            int generationsWidth = (int) (fatherParentsCount * parentsWidth) - configuration.getMarriageLabelWidth();
             fatherX = childX + generationsWidth;
-
         } else {
-            fatherX = childX + (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            fatherX = childX + configuration.getMarriageLabelWidth();
         }
         return fatherX;
     }
@@ -293,11 +292,9 @@ public class VerticalLineageService extends VerticalAncestorService implements L
     private int calculateMotherX(AncestorPerson mother, int childX) {
         int motherX;
         if (mother.getAncestorGenerations() > 0) {
-
             double motherParentsCount = mother.getLastParentsCount();
-            int generationsWidth = (int) (motherParentsCount * parentsWidth) - (int) (configuration.getAdultImageWidth() / 3.0 * 2);
+            int generationsWidth = (int) (motherParentsCount * parentsWidth) - configuration.getMarriageLabelWidth();
             motherX = childX - generationsWidth;
-
         } else {
             motherX = childX;
         }
