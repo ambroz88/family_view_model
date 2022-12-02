@@ -2,6 +2,7 @@ package org.ambrogenea.familyview.service;
 
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.ParentsDto;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.enums.Relation;
@@ -35,4 +36,6 @@ public interface CommonAncestorService {
     void addStraightChildrenLine(Position childPosition);
 
     TreeModel getTreeModel();
+
+    ParentsDto generateParents(Position heraldryPosition, AncestorPerson child);
 }

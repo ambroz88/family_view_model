@@ -10,16 +10,16 @@ public interface LineageService extends SpecificAncestorService {
 
     void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson);
 
-    void generateFathersFamily(Position childPosition, AncestorPerson person);
+    void generateFathersFamily(Position heraldryPosition, AncestorPerson person);
 
-    void generateMotherFamily(Position childPosition, AncestorPerson person);
+    void generateMotherFamily(Position heraldryPosition, AncestorPerson person);
+
+    void generateParentsFamily(Position heraldryPosition, AncestorPerson person);
 
     Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth);
 
-    void addFirstParents(Position childPosition, AncestorPerson child);
+    void addAllParents(Position heraldryPosition, AncestorPerson child);
 
     Position addCoupleFamily(Position firstChildPosition, AncestorCouple couple, int descendentsWidth);
-
-    Position calculateMotherPosition(Position fatherPosition, AncestorPerson rootPerson);
 
 }

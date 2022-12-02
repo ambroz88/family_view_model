@@ -47,11 +47,8 @@ public class TreeModel {
         return persons;
     }
 
-    public void addPersonWithResidence(PersonRecord person, ConfigurationService service) {
+    public void addPerson(PersonRecord person) {
         persons.add(person);
-        if (service.isShowResidence()) {
-            addResidence(person, service);
-        }
     }
 
     public Set<Marriage> getMarriages() {
@@ -95,39 +92,11 @@ public class TreeModel {
         return cityRegister;
     }
 
-    private void addResidence(final PersonRecord person, ConfigurationService configuration) {
-        Residence residence;
-        int yShift;
-        Position position;
-        for (int i = 0; i < person.getResidences().size(); i++) {
-
-            residence = person.getResidences().get(i);
-            if (!residence.getCity().isEmpty()) {
-
-                if (person.isDirectLineage()) {
-                    yShift = -configuration.getAdultImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5);
-
-                    if (person.getSex().equals(Sex.FEMALE)) {
-                        position = person.getPosition().addXAndY(
-                                (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2, yShift);
-                    } else {
-                        position = person.getPosition().addXAndY(
-                                -(configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2 - Spaces.RESIDENCE_SIZE, yShift);
-                    }
-                } else {
-                    position = person.getPosition().addXAndY(
-                            -(configuration.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) / 2 - Spaces.RESIDENCE_SIZE,
-                            -configuration.getSiblingImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5)
-                    );
-                }
-
-                residences.add(new ResidenceDto(position, residence));
-                addCityToRegister(residence.getCity());
-            }
-        }
+    public void addResidence(Position position, Residence residence) {
+        residences.add(new ResidenceDto(position, residence));
     }
 
-    private void addCityToRegister(String city) {
+    public void addCityToRegister(String city) {
         if (!cityRegister.contains(city)) {
             cityRegister.add(city);
         }

@@ -1,11 +1,10 @@
 package org.ambrogenea.familyview.configuration;
 
-import java.util.Locale;
-
-import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
+
+import java.util.Locale;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -20,21 +19,14 @@ public class PersonConfiguration {
     private int adultVerticalShift;
     private int adultFontSize;
 
-    private int wideMarriageLabel;
-    private int marriageLabelWidth;
-
     private int siblingImageWidth;
     private int siblingImageHeight;
-    private int siblingVerticalShift;
     private int siblingFontSize;
 
     private Diagrams adultDiagram;
-    private Diagrams siblingDiagram;
     private LabelShape labelShape;
     private String adultManImagePath;
     private String adultWomanImagePath;
-    private String siblingManImagePath;
-    private String siblingWomanImagePath;
 
     private boolean showMarriage;
 
@@ -48,25 +40,19 @@ public class PersonConfiguration {
     public PersonConfiguration() {
         adultImageWidth = 190;
         adultImageHeight = 130;
-        marriageLabelWidth = Spaces.MIN_MARRIAGE_LABEL_WIDTH;
-        wideMarriageLabel = 3 * (adultImageWidth + marriageLabelWidth) / 2;
         adultVerticalShift = 0;
         siblingImageWidth = 170;
         siblingImageHeight = 120;
-        siblingVerticalShift = 0;
         adultFontSize = 12;
         siblingFontSize = 11;
 
         adultDiagram = Diagrams.SCROLL;
-        siblingDiagram = Diagrams.SCROLL;
         labelShape = LabelShape.OVAL;
         adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
         adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";
-        siblingManImagePath = "diagrams/" + siblingDiagram + "_man.png";
-        siblingWomanImagePath = "diagrams/" + siblingDiagram + "_woman.png";
 
         showAge = true;
-        showPlaces = false;
+        showPlaces = true;
         shortenPlaces = false;
         showOccupation = true;
         showMarriage = true;
@@ -108,22 +94,6 @@ public class PersonConfiguration {
         this.adultImageHeight = adultImageHeight;
     }
 
-    public int getWideMarriageLabel() {
-        return wideMarriageLabel;
-    }
-
-    public void setWideMarriageLabel(int wideMarriageLabel) {
-        this.wideMarriageLabel = wideMarriageLabel;
-    }
-
-    public int getMarriageLabelWidth() {
-        return marriageLabelWidth;
-    }
-
-    public void setMarriageLabelWidth(int marriageLabelWidth) {
-        this.marriageLabelWidth = marriageLabelWidth;
-    }
-
     public int getAdultVerticalShift() {
         return adultVerticalShift;
     }
@@ -146,14 +116,6 @@ public class PersonConfiguration {
 
     public void setSiblingImageHeight(int siblingImageHeight) {
         this.siblingImageHeight = siblingImageHeight;
-    }
-
-    public int getSiblingVerticalShift() {
-        return siblingVerticalShift;
-    }
-
-    public void setSiblingVerticalShift(int siblingVerticalShift) {
-        this.siblingVerticalShift = siblingVerticalShift;
     }
 
     public int getAdultFontSize() {
@@ -180,14 +142,6 @@ public class PersonConfiguration {
         this.adultDiagram = adultDiagram;
     }
 
-    public Diagrams getSiblingDiagram() {
-        return siblingDiagram;
-    }
-
-    public void setSiblingDiagram(Diagrams siblingDiagram) {
-        this.siblingDiagram = siblingDiagram;
-    }
-
     public LabelShape getLabelShape() {
         return labelShape;
     }
@@ -210,22 +164,6 @@ public class PersonConfiguration {
 
     public void setAdultWomanImagePath(String adultWomanImagePath) {
         this.adultWomanImagePath = adultWomanImagePath;
-    }
-
-    public String getSiblingManImagePath() {
-        return siblingManImagePath;
-    }
-
-    public void setSiblingManImagePath(String siblingManImagePath) {
-        this.siblingManImagePath = siblingManImagePath;
-    }
-
-    public String getSiblingWomanImagePath() {
-        return siblingWomanImagePath;
-    }
-
-    public void setSiblingWomanImagePath(String siblingWomanImagePath) {
-        this.siblingWomanImagePath = siblingWomanImagePath;
     }
 
     public boolean isShowMarriage() {

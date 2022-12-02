@@ -1,12 +1,7 @@
 package org.ambrogenea.familyview.service.impl;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.Locale;
-
-import static org.ambrogenea.familyview.constant.Spaces.HORIZONTAL_GAP;
-
 import org.ambrogenea.familyview.configuration.Configuration;
+import org.ambrogenea.familyview.constant.Dimensions;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.dto.AncestorPerson;
@@ -15,16 +10,22 @@ import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
 import org.ambrogenea.familyview.service.ConfigurationService;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Locale;
+
+import static org.ambrogenea.familyview.constant.Spaces.HORIZONTAL_GAP;
+
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public final class DefaultConfigurationService implements ConfigurationService {
+public class DefaultConfigurationService implements ConfigurationService {
 
     private final Configuration configuration;
     private final PropertyChangeSupport prop;
 
-    public DefaultConfigurationService() {
-        configuration = new Configuration();
+    public DefaultConfigurationService(Configuration configuration) {
+        this.configuration = configuration;
         prop = new PropertyChangeSupport(this);
     }
 
@@ -49,18 +50,8 @@ public final class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public int getWideMarriageLabel() {
-        return configuration.getWideMarriageLabel();
-    }
-
-    @Override
-    public int getMarriageLabelWidth() {
-        return configuration.getMarriageLabelWidth();
-    }
-
-    @Override
-    public int getMarriageLabelHeight() {
-        return Math.max((int) (getAdultFontSize() + 10), Spaces.MIN_MARRIAGE_LABEL_HEIGHT);
+    public int getHeraldryVerticalDistance() {
+        return (getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2;
     }
 
     @Override
@@ -69,78 +60,10 @@ public final class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public int getParentImageSpace() {
-        return (getAdultImageWidth() + getMarriageLabelWidth()) / 2;
-    }
-
-    @Override
-    public int getSpouseLabelSpace() {
-        if (isShowCouplesVertical()) {
-            return getCoupleWidth() - getAdultImageWidth() / 2;
-        }
-        return getAdultImageWidth() + getMarriageLabelWidth();
-
-    }
-
-    @Override
-    public int getHalfSpouseLabelSpace() {
-        return (getAdultImageWidth() + getMarriageLabelWidth()) / 2;
-    }
-
-    @Override
-    public int getCoupleWidth() {
-        if (isShowCouplesVertical()) {
-            return (int) (Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, getAdultImageWidth()) / 3.0 * 5);
-        } else {
-            return 2 * getAdultImageWidth() + getMarriageLabelWidth();
-        }
-    }
-
-    @Override
-    public int getGapBetweenCouples() {
-        if (isShowCouplesVertical()) {
-            return (int) (Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, getAdultImageWidth()) / 3.0);
-        } else {
-            return Spaces.SIBLINGS_GAP;
-        }
-    }
-
-    @Override
-    public int getAllAncestorsCoupleIncrease() {
-        if (isShowCouplesVertical()) {
-            return 2 * getMarriageLabelWidth();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public int getSpouseDistance() {
-        if (isShowCouplesVertical()) {
-            return getMarriageLabelWidth();
-        } else {
-            return getAdultImageWidth() + getMarriageLabelWidth();
-        }
-    }
-
-    @Override
-    public int getCoupleVerticalDifference() {
-        if (isShowCouplesVertical()) {
-            return getAdultImageHeightAlternative() + getMarriageLabelHeight();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
     public void setAdultImageWidth(int adultImageWidth) {
         int oldValue = getAdultImageWidth();
         if (Math.abs(oldValue - adultImageWidth) > 4) {
             configuration.setAdultImageWidth(adultImageWidth);
-            if (isShowCouplesVertical()) {
-                configuration.setMarriageLabelWidth(Math.max(Spaces.MIN_MARRIAGE_LABEL_WIDTH, (int) (adultImageWidth / 3.0 * 2)));
-            }
-            configuration.setWideMarriageLabel(3 * getParentImageSpace());
             firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
         }
     }
@@ -197,31 +120,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public int getChildrenShift(AncestorPerson person) {
-        int childrenShift = 0;
-        if (isShowSpouses() && isShowChildren() && person.getSpouseCouple() != null && !person.getSpouseCouple().getChildren().isEmpty()) {
-            childrenShift = ((getSiblingImageWidth() + HORIZONTAL_GAP) * person.getChildrenCount(0)
-                    - getCoupleWidth()) / 2;
-        }
-        return childrenShift;
-    }
-
-    @Override
-    public int getParentGenerationWidth(AncestorPerson person) {
-        if (isShowCouplesVertical()) {
-            return 0;
-        } else {
-            int ancestorGeneration = 0;
-            if (person.getFather() != null && person.getFather().getAncestorGenerations() > 0) {
-                ancestorGeneration = person.getFather().getAncestorGenerations();
-            } else if (person.getMother() != null) {
-                ancestorGeneration = person.getMother().getAncestorGenerations();
-            }
-            return getParentImageSpace() * Math.min(ancestorGeneration + 1, getGenerationCount());
-        }
-    }
-
-    @Override
     public int getAdultFontSize() {
         return configuration.getAdultFontSize();
     }
@@ -254,23 +152,29 @@ public final class DefaultConfigurationService implements ConfigurationService {
     public void setAdultDiagram(Diagrams adultDiagram) {
         Diagrams oldValue = getAdultDiagram();
         configuration.setAdultDiagram(adultDiagram);
+        int imageWidth;
+        int imageHeight;
+        if (adultDiagram == Diagrams.HERALDRY) {
+            imageWidth = Dimensions.PORTRAIT_IMAGE_WIDTH;
+            imageHeight = Dimensions.PORTRAIT_IMAGE_HEIGHT;
+        } else if (adultDiagram == Diagrams.SCROLL) {
+            imageWidth = Dimensions.SCROLL_IMAGE_WIDTH;
+            imageHeight = Dimensions.SCROLL_IMAGE_HEIGHT;
+        } else if (adultDiagram == Diagrams.DOUBLE_WAVE) {
+            imageWidth = Dimensions.DOUBLE_WAVE_IMAGE_WIDTH;
+            imageHeight = Dimensions.DOUBLE_WAVE_IMAGE_HEIGHT;
+        } else {
+            imageWidth = Dimensions.DEFAULT_IMAGE_WIDTH;
+            imageHeight = Dimensions.DEFAULT_IMAGE_HEIGHT;
+        }
+        setAdultImageWidth(imageWidth);
+        setAdultImageHeight(imageHeight);
+        setSiblingImageWidth(imageWidth);
+        setSiblingImageHeight(imageHeight);
+
         setAdultManImagePath("diagrams/" + adultDiagram + "_man.png");
         setAdultWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
         firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultDiagram);
-    }
-
-    @Override
-    public Diagrams getSiblingDiagram() {
-        return configuration.getSiblingDiagram();
-    }
-
-    @Override
-    public void setSiblingDiagram(Diagrams siblingDiagram) {
-        Diagrams oldValue = getSiblingDiagram();
-        configuration.setSiblingDiagram(siblingDiagram);
-        setSiblingManImagePath("diagrams/" + siblingDiagram + "_man.png");
-        setSiblingWomanImagePath("diagrams/" + siblingDiagram + "_woman.png");
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingDiagram);
     }
 
     @Override
@@ -302,24 +206,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public String getSiblingManImagePath() {
-        return configuration.getSiblingManImagePath();
-    }
-
-    private void setSiblingManImagePath(String siblingManImagePath) {
-        configuration.setSiblingManImagePath(siblingManImagePath);
-    }
-
-    @Override
-    public String getSiblingWomanImagePath() {
-        return configuration.getSiblingWomanImagePath();
-    }
-
-    private void setSiblingWomanImagePath(String siblingWomanImagePath) {
-        configuration.setSiblingWomanImagePath(siblingWomanImagePath);
-    }
-
-    @Override
     public int getAdultVerticalShift() {
         return configuration.getAdultVerticalShift();
     }
@@ -329,18 +215,6 @@ public final class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getAdultVerticalShift();
         configuration.setAdultVerticalShift(adultVerticalShift);
         firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalShift);
-    }
-
-    @Override
-    public int getSiblingVerticalShift() {
-        return configuration.getSiblingVerticalShift();
-    }
-
-    @Override
-    public void setSiblingVerticalShift(int siblingVerticalShift) {
-        int oldValue = getSiblingVerticalShift();
-        configuration.setSiblingVerticalShift(siblingVerticalShift);
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingVerticalShift);
     }
 
     @Override
@@ -538,4 +412,7 @@ public final class DefaultConfigurationService implements ConfigurationService {
         prop.removePropertyChangeListener(listener);
     }
 
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 }

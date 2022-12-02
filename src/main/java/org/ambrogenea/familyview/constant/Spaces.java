@@ -10,8 +10,10 @@ public abstract class Spaces {
     public static final int SIBLINGS_GAP = HORIZONTAL_GAP;
     public static final int VERTICAL_GAP = 80;
     public static final int RESIDENCE_SIZE = 25;
-    public static final int MIN_MARRIAGE_LABEL_HEIGHT = 25;
-    public static final int MIN_MARRIAGE_LABEL_WIDTH = 100;
+    public static final int HORIZ_MARRIAGE_LABEL_HEIGHT = 40;
+    public static final int HORIZ_MARRIAGE_LABEL_WIDTH = 50;
+    public static final int VERT_MARRIAGE_LABEL_HEIGHT = 25;
+    public static final int MIN_VERT_MARRIAGE_LABEL_WIDTH = 100;
     public static final int LABEL_GAP = 2;
     public final static int TITLE_HEIGHT = 120;
 
