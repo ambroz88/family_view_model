@@ -120,7 +120,8 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         if (spouseCouple != null) {
 
             if (getConfiguration().isShowChildren() && !spouseCouple.getChildren().isEmpty()) {
-                Position coupleCenterPosition = fatherPosition.addXAndY(extensionConfig.getHalfSpouseLabelSpace(), 0);
+                HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
+                Position coupleCenterPosition = fatherPosition.addXAndY(config.getSpouseDistance() / 2, 0);
 
                 Position heraldryPosition = coupleCenterPosition.addXAndY(
                         0, (getConfiguration().getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
@@ -187,13 +188,13 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             Position spousePosition = new Position(rootPersonPosition);
 
             Position label;
-            int labelShift = getConfiguration().getAdultImageWidth() / 2 + extensionConfig.getMarriageLabelWidth();
+            int labelShift = getConfiguration().getAdultImageWidth() / 2 + config.getMarriageLabelWidth();
 
             for (int index = 0; index < person.getSpouseCouples().size(); index++) {
                 spousePosition = spousePosition.addXAndY(config.getSpouseDistance(), 0);
                 label = spousePosition.addXAndY(-labelShift, 0);
                 addPerson(spousePosition, person.getSpouse(index));
-                addLabel(label, extensionConfig.getMarriageLabelWidth(),
+                addLabel(label, config.getMarriageLabelWidth(),
                         person.getSpouseCouple(index).getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
             }
 
