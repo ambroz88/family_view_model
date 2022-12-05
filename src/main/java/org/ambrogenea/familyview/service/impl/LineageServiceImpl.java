@@ -76,7 +76,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
     private void addFatherFamily(AncestorPerson father, ParentsDto parentsDto) {
         int fatherSiblingsWidth = 0;
-        if (father.getFather() != null) {
+        if (configService.isShowSiblings() && father.getFather() != null) {
             int fathersSiblings = father.getFather().getMaxYoungerSiblings();
             if (fathersSiblings > 0) {
                 fatherSiblingsWidth = fathersSiblings * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
@@ -91,17 +91,15 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
     private void addMotherFamily(AncestorPerson mother, ParentsDto parentsDto) {
         int motherSiblingsWidth = 0;
-        if (mother.getFather() != null) {
+        if (configService.isShowSiblings() && mother.getFather() != null) {
             int mothersSiblings = mother.getFather().getMaxOlderSiblings();
             if (mothersSiblings > 0) {
                 motherSiblingsWidth = mothersSiblings * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
             }
         }
 
-        ConfigurationExtensionService extensionService = new HorizontalConfigurationService(getConfiguration());
-        int parentWidth = mother.getFatherGenerations() * extensionService.getHalfSpouseLabelSpace();
+        int motherX = parentsDto.getWifePosition().getX() + extensionConfig.getMotherHorizontalDistance() + motherSiblingsWidth;
 
-        int motherX = parentsDto.getWifePosition().getX() + extensionService.getMotherHorizontalDistance() + motherSiblingsWidth + parentWidth;
         Position motherHeraldry = new Position(motherX, parentsDto.getNextHeraldryY());
         generateFathersFamily(motherHeraldry, mother);
         addLine(motherHeraldry, parentsDto.getWifePosition(), Relation.DIRECT);
