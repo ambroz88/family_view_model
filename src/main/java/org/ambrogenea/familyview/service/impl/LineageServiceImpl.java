@@ -6,7 +6,6 @@ import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.ParentsDto;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
-import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationExtensionService;
 import org.ambrogenea.familyview.service.ConfigurationService;
@@ -38,11 +37,12 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
             ParentsDto parents = generateParents(heraldryPosition, person);
             if (parents != null) {
                 Position parentPosition = Objects.requireNonNullElse(parents.getHusbandPosition(), parents.getWifePosition());
-
                 Position nextHeraldryPosition = new Position(parentPosition.getX(), parents.getNextHeraldryY());
-                addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
-
                 AncestorPerson parent = Objects.requireNonNullElse(person.getFather(), person.getMother());
+
+                if (!parent.hasNoParents()) {
+                    addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
+                }
                 if (configService.isShowSiblings()) {
                     addSiblings(parentPosition, parent);
                     if (!parent.getYoungerSiblings().isEmpty()) {
@@ -62,11 +62,12 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
             ParentsDto parents = generateSwitchedParents(heraldryPosition, person);
             if (parents != null) {
                 Position parentPosition = Objects.requireNonNullElse(parents.getWifePosition(), parents.getHusbandPosition());
-
                 Position nextHeraldryPosition = new Position(parentPosition.getX(), parents.getNextHeraldryY());
-                addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
-
                 AncestorPerson parent = Objects.requireNonNullElse(person.getMother(), person.getFather());
+
+                if (!parent.hasNoParents()) {
+                    addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
+                }
                 if (configService.isShowSiblings()) {
                     addSiblings(parentPosition, parent);
                     if (!parent.getYoungerSiblings().isEmpty()) {
@@ -174,50 +175,38 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
         if (child.getMother() != null) {
             AncestorPerson mother = child.getMother();
-            int verticalShift = -extensionService.getMotherVerticalDistance();
             double motherParentsCount = Math.min(mother.getInnerParentsCount(), mother.getLastParentsCount());
 
-            Position motherPosition;
-            if (mother.getFather() == null) {
-                motherPosition = heraldryPosition.addXAndY(0, verticalShift);
-            } else {
-                double fatherParentsCount = Math.min(child.getFather().getInnerParentsCount(), child.getFather().getLastParentsCount());
+            int mothersParentHeraldryHorizontalShift = (int) (motherParentsCount * (extensionService.getCoupleWidth() + extensionService.getGapBetweenCouples()))
+                    - configService.getAdultImageWidth() / 2 - extensionService.getGapBetweenCouples() + extensionService.getMarriageLabelWidth() / 2;
 
-                Position fatherPosition;
-                if (motherParentsCount == 0 || fatherParentsCount == 0) {
-                    fatherPosition = heraldryPosition.addXAndY(-extensionService.getHalfSpouseLabelSpace(), verticalShift);
-                    motherPosition = heraldryPosition.addXAndY(extensionService.getHalfSpouseLabelSpace(), verticalShift);
-                } else {
-                    double motherParentWidth = (extensionService.getCoupleWidth() + Spaces.SIBLINGS_GAP) * motherParentsCount;
-                    double fatherParentWidth = (extensionService.getCoupleWidth() + Spaces.SIBLINGS_GAP) * fatherParentsCount;
-                    int halfParentWidth = (int) (fatherParentWidth + motherParentWidth) / 2;
-                    fatherPosition = heraldryPosition.addXAndY(-halfParentWidth, verticalShift);
-                    motherPosition = heraldryPosition.addXAndY(halfParentWidth, verticalShift);
-                }
-
-                addPerson(fatherPosition, child.getFather());
-                Position labelPosition = fatherPosition.addXAndY(getConfiguration().getAdultImageWidth() / 2 + Spaces.LABEL_GAP,
-                        -extensionService.getMarriageLabelHeight() / 2);
-                int labelWidth;
-                if (configService.getLabelShape().equals(LabelShape.OVAL)) {
-                    labelWidth = motherPosition.getX() - fatherPosition.getX() - getConfiguration().getAdultImageWidth() - 2 * Spaces.LABEL_GAP;
-                } else {
-                    labelWidth = motherPosition.getX() - fatherPosition.getX();
-                }
-                addMarriage(labelPosition, labelWidth,
-                        child.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale())
-                );
-                addAllParents(fatherPosition, child.getFather());
+            Position motherHeraldryPosition = new Position(
+                    parentsDto.getWifePosition().getX() + mothersParentHeraldryHorizontalShift,
+                    parentsDto.getNextHeraldryY()
+            );
+            if (!mother.hasNoParents()) {
+                addLine(motherHeraldryPosition, parentsDto.getWifePosition(), Relation.DIRECT);
             }
-
-            if (getConfiguration().isShowHeraldry()) {
-                addHeraldry(heraldryPosition, child.getBirthDatePlace().getSimplePlace());
-            }
-
-            addPerson(motherPosition, child.getMother());
-            addAllParents(motherPosition, child.getMother());
-            //addVerticalLineToParents(heraldryPosition);
+            addAllParents(motherHeraldryPosition, mother);
         }
+
+        if (child.getFather() != null) {
+            AncestorPerson father = child.getFather();
+            double fatherParentsCount = Math.min(father.getInnerParentsCount(), father.getLastParentsCount());
+
+            int fathersParentHeraldryHorizontalShift = (int) (fatherParentsCount * (extensionService.getCoupleWidth() + extensionService.getGapBetweenCouples()))
+                    - configService.getAdultImageWidth() / 2 - extensionService.getGapBetweenCouples() + extensionService.getMarriageLabelWidth() / 2;
+
+            Position fatherHeraldryPosition = new Position(
+                    parentsDto.getHusbandPosition().getX() - fathersParentHeraldryHorizontalShift,
+                    parentsDto.getNextHeraldryY()
+            );
+            if (!father.hasNoParents()) {
+                addLine(fatherHeraldryPosition, parentsDto.getHusbandPosition(), Relation.DIRECT);
+            }
+            addAllParents(fatherHeraldryPosition, father);
+        }
+
         return getTreeModel();
     }
 

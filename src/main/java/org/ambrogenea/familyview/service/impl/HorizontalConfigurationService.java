@@ -35,7 +35,7 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
 
     @Override
     public int getGapBetweenCouples() {
-        return Spaces.SIBLINGS_GAP;
+        return getMarriageLabelWidth();
     }
 
     @Override
