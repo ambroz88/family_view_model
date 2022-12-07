@@ -214,8 +214,6 @@ public class AncestorPerson implements Personalize {
             if (getFather() == null) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else if (getMother() == null) {
-                ancestorGenerations = getFather().getAncestorGenerations() + 1;
-                setMother(Tools.createEmtpyWoman());
             } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
             } else {
@@ -243,8 +241,8 @@ public class AncestorPerson implements Personalize {
         return parents.getWife();
     }
 
-    public boolean hasNoParents() {
-        return getFather() == null && getMother() == null;
+    public boolean hasMinOneParent() {
+        return getFather() != null || getMother() != null;
     }
 
     public boolean hasBothParents() {
@@ -403,7 +401,7 @@ public class AncestorPerson implements Personalize {
     public int getSpouseCount() {
         int count = 0;
         for (AncestorCouple spouse : spouses) {
-            if (!spouse.isSingle()) {
+            if (spouse.isNotSingle()) {
                 count++;
             }
         }
@@ -434,20 +432,6 @@ public class AncestorPerson implements Personalize {
         this.spouses = new ArrayList<>(spouses);
     }
 
-//    public void addSpouseCouple(AncestorCouple spouse) {
-//        if (spouse != null) {
-//            if (!this.spouses.isEmpty()) {
-//                AncestorCouple lastCouple = this.spouses.get(spouses.size() - 1);
-//                if (spouse.getDatePlace().getDate().isBefore(lastCouple.getDatePlace().getDate())) {
-//                    this.spouses.add(this.spouses.size() - 1, new AncestorCouple(spouse));
-//                } else {
-//                    this.spouses.add(new AncestorCouple(spouse));
-//                }
-//            } else {
-//                this.spouses.add(new AncestorCouple(spouse));
-//            }
-//        }
-//    }
     public int getChildrenCount(int wifeNumber) {
         int count = 0;
         if (getSpouseCouple(wifeNumber) != null) {

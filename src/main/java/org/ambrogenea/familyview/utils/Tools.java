@@ -1,18 +1,14 @@
 package org.ambrogenea.familyview.utils;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.Properties;
-
-import org.ambrogenea.familyview.domain.Person;
 import org.ambrogenea.familyview.domain.Personalize;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.dto.tree.PersonRecord;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.service.ConfigurationService;
 
+import java.net.URL;
+import java.util.Properties;
+
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public final class Tools {
@@ -43,35 +39,10 @@ public final class Tools {
         return placeName;
     }
 
-    public static PersonRecord generateSamplePerson() {
-        PersonRecord samplePerson = new PersonRecord(Sex.MALE, true);
-        samplePerson.setFirstName("Vítězslav");
-        samplePerson.setSurname("Konipásek");
-        samplePerson.getBirthDatePlace().setDate(LocalDate.of(1869, 8, 24));
-        samplePerson.getBirthDatePlace().setPlace("České Budějovice");
-        samplePerson.getDeathDatePlace().setDate(LocalDate.of(1924, 12, 30));
-        samplePerson.getDeathDatePlace().setPlace("České Budějovice");
-        samplePerson.setOccupation("pekařský mistr");
-        samplePerson.setLiving(false);
-
-        return samplePerson;
-    }
-
-    public static PersonRecord generateSampleChild() {
-        PersonRecord samplePerson = new PersonRecord(Sex.FEMALE, false);
-        samplePerson.setFirstName("Julie");
-        samplePerson.setSurname("Konipásková");
-        samplePerson.getBirthDatePlace().setDate(LocalDate.of(1901, 1, 18));
-        samplePerson.getBirthDatePlace().setPlace("České Budějovice");
-        samplePerson.setLiving(true);
-
-        return samplePerson;
-    }
-
     public static int calculateGenerations(AncestorPerson person, ConfigurationService config) {
         int generationCount = 1;
 
-        if (config.isShowParents() && !person.hasNoParents()) {
+        if (config.isShowParents() && person.hasMinOneParent()) {
             generationCount++;
         }
         if (config.isShowChildren() && person.getAllChildrenCount() > 0) {
@@ -154,14 +125,6 @@ public final class Tools {
         }
 
         return firstName + " " + surName;
-    }
-
-    public static AncestorPerson createEmtpyWoman() {
-        Person woman = new Person("0000");
-        woman.setSex(Sex.FEMALE);
-        AncestorPerson mother = new AncestorPerson(woman);
-        mother.setDirectLineage(true);
-        return mother;
     }
 
 }

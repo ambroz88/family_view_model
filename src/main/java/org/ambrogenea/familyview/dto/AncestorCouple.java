@@ -21,22 +21,9 @@ public class AncestorCouple {
     private DatePlace datePlace;
     private DescendentTreeInfo descendentTreeInfo;
 
-    public AncestorCouple() {
-        initEmpty();
-    }
-
     public AncestorCouple(AncestorPerson husband, AncestorPerson wife) {
         this.husband = husband;
         this.wife = wife;
-        initEmpty();
-    }
-
-    public AncestorCouple(AncestorPerson person) {
-        if (person.getSex().equals(Sex.MALE)) {
-            husband = person;
-        } else if (person.getSex().equals(Sex.FEMALE)) {
-            wife = person;
-        }
         initEmpty();
     }
 
@@ -60,21 +47,6 @@ public class AncestorCouple {
         }
     }
 
-//    public AncestorCouple(AncestorCouple couple) {
-//        if (couple != null) {
-//            if (couple.getHusband() != null) {
-//                this.husband = new AncestorPerson(couple.getHusband());
-//            }
-//
-//            if (couple.getWife() != null) {
-//                this.wife = new AncestorPerson(couple.getWife());
-//            }
-//            this.children = new ArrayList<>(couple.getChildren());
-//            this.datePlace = couple.getDatePlace();
-//        } else {
-//            initEmpty();
-//        }
-//    }
     private void initEmpty() {
         childrenID = new ArrayList<>();
         children = new ArrayList<>();
@@ -122,8 +94,8 @@ public class AncestorCouple {
         return wife != null;
     }
 
-    public boolean isSingle() {
-        return !hasHusband() || !hasWife();
+    public boolean isNotSingle() {
+        return hasHusband() && hasWife();
     }
 
     public ArrayList<String> getChildrenIndexes() {
@@ -161,7 +133,7 @@ public class AncestorCouple {
             getDescendentTreeInfo().addChildGenerations(generationsCount);
         }
 
-        if (!isSingle() && (actualSingles <= 2 && actualCouples <= 1)) {
+        if (isNotSingle() && (actualSingles <= 2 && actualCouples <= 1)) {
             getDescendentTreeInfo().setMaxSinglesCount(0);
             getDescendentTreeInfo().setMaxCouplesCount(1);
         } else {

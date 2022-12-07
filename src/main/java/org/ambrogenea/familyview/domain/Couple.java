@@ -20,12 +20,6 @@ public class Couple {
         initEmpty();
     }
 
-    public Couple(Person husband, Person wife) {
-        this.husband = husband;
-        this.wife = wife;
-        initEmpty();
-    }
-
     public Couple(Person person) {
         addSpouse(person);
         initEmpty();
