@@ -30,23 +30,85 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     @Override
-    public void addPerson(Position personCenter, AncestorPerson person) {
-        treeModelService.addPerson(personCenter, person);
+    public void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson) {
+        if (configService.isShowSpouses()) {
+            Position lastSpouse = addRootSpouses(rootPersonPosition, rootPerson);
+            if (configService.isShowSiblings() && !rootPerson.getYoungerSiblings().isEmpty()) {
+                int spouseGap = lastSpouse.getX() - rootPersonPosition.getX();
+                addLineAboveSpouses(rootPersonPosition, spouseGap);
+
+                addOlderSiblings(rootPersonPosition, rootPerson);
+                addYoungerSiblings(new Position(lastSpouse.getX(), rootPersonPosition.getY()), rootPerson);
+            }
+        } else {
+            addSiblings(rootPersonPosition, rootPerson);
+        }
     }
 
     @Override
-    public void addRootPerson(Position center, AncestorPerson person) {
-        treeModelService.addRootPerson(center, person);
+    public Position addRootSpouses(Position rootPersonPosition, AncestorPerson person) {
+        if (person.getSpouse() != null) {
+            HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
+            Position spousePosition = new Position(rootPersonPosition);
+
+            Position label;
+            int labelShift = configService.getAdultImageWidth() / 2 + config.getMarriageLabelWidth();
+
+            for (int index = 0; index < person.getSpouseCouples().size(); index++) {
+                spousePosition = spousePosition.addXAndY(config.getSpouseDistance(), 0);
+                label = spousePosition.addXAndY(-labelShift, 0);
+                addPerson(spousePosition, person.getSpouse(index));
+                addMarriage(label, config.getMarriageLabelWidth(),
+                        person.getSpouseCouple(index).getDatePlace().getLocalizedDate(configService.getLocale()));
+                //TODO: add children for each spouse
+            }
+
+            return spousePosition;
+        }
+        return rootPersonPosition;
+    }
+
+    private void addLineAboveSpouses(Position rootSibling, int spouseGap) {
+        int verticalShift = (configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2;
+        Position linePosition = rootSibling.addXAndY(0, -verticalShift);
+        addLine(linePosition, linePosition.addXAndY(spouseGap, 0), Relation.SIDE);
+    }
+
+    @Override
+    public int generateChildren(Position fatherPosition, AncestorCouple spouseCouple) {
+        int childrenWidth = 0;
+        if (spouseCouple != null) {
+
+            if (configService.isShowChildren() && !spouseCouple.getChildren().isEmpty()) {
+                HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
+                Position coupleCenterPosition = fatherPosition.addXAndY(config.getSpouseDistance() / 2, 0);
+
+                Position heraldryPosition = coupleCenterPosition.addXAndY(0, configService.getHeraldryVerticalDistance());
+                addLine(heraldryPosition, coupleCenterPosition, Relation.DIRECT);
+                if (configService.isShowHeraldry()) {
+                    addHeraldry(heraldryPosition, spouseCouple.getChildren().get(0).getBirthDatePlace().getSimplePlace());
+                }
+
+                childrenWidth = addChildren(heraldryPosition, spouseCouple);
+            }
+
+        }
+        return childrenWidth;
     }
 
     @Override
     public void addSiblings(Position rootSiblingPosition, AncestorPerson rootSibling) {
-        addOlderSiblings(rootSiblingPosition, rootSibling);
-        addYoungerSiblings(rootSiblingPosition, rootSibling);
+        if (configService.isShowSiblings()) {
+            addOlderSiblings(rootSiblingPosition, rootSibling);
+            int spouseGap = 0;
+            if (rootSibling.getSpouse() != null) {
+                spouseGap = extensionConfig.getSpouseDistance();
+            }
+            addYoungerSiblings(rootSiblingPosition.addXAndY(spouseGap, 0), rootSibling);
+        }
     }
 
-    @Override
-    public void addOlderSiblings(Position rootSiblingPosition, AncestorPerson rootChild) {
+    private void addOlderSiblings(Position rootSiblingPosition, AncestorPerson rootChild) {
         AncestorPerson sibling;
         int startX;
 
@@ -59,7 +121,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         for (int i = olderSiblingCount - 1; i >= 0; i--) {
             sibling = rootChild.getOlderSiblings().get(i);
 
-            startX = siblingPosition.getX() - getConfiguration().getSiblingImageWidth() - Spaces.HORIZONTAL_GAP;
+            startX = siblingPosition.getX() - configService.getSiblingImageWidth() - Spaces.HORIZONTAL_GAP;
             siblingPosition = new Position(startX, rootSiblingPosition.getY());
 
             addPerson(siblingPosition, sibling);
@@ -71,8 +133,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         }
     }
 
-    @Override
-    public void addYoungerSiblings(Position rootSiblingPosition, AncestorPerson rootChild) {
+    private void addYoungerSiblings(Position rootSiblingPosition, AncestorPerson rootChild) {
         AncestorPerson sibling;
         int startX;
 
@@ -80,16 +141,13 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
         int youngerSiblingsCount = rootChild.getYoungerSiblings().size();
         int widthDifference = configService.getAdultImageWidth() - configService.getSiblingImageWidth();
-        int spouseGap = 0;
-        if (rootChild.getSpouse() != null) {
-            spouseGap = extensionConfig.getSpouseDistance();
-        }
-        Position siblingPosition = rootSiblingPosition.addXAndY(spouseGap + widthDifference / 2, 0);
+
+        Position siblingPosition = rootSiblingPosition.addXAndY(widthDifference / 2, 0);
 
         for (int i = 0; i < youngerSiblingsCount; i++) {
             sibling = rootChild.getYoungerSiblings().get(i);
 
-            startX = siblingPosition.getX() + getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP;
+            startX = siblingPosition.getX() + configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP;
             siblingPosition = new Position(startX, rootSiblingPosition.getY());
 
             addPerson(siblingPosition, sibling);
@@ -101,53 +159,13 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         }
     }
 
-    @Override
-    public void addLabel(Position labelPosition, int labelWidth, String text) {
-        treeModelService.addMarriages(labelPosition, labelWidth, text);
-    }
-
-    @Override
-    public void addLine(Position start, Position end, Relation lineType) {
-        treeModelService.addLine(start, end, lineType);
-    }
-
-    @Override
-    public void addHeraldry(Position childPosition, String simpleBirthPlace) {
-        treeModelService.addHeraldry(childPosition, simpleBirthPlace);
-    }
-
-    @Override
-    public int generateChildren(Position fatherPosition, AncestorCouple spouseCouple) {
-        int childrenWidth = 0;
-        if (spouseCouple != null) {
-
-            if (getConfiguration().isShowChildren() && !spouseCouple.getChildren().isEmpty()) {
-                HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
-                Position coupleCenterPosition = fatherPosition.addXAndY(config.getSpouseDistance() / 2, 0);
-
-                Position heraldryPosition = coupleCenterPosition.addXAndY(
-                        0, (getConfiguration().getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
-
-                addLine(heraldryPosition, coupleCenterPosition, Relation.SIDE);
-
-                childrenWidth = addChildren(heraldryPosition, spouseCouple);
-            }
-
-        }
-        return childrenWidth;
-    }
-
     private int addChildren(Position heraldryPosition, AncestorCouple spouseCouple) {
         int childrenCount = spouseCouple.getChildren().size();
-        int childrenWidth = childrenCount * (getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
+        int childrenWidth = childrenCount * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) - Spaces.HORIZONTAL_GAP;
 
         Position childrenPosition = heraldryPosition.addXAndY(
-                getConfiguration().getSiblingImageWidth() / 2 - childrenWidth / 2,
-                (getConfiguration().getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
-
-        if (getConfiguration().isShowHeraldry()) {
-            addChildrenHeraldry(heraldryPosition, spouseCouple);
-        }
+                configService.getSiblingImageWidth() / 2 - childrenWidth / 2,
+                (configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
 
         for (int i = 0; i < childrenCount; i++) {
             if (i == 0 || i == childrenCount - 1) {
@@ -157,73 +175,10 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             }
             //TODO: draw spouse of the children
             addPerson(childrenPosition, spouseCouple.getChildren().get(i));
-            childrenPosition = childrenPosition.addXAndY(getConfiguration().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP, 0);
+            childrenPosition = childrenPosition.addXAndY(configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP, 0);
         }
 
         return childrenWidth / 2;
-    }
-
-    @Override
-    public Position addParents(Position childPosition, AncestorPerson person) {
-        Position fatherPosition = childPosition.addXAndY(-extensionConfig.getHalfSpouseLabelSpace(),
-                -getConfiguration().getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
-
-        Position motherPosition = childPosition.addXAndY(extensionConfig.getHalfSpouseLabelSpace(),
-                -getConfiguration().getAdultImageHeightAlternative() - Spaces.VERTICAL_GAP);
-
-        addPerson(fatherPosition, person.getFather());
-        addPerson(motherPosition, person.getMother());
-        Position label = fatherPosition.addXAndY(
-                calculateSpouseLabelXShift(),
-                -extensionConfig.getMarriageLabelHeight() / 2
-        );
-
-        addLabel(label, calculateLabelWidth(),
-                person.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
-        return new Position(childPosition.getX(), fatherPosition.getY());
-    }
-
-    @Override
-    public Position addRootSpouses(Position rootPersonPosition, AncestorPerson person) {
-        if (person.getSpouse() != null) {
-            HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
-            Position spousePosition = new Position(rootPersonPosition);
-
-            Position label;
-            int labelShift = getConfiguration().getAdultImageWidth() / 2 + config.getMarriageLabelWidth();
-
-            for (int index = 0; index < person.getSpouseCouples().size(); index++) {
-                spousePosition = spousePosition.addXAndY(config.getSpouseDistance(), 0);
-                label = spousePosition.addXAndY(-labelShift, 0);
-                addPerson(spousePosition, person.getSpouse(index));
-                addLabel(label, config.getMarriageLabelWidth(),
-                        person.getSpouseCouple(index).getDatePlace().getLocalizedDate(getConfiguration().getLocale()));
-            }
-
-            return spousePosition;
-        }
-        return rootPersonPosition;
-    }
-
-    @Override
-    public void addStraightChildrenLine(Position siblingPosition) {
-        Position endLine = siblingPosition.addXAndY(0, -(configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
-        addLine(siblingPosition, endLine, Relation.SIDE);
-    }
-
-    @Override
-    public void addChildrenHeraldry(Position childPosition, AncestorCouple spouseCouple) {
-        String birthPlace = spouseCouple.getChildren().get(0).getBirthDatePlace().getSimplePlace();
-        addHeraldry(childPosition, birthPlace);
-    }
-
-    @Override
-    public TreeModel getTreeModel() {
-        return treeModelService.getTreeModel();
-    }
-
-    protected ConfigurationService getConfiguration() {
-        return configService;
     }
 
     protected void addLineAboveSpouse(Position husbandPosition, int positionY) {
@@ -234,34 +189,17 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         );
     }
 
-    protected void addLineAboveSpouses(Position rootSibling, int spouseGap) {
-        int verticalShift = (configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2;
-        Position linePosition = rootSibling.addXAndY(0, -verticalShift);
-        addLine(linePosition, linePosition.addXAndY(spouseGap, 0), Relation.SIDE);
-    }
-
-    protected int calculateSpouseLabelXShift() {
-        int labelXShift;
-        if (configService.getLabelShape().equals(LabelShape.OVAL)) {
-            labelXShift = getConfiguration().getAdultImageWidth() / 2 + Spaces.LABEL_GAP;
-        } else {
-            labelXShift = 0;
-        }
-        return labelXShift;
-    }
-
-    protected int calculateLabelWidth() {
-        return calculateMarriageLabelWidth();
-    }
-
-    protected ParentsDto generateHorizontalParents(Position heraldryPosition, AncestorPerson child) {
+    @Override
+    public ParentsDto generateHorizontalParents(Position heraldryPosition, AncestorPerson child) {
         return generateParents(heraldryPosition, child, new HorizontalConfigurationService(configService));
     }
 
-    protected ParentsDto generateVerticalParents(Position heraldryPosition, AncestorPerson child) {
+    @Override
+    public ParentsDto generateVerticalParents(Position heraldryPosition, AncestorPerson child) {
         return generateParents(heraldryPosition, child, new VerticalConfigurationService(configService));
     }
 
+    @Override
     public ParentsDto generateParents(Position heraldryPosition, AncestorPerson child) {
         if (configService.isShowCouplesVertical()) {
             return generateParents(heraldryPosition, child, new VerticalConfigurationService(configService));
@@ -326,13 +264,46 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         }
     }
 
-
     private int calculateMarriageLabelWidth() {
         if (configService.getLabelShape().equals(LabelShape.OVAL)) {
             return extensionConfig.getMarriageLabelWidth() - 2 * Spaces.LABEL_GAP;
         } else {
             return extensionConfig.getSpouseDistance();
         }
+    }
+
+    @Override
+    public void addPerson(Position personCenter, AncestorPerson person) {
+        treeModelService.addPerson(personCenter, person);
+    }
+
+    @Override
+    public void addRootPerson(Position center, AncestorPerson person) {
+        treeModelService.addRootPerson(center, person);
+    }
+
+    @Override
+    public void addMarriage(Position labelPosition, int labelWidth, String text) {
+        treeModelService.addMarriages(labelPosition, labelWidth, text);
+    }
+
+    @Override
+    public void addLine(Position start, Position end, Relation lineType) {
+        treeModelService.addLine(start, end, lineType);
+    }
+
+    @Override
+    public void addHeraldry(Position childPosition, String simpleBirthPlace) {
+        treeModelService.addHeraldry(childPosition, simpleBirthPlace);
+    }
+
+    @Override
+    public TreeModel getTreeModel() {
+        return treeModelService.getTreeModel();
+    }
+
+    protected ConfigurationService getConfiguration() {
+        return configService;
     }
 
 }

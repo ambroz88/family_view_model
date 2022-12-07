@@ -9,33 +9,20 @@ import org.ambrogenea.familyview.enums.Relation;
 
 public interface CommonAncestorService {
 
-    void addPerson(Position center, AncestorPerson person);
-
-    void addRootPerson(Position center, AncestorPerson person);
-
-    void addSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
-
-    void addYoungerSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
-
-    void addOlderSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
-
-    void addLabel(Position labelPosition, int labelWidth, String text);
-
-    void addLine(Position start, Position end, Relation lineType);
-
-    void addHeraldry(Position childPosition, String simpleBirthPlace);
-
-    void addChildrenHeraldry(Position childPosition, AncestorCouple spouseCouple);
-
-    int generateChildren(Position fatherPosition, AncestorCouple spouseCouple);
-
-    Position addParents(Position childPosition, AncestorPerson person);
-
     Position addRootSpouses(Position rootPersonPosition, AncestorPerson person);
+    void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson);
+    int generateChildren(Position fatherPosition, AncestorCouple spouseCouple);
+    void addSiblings(Position rootSiblingPosition, AncestorPerson rootSibling);
+    ParentsDto generateParents(Position heraldryPosition, AncestorPerson child);
+    ParentsDto generateHorizontalParents(Position heraldryPosition, AncestorPerson child);
+    ParentsDto generateVerticalParents(Position heraldryPosition, AncestorPerson child);
 
-    void addStraightChildrenLine(Position childPosition);
+    void addPerson(Position center, AncestorPerson person);
+    void addRootPerson(Position center, AncestorPerson person);
+    void addMarriage(Position labelPosition, int labelWidth, String text);
+    void addLine(Position start, Position end, Relation lineType);
+    void addHeraldry(Position childPosition, String simpleBirthPlace);
 
     TreeModel getTreeModel();
 
-    ParentsDto generateParents(Position heraldryPosition, AncestorPerson child);
 }

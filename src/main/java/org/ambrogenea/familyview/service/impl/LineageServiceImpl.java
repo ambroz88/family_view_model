@@ -5,6 +5,7 @@ import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.ParentsDto;
 import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationExtensionService;
@@ -21,19 +22,18 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     }
 
     @Override
-    public void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson) {
-        if (getConfiguration().isShowSpouses()) {
-            Position lastSpouse = addRootSpouses(rootPersonPosition, rootPerson);
-            if (getConfiguration().isShowSiblings()) {
-                addSiblingsAroundWives(rootPersonPosition, rootPerson, lastSpouse.getX());
-            }
-        } else if (getConfiguration().isShowSiblings()) {
-            addSiblings(rootPersonPosition, rootPerson);
-        }
+    public Position addClosestFamily(Position rootPosition, AncestorPerson person) {
+        addRootPerson(rootPosition, person);
+        generateSpouseAndSiblings(rootPosition, person);
+        generateChildren(rootPosition, person.getSpouseCouple());
+
+        Position heraldryPosition = rootPosition.addXAndY(0, -(configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
+        addLine(rootPosition, heraldryPosition, Relation.DIRECT);
+        return heraldryPosition;
     }
 
     @Override
-    public void generateFathersFamily(Position heraldryPosition, AncestorPerson person) {
+    public TreeModel generateFathersFamily(Position heraldryPosition, AncestorPerson person) {
         if (person != null) {
             ParentsDto parents = generateParents(heraldryPosition, person);
             if (parents != null) {
@@ -53,10 +53,11 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 generateFathersFamily(nextHeraldryPosition, parent);
             }
         }
+        return getTreeModel();
     }
 
     @Override
-    public void generateMotherFamily(Position heraldryPosition, AncestorPerson person) {
+    public TreeModel generateMotherFamily(Position heraldryPosition, AncestorPerson person) {
         if (person != null) {
             ParentsDto parents = generateSwitchedParents(heraldryPosition, person);
             if (parents != null) {
@@ -76,7 +77,9 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 generateFathersFamily(nextHeraldryPosition, parent);
             }
         }
+        return getTreeModel();
     }
+
     public ParentsDto generateSwitchedParents(Position heraldryPosition, AncestorPerson child) {
         if (configService.isShowCouplesVertical()) {
             return generateSwitchedParents(heraldryPosition, child, new VerticalConfigurationService(configService));
@@ -120,10 +123,11 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     }
 
     @Override
-    public void generateParentsFamily(Position heraldryPosition, AncestorPerson person) {
+    public TreeModel generateParentsFamily(Position heraldryPosition, AncestorPerson person) {
         ParentsDto parentsDto = generateHorizontalParents(heraldryPosition, person);
         addFatherFamily(person.getFather(), parentsDto);
         addMotherFamily(person.getMother(), parentsDto);
+        return getTreeModel();
     }
 
     private void addFatherFamily(AncestorPerson father, ParentsDto parentsDto) {
@@ -158,12 +162,13 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     }
 
     @Override
-    public Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth) {
-        return null;
+    public TreeModel generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth) {
+
+        return getTreeModel();
     }
 
     @Override
-    public void addAllParents(Position heraldryPosition, AncestorPerson child) {
+    public TreeModel addAllParents(Position heraldryPosition, AncestorPerson child) {
         ParentsDto parentsDto = generateHorizontalParents(heraldryPosition, child);
         ConfigurationExtensionService extensionService = new HorizontalConfigurationService(getConfiguration());
 
@@ -199,7 +204,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 } else {
                     labelWidth = motherPosition.getX() - fatherPosition.getX();
                 }
-                addLabel(labelPosition, labelWidth,
+                addMarriage(labelPosition, labelWidth,
                         child.getParents().getDatePlace().getLocalizedDate(getConfiguration().getLocale())
                 );
                 addAllParents(fatherPosition, child.getFather());
@@ -211,8 +216,9 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
             addPerson(motherPosition, child.getMother());
             addAllParents(motherPosition, child.getMother());
-            addVerticalLineToParents(heraldryPosition);
+            //addVerticalLineToParents(heraldryPosition);
         }
+        return getTreeModel();
     }
 
     @Override
@@ -220,40 +226,4 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
         return null;
     }
 
-    @Override
-    public Position addMother(Position childPosition, AncestorPerson mother, String marriageDate) {
-        return null;
-    }
-
-    @Override
-    public Position addFather(Position childPosition, AncestorPerson father) {
-        return null;
-    }
-
-    @Override
-    public Position addSpouse(Position rootPosition, AncestorPerson root) {
-        return null;
-    }
-
-    @Override
-    public void addSiblingsAroundMother(Position rootSibling, AncestorPerson rootChild) {
-
-    }
-
-    @Override
-    public void addSiblingsAroundWives(Position rootSibling, AncestorPerson rootChild, int lastSpouseX) {
-        int spouseGap = lastSpouseX - rootSibling.getX();
-
-        if (!rootChild.getYoungerSiblings().isEmpty()) {
-            addLineAboveSpouses(rootSibling, spouseGap);
-        }
-
-        addOlderSiblings(rootSibling, rootChild);
-        addYoungerSiblings(new Position(lastSpouseX, rootSibling.getY()), rootChild);
-    }
-
-    @Override
-    public void addVerticalLineToParents(Position child) {
-
-    }
 }

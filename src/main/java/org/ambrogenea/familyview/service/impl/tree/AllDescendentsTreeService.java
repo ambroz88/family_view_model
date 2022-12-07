@@ -10,6 +10,7 @@ import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.service.ConfigurationExtensionService;
 import org.ambrogenea.familyview.service.ConfigurationService;
+import org.ambrogenea.familyview.service.LineageService;
 import org.ambrogenea.familyview.service.TreeService;
 import org.ambrogenea.familyview.service.impl.HorizontalConfigurationService;
 import org.ambrogenea.familyview.service.impl.LineageServiceImpl;
@@ -19,12 +20,14 @@ import org.ambrogenea.familyview.utils.Tools;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllDescendentsTreeService extends LineageServiceImpl implements TreeService {
+public class AllDescendentsTreeService implements TreeService {
 
     private final ConfigurationExtensionService extensionConfig;
+    private final ConfigurationService configService;
+    private LineageService lineageService;
 
     public AllDescendentsTreeService(ConfigurationService configurationService) {
-        super(configurationService);
+        configService = configurationService;
         if (configurationService.isShowCouplesVertical()) {
             extensionConfig = new VerticalConfigurationService(configurationService);
         } else {
@@ -35,10 +38,11 @@ public class AllDescendentsTreeService extends LineageServiceImpl implements Tre
     @Override
     public TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration) {
         Position rootPosition = pageSetup.getRootPosition();
-        addRootPerson(rootPosition, rootPerson);
-        addRootSpouses(rootPosition, rootPerson);
+        lineageService = new LineageServiceImpl(configuration);
+        lineageService.addRootPerson(rootPosition, rootPerson);
+        lineageService.addRootSpouses(rootPosition, rootPerson);
 
-        addLine(
+        lineageService.addLine(
                 rootPosition.addXAndY((configuration.getAdultImageWidth() + extensionConfig.getMarriageLabelWidth()) / 2, 0),
                 rootPosition.addXAndY((configuration.getAdultImageWidth() + extensionConfig.getMarriageLabelWidth()) / 2, (configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
                 Relation.DIRECT
@@ -48,7 +52,7 @@ public class AllDescendentsTreeService extends LineageServiceImpl implements Tre
                 rootPerson.getSpouseCouples(), pageSetup.getWidth() - Spaces.SIBLINGS_GAP
         );
 
-        TreeModel treeModel = getTreeModel();
+        TreeModel treeModel = lineageService.getTreeModel();
         treeModel.setPageSetup(pageSetup);
         treeModel.setTreeName("Rozrod " + Tools.getNameIn2ndFall(rootPerson));
         return treeModel;
@@ -100,8 +104,8 @@ public class AllDescendentsTreeService extends LineageServiceImpl implements Tre
                 parent = actualChildPosition.addXAndY(centerX, 0);
             }
 
-            addPerson(parent, child);
-            Position spousePosition = addSpouse(parent, child);
+            lineageService.addPerson(parent, child);
+            Position spousePosition = new Position();//addSpouse(parent, child);
 
             addLineToChildren(child, parent);
             addLineFromChildren(children.size(), i, parent, parentCentralPosition);
@@ -117,12 +121,12 @@ public class AllDescendentsTreeService extends LineageServiceImpl implements Tre
 
     private void addLineFromChildren(int childrenCount, int childrenIndex, Position childPosition, Position parentCentralPosition) {
         if (childrenCount == 1 || (childrenCount > 2 && childrenIndex > 0 && childrenIndex < childrenCount - 1)) {
-            addLine(childPosition,
+            lineageService.addLine(childPosition,
                     childPosition.addXAndY(0, -(configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
                     Relation.DIRECT
             );
         } else {
-            addLine(childPosition,
+            lineageService.addLine(childPosition,
                     parentCentralPosition.addXAndY(0, -(configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
                     Relation.DIRECT
             );
@@ -131,17 +135,17 @@ public class AllDescendentsTreeService extends LineageServiceImpl implements Tre
 
     private void addLineToChildren(AncestorPerson child, Position parent) {
         if (child.getSpouseCouple() != null && child.getSpouse() == null) {
-            addLine(parent,
+            lineageService.addLine(parent,
                     parent.addXAndY(0, (configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
                     Relation.DIRECT
             );
-            addHeraldry(parent.addXAndY(0, configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP), child.getBirthDatePlace().getSimplePlace());
+            lineageService.addHeraldry(parent.addXAndY(0, configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP), child.getBirthDatePlace().getSimplePlace());
         } else if (child.getSpouseCouple() != null && !child.getSpouseCouple().getChildren().isEmpty()) {
-            addLine(parent.addXAndY(extensionConfig.getSpouseDistance() / 2, 0),
+            lineageService.addLine(parent.addXAndY(extensionConfig.getSpouseDistance() / 2, 0),
                     parent.addXAndY(extensionConfig.getSpouseDistance() / 2, (configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2),
                     Relation.DIRECT
             );
-            addHeraldry(parent.addXAndY(extensionConfig.getSpouseDistance() / 2,
+            lineageService.addHeraldry(parent.addXAndY(extensionConfig.getSpouseDistance() / 2,
                     configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP), child.getBirthDatePlace().getSimplePlace()
             );
         }

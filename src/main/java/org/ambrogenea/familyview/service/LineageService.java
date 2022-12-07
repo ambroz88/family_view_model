@@ -1,25 +1,19 @@
 package org.ambrogenea.familyview.service;
 
-import java.util.List;
-
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.Position;
+import org.ambrogenea.familyview.dto.tree.TreeModel;
 
-public interface LineageService extends SpecificAncestorService {
+import java.util.List;
 
-    void generateSpouseAndSiblings(Position rootPersonPosition, AncestorPerson rootPerson);
+public interface LineageService extends CommonAncestorService {
+    Position addClosestFamily(Position rootPosition, AncestorPerson person);
+    TreeModel generateFathersFamily(Position heraldryPosition, AncestorPerson person);
+    TreeModel generateMotherFamily(Position heraldryPosition, AncestorPerson person);
+    TreeModel generateParentsFamily(Position heraldryPosition, AncestorPerson person);
+    TreeModel addAllParents(Position heraldryPosition, AncestorPerson child);
 
-    void generateFathersFamily(Position heraldryPosition, AncestorPerson person);
-
-    void generateMotherFamily(Position heraldryPosition, AncestorPerson person);
-
-    void generateParentsFamily(Position heraldryPosition, AncestorPerson person);
-
-    Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth);
-
-    void addAllParents(Position heraldryPosition, AncestorPerson child);
-
+    TreeModel generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth);
     Position addCoupleFamily(Position firstChildPosition, AncestorCouple couple, int descendentsWidth);
-
 }
