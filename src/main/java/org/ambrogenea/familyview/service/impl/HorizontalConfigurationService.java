@@ -3,6 +3,7 @@ package org.ambrogenea.familyview.service.impl;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.enums.LabelType;
 import org.ambrogenea.familyview.service.ConfigurationExtensionService;
 import org.ambrogenea.familyview.service.ConfigurationService;
 
@@ -79,12 +80,8 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
     }
 
     @Override
-    public int getMarriageLabelHorizontalDistance() {
-        if (configService.getLabelShape().equals(LabelShape.OVAL)) {
-            return getMarriageLabelWidth() / 2 - Spaces.LABEL_GAP;
-        } else {
-            return getSpouseDistance() / 2;
-        }
+    public LabelType getMarriageLabelType() {
+        return LabelType.TALL;
     }
 
     @Override

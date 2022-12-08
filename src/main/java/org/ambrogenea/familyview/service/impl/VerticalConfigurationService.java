@@ -2,6 +2,7 @@ package org.ambrogenea.familyview.service.impl;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.enums.LabelType;
 import org.ambrogenea.familyview.service.ConfigurationExtensionService;
 import org.ambrogenea.familyview.service.ConfigurationService;
 
@@ -15,7 +16,7 @@ public class VerticalConfigurationService implements ConfigurationExtensionServi
 
     @Override
     public int getMarriageLabelWidth() {
-        return (Math.max(Spaces.MIN_VERT_MARRIAGE_LABEL_WIDTH, (int) (configService.getAdultImageWidth() / 3.0 * 2)));
+        return Math.max(Spaces.MIN_VERT_MARRIAGE_LABEL_WIDTH, (int) (configService.getAdultImageWidth() / 3.0 * 2));
     }
 
     @Override
@@ -79,8 +80,8 @@ public class VerticalConfigurationService implements ConfigurationExtensionServi
     }
 
     @Override
-    public int getMarriageLabelHorizontalDistance() {
-        return 0;
+    public LabelType getMarriageLabelType() {
+        return LabelType.LONG;
     }
 
     @Override

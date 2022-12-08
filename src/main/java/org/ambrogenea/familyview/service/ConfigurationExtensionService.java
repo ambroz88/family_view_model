@@ -1,6 +1,7 @@
 package org.ambrogenea.familyview.service;
 
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.enums.LabelType;
 
 /**
  *
@@ -20,7 +21,7 @@ public interface ConfigurationExtensionService {
     int getFatherVerticalDistance();
     int getMotherVerticalDistance();
     int getMarriageLabelVerticalDistance();
-    int getMarriageLabelHorizontalDistance();
+    LabelType getMarriageLabelType();
     int getGenerationsVerticalDistance();
     int getParentGenerationWidth(AncestorPerson person);
 }

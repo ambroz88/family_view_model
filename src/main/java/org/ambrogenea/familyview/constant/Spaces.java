@@ -14,7 +14,6 @@ public abstract class Spaces {
     public static final int HORIZ_MARRIAGE_LABEL_WIDTH = 50;
     public static final int VERT_MARRIAGE_LABEL_HEIGHT = 25;
     public static final int MIN_VERT_MARRIAGE_LABEL_WIDTH = 100;
-    public static final int LABEL_GAP = 2;
     public final static int TITLE_HEIGHT = 120;
 
 }

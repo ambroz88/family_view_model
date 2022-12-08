@@ -22,12 +22,12 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
     @Override
     public Position addClosestFamily(Position rootPosition, AncestorPerson person) {
-        addRootPerson(rootPosition, person);
+        treeModelService.addRootPerson(rootPosition, person);
         generateSpouseAndSiblings(rootPosition, person);
         generateChildren(rootPosition, person.getSpouseCouple());
 
         Position heraldryPosition = rootPosition.addXAndY(0, -(configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
-        addLine(rootPosition, heraldryPosition, Relation.DIRECT);
+        treeModelService.addLine(rootPosition, heraldryPosition, Relation.DIRECT);
         return heraldryPosition;
     }
 
@@ -41,7 +41,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 AncestorPerson parent = Objects.requireNonNullElse(person.getFather(), person.getMother());
 
                 if (parent.hasMinOneParent()) {
-                    addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
+                    treeModelService.addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
                 }
                 if (configService.isShowSiblings()) {
                     addSiblings(parentPosition, parent);
@@ -66,7 +66,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 AncestorPerson parent = Objects.requireNonNullElse(person.getMother(), person.getFather());
 
                 if (parent.hasMinOneParent()) {
-                    addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
+                    treeModelService.addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
                 }
                 if (configService.isShowSiblings()) {
                     addSiblings(parentPosition, parent);
@@ -90,8 +90,6 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     }
 
     private ParentsDto generateSwitchedParents(Position heraldryPosition, AncestorPerson child, ConfigurationExtensionService extensionConfig) {
-        this.extensionConfig = extensionConfig;
-
         Position motherPosition;
         if (child.getMother() != null) {
             motherPosition = heraldryPosition.addXAndY(
@@ -120,7 +118,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
             fatherPosition = null;
         }
 
-        return getParentsDto(heraldryPosition, fatherPosition, motherPosition, child, extensionConfig.getGenerationsVerticalDistance());
+        return getParentsDto(heraldryPosition, fatherPosition, motherPosition, child, extensionConfig);
     }
 
     @Override
@@ -143,7 +141,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
         Position fatherHeraldry = new Position(fatherHeraldryX, parentsDto.getNextHeraldryY());
         generateFathersFamily(fatherHeraldry, father);
-        addLine(fatherHeraldry, parentsDto.getHusbandPosition(), Relation.DIRECT);
+        treeModelService.addLine(fatherHeraldry, parentsDto.getHusbandPosition(), Relation.DIRECT);
     }
 
     private void addMotherFamily(AncestorPerson mother, ParentsDto parentsDto) {
@@ -159,7 +157,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
         Position motherHeraldry = new Position(motherX, parentsDto.getNextHeraldryY());
         generateFathersFamily(motherHeraldry, mother);
-        addLine(motherHeraldry, parentsDto.getWifePosition(), Relation.DIRECT);
+        treeModelService.addLine(motherHeraldry, parentsDto.getWifePosition(), Relation.DIRECT);
     }
 
     @Override
@@ -195,7 +193,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                     parentsDto.getNextHeraldryY()
             );
             if (mother.hasMinOneParent()) {
-                addLine(motherHeraldryPosition, parentsDto.getWifePosition(), Relation.DIRECT);
+                treeModelService.addLine(motherHeraldryPosition, parentsDto.getWifePosition(), Relation.DIRECT);
             }
             addAllParents(motherHeraldryPosition, mother);
         }
@@ -217,7 +215,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                     parentsDto.getNextHeraldryY()
             );
             if (father.hasMinOneParent()) {
-                addLine(fatherHeraldryPosition, parentsDto.getHusbandPosition(), Relation.DIRECT);
+                treeModelService.addLine(fatherHeraldryPosition, parentsDto.getHusbandPosition(), Relation.DIRECT);
             }
             addAllParents(fatherHeraldryPosition, father);
         }

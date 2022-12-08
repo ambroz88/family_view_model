@@ -19,7 +19,6 @@ public interface CommonAncestorService {
 
     void addPerson(Position center, AncestorPerson person);
     void addRootPerson(Position center, AncestorPerson person);
-    void addMarriage(Position labelPosition, int labelWidth, String text);
     void addLine(Position start, Position end, Relation lineType);
     void addHeraldry(Position childPosition, String simpleBirthPlace);
 

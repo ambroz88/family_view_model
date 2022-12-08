@@ -1,14 +1,11 @@
 package org.ambrogenea.familyview.dto.tree;
 
+import org.ambrogenea.familyview.domain.Residence;
+import org.ambrogenea.familyview.dto.PageSetup;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.ambrogenea.familyview.constant.Spaces;
-import org.ambrogenea.familyview.domain.Residence;
-import org.ambrogenea.familyview.dto.PageSetup;
-import org.ambrogenea.familyview.enums.Sex;
-import org.ambrogenea.familyview.service.ConfigurationService;
 
 public class TreeModel {
 

@@ -1,15 +1,17 @@
 package org.ambrogenea.familyview.dto.tree;
 
+import org.ambrogenea.familyview.enums.LabelType;
+
 public class Marriage {
 
     private final Position position;
     private final String date;
-    private final int length;
+    private final LabelType labelType;
 
-    public Marriage(Position position, String date, int length) {
+    public Marriage(Position position, String date, LabelType labelType) {
         this.position = position;
         this.date = date;
-        this.length = length;
+        this.labelType = labelType;
     }
 
     public String getDate() {
@@ -20,7 +22,7 @@ public class Marriage {
         return position;
     }
 
-    public int getLength() {
-        return length;
+    public LabelType getLabelType() {
+        return labelType;
     }
 }

@@ -4,7 +4,7 @@ import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.Residence;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.tree.*;
-import org.ambrogenea.familyview.enums.LabelShape;
+import org.ambrogenea.familyview.enums.LabelType;
 import org.ambrogenea.familyview.enums.Relation;
 import org.ambrogenea.familyview.enums.Sex;
 import org.ambrogenea.familyview.service.ConfigurationService;
@@ -66,14 +66,15 @@ public class TreeModelServiceImpl implements TreeModelService {
             }
         }
     }
+
     @Override
     public void addRootPerson(Position center, AncestorPerson person) {
         treeModel.setRootPerson(new PersonRecord(person, center));
     }
 
     @Override
-    public void addMarriages(Position labelPosition, int labelWidth, String text) {
-        treeModel.getMarriages().add(new Marriage(labelPosition, text, labelWidth));
+    public void addMarriage(Position labelPosition, String text, LabelType labelType) {
+        treeModel.getMarriages().add(new Marriage(labelPosition, text, labelType));
     }
 
     @Override
@@ -85,47 +86,36 @@ public class TreeModelServiceImpl implements TreeModelService {
             treeModel.getLines().add(straightLine);
 
         } else {
-
             Line horizontal;
             Line vertical;
-            if (configuration.getLabelShape().equals(LabelShape.RECTANGLE)) {
-
-                horizontal = new Line(start.getX(), end.getY(), end.getX(), end.getY());
-                vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY());
-                treeModel.getLines().add(horizontal);
-                treeModel.getLines().add(vertical);
-
-            } else if (configuration.getLabelShape().equals(LabelShape.OVAL)) {
-
-                Arc arc;
-                if (start.getX() < end.getX()) {
-                    horizontal = new Line(start.getX() + Arc.RADIUS, end.getY(), end.getX(), end.getY());
-                    if (start.getY() < end.getY()) {//ancestors
-                        vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX(), end.getY() - 2 * Arc.RADIUS), 180, lineType);
-                    } else {//children
-                        vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX(), end.getY()), 90, lineType);
-                    }
-                } else {
-                    horizontal = new Line(start.getX() - Arc.RADIUS, end.getY(), end.getX(), end.getY());
-                    if (start.getY() < end.getY()) {
-                        vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY() - 2 * Arc.RADIUS), -90, lineType);
-                    } else {
-                        vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
-                        arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY()), 0, lineType);
-                    }
+            Arc arc;
+            if (start.getX() < end.getX()) {
+                horizontal = new Line(start.getX() + Arc.RADIUS, end.getY(), end.getX(), end.getY());
+                if (start.getY() < end.getY()) {//ancestors
+                    vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
+                    arc = new Arc(new Position(start.getX(), end.getY() - 2 * Arc.RADIUS), 180, lineType);
+                } else {//children
+                    vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
+                    arc = new Arc(new Position(start.getX(), end.getY()), 90, lineType);
                 }
-
-                arc.setRelation(lineType);
-                horizontal.setType(lineType);
-                vertical.setType(lineType);
-
-                treeModel.getArcs().add(arc);
-                treeModel.getLines().add(horizontal);
-                treeModel.getLines().add(vertical);
+            } else {
+                horizontal = new Line(start.getX() - Arc.RADIUS, end.getY(), end.getX(), end.getY());
+                if (start.getY() < end.getY()) {
+                    vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() - Arc.RADIUS);
+                    arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY() - 2 * Arc.RADIUS), -90, lineType);
+                } else {
+                    vertical = new Line(start.getX(), start.getY(), start.getX(), end.getY() + Arc.RADIUS);
+                    arc = new Arc(new Position(start.getX() - 2 * Arc.RADIUS, end.getY()), 0, lineType);
+                }
             }
+
+            arc.setRelation(lineType);
+            horizontal.setType(lineType);
+            vertical.setType(lineType);
+
+            treeModel.getArcs().add(arc);
+            treeModel.getLines().add(horizontal);
+            treeModel.getLines().add(vertical);
         }
     }
 
