@@ -1,10 +1,10 @@
 package org.ambrogenea.familyview.utils;
 
+import org.ambrogenea.familyview.dto.tree.PageSetup;
+import org.ambrogenea.familyview.dto.tree.Position;
+
 import java.util.Arrays;
 import java.util.LinkedList;
-
-import org.ambrogenea.familyview.dto.PageSetup;
-import org.ambrogenea.familyview.dto.tree.Position;
 
 /**
  *
@@ -26,20 +26,19 @@ public class Calculation {
         int newWidth = getStandardPixelSize(setup.getWidth());
         int newHeight = getStandardPixelSize(setup.getHeight());
         int deltaY = (newHeight - setup.getHeight()) / 2;
-        int newX = setup.getRootPosition().getX() + (newWidth - setup.getWidth()) / 2;
-        int newY = setup.getRootPosition().getY() + deltaY;
+        int newX = setup.getStartPosition().getX() + (newWidth - setup.getWidth()) / 2;
+        int newY = setup.getStartPosition().getY() + deltaY;
 
-        return new PageSetup(newWidth, newHeight, deltaY, new Position(newX, newY));
+        return new PageSetup(new Position(newX, newY), newWidth, newHeight);
     }
 
     private static int getStandardPixelSize(int sizeInPixels) {
         double sizeInCm = sizeInPixels * 2.54 / DPI;
         double standardCmSize = sizeInCm;
 
-        for (int i = 0; i < PAPER_DIMENSIONS.size(); i++) {
-
-            if (sizeInCm < PAPER_DIMENSIONS.get(i)) {
-                standardCmSize = PAPER_DIMENSIONS.get(i);
+        for (Double paperDimension : PAPER_DIMENSIONS) {
+            if (sizeInCm < paperDimension) {
+                standardCmSize = paperDimension;
                 break;
             }
         }

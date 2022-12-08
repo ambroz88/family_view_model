@@ -1,7 +1,7 @@
 package org.ambrogenea.familyview.dto.tree;
 
 import org.ambrogenea.familyview.domain.Residence;
-import org.ambrogenea.familyview.dto.PageSetup;
+import org.ambrogenea.familyview.service.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,9 +17,9 @@ public class TreeModel {
     protected final Set<ResidenceDto> residences;
     protected final ArrayList<String> cityRegister;
 
+    private final PageMaxCoordinates pageMaxCoordinates;
     private String treeName;
     private PersonRecord rootPerson;
-    private PageSetup pageSetup;
 
     public TreeModel() {
         treeName = "";
@@ -30,6 +30,7 @@ public class TreeModel {
         images = new HashSet<>();
         residences = new HashSet<>();
         cityRegister = new ArrayList<>();
+        pageMaxCoordinates = new PageMaxCoordinates();
     }
 
     public Set<Line> getLines() {
@@ -45,6 +46,7 @@ public class TreeModel {
     }
 
     public void addPerson(PersonRecord person) {
+        pageMaxCoordinates.verifyExtremes(person.getPosition());
         persons.add(person);
     }
 
@@ -63,14 +65,6 @@ public class TreeModel {
     public void setRootPerson(PersonRecord rootPerson) {
         this.rootPerson = rootPerson;
         persons.add(rootPerson);
-    }
-
-    public PageSetup getPageSetup() {
-        return pageSetup;
-    }
-
-    public void setPageSetup(PageSetup pageSetup) {
-        this.pageSetup = pageSetup;
     }
 
     public String getTreeName() {
@@ -99,4 +93,11 @@ public class TreeModel {
         }
     }
 
+    public PageMaxCoordinates getPageMaxCoordinates() {
+        return pageMaxCoordinates;
+    }
+
+    public PageSetup getPageSetup(ConfigurationService config){
+        return pageMaxCoordinates.getPageSetup(config);
+    }
 }

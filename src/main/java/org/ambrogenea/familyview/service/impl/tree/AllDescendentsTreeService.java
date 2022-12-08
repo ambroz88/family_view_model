@@ -4,7 +4,6 @@ import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.DescendentTreeInfo;
-import org.ambrogenea.familyview.dto.PageSetup;
 import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.dto.tree.TreeModel;
 import org.ambrogenea.familyview.enums.Relation;
@@ -36,8 +35,8 @@ public class AllDescendentsTreeService implements TreeService {
     }
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, PageSetup pageSetup, ConfigurationService configuration) {
-        Position rootPosition = pageSetup.getRootPosition();
+    public TreeModel generateTreeModel(AncestorPerson rootPerson, ConfigurationService configuration) {
+        Position rootPosition = new Position();
         lineageService = new LineageServiceImpl(configuration);
         lineageService.addRootPerson(rootPosition, rootPerson);
         lineageService.addRootSpouses(rootPosition, rootPerson);
@@ -49,13 +48,18 @@ public class AllDescendentsTreeService implements TreeService {
         );
 
         generateAllDescendents(new Position(Spaces.SIBLINGS_GAP, rootPosition.getY()),
-                rootPerson.getSpouseCouples(), pageSetup.getWidth() - Spaces.SIBLINGS_GAP
+                rootPerson.getSpouseCouples(), calculatePageWidth(rootPerson)
         );
 
         TreeModel treeModel = lineageService.getTreeModel();
-        treeModel.setPageSetup(pageSetup);
         treeModel.setTreeName("Rozrod " + Tools.getNameIn2ndFall(rootPerson));
         return treeModel;
+    }
+
+    private int calculatePageWidth(AncestorPerson personModel) {
+        DescendentTreeInfo treeInfo = personModel.getSpouseCouple().getDescendentTreeInfo();
+        return Spaces.SIBLINGS_GAP + treeInfo.getMaxCouplesCount() * (extensionConfig.getCoupleWidth() + Spaces.SIBLINGS_GAP)
+                + treeInfo.getMaxSinglesCount() * (configService.getAdultImageWidth() + Spaces.SIBLINGS_GAP);
     }
 
     public Position generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth) {
