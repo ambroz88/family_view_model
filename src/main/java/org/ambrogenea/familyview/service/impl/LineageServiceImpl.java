@@ -1,7 +1,6 @@
 package org.ambrogenea.familyview.service.impl;
 
 import org.ambrogenea.familyview.constant.Spaces;
-import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.dto.ParentsDto;
 import org.ambrogenea.familyview.dto.tree.Position;
@@ -11,7 +10,6 @@ import org.ambrogenea.familyview.service.ConfigurationExtensionService;
 import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.LineageService;
 
-import java.util.List;
 import java.util.Objects;
 
 public class LineageServiceImpl extends CommonAncestorServiceImpl implements LineageService {
@@ -22,10 +20,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
     @Override
     public Position addClosestFamily(Position rootPosition, AncestorPerson person) {
-        treeModelService.addRootPerson(rootPosition, person);
         generateSpouseAndSiblings(rootPosition, person);
-        generateChildren(rootPosition, person.getSpouseCouple());
-
         Position heraldryPosition = rootPosition.addXAndY(0, -(configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2);
         treeModelService.addLine(rootPosition, heraldryPosition, Relation.DIRECT);
         return heraldryPosition;
@@ -161,12 +156,6 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     }
 
     @Override
-    public TreeModel generateAllDescendents(Position firstChildPosition, List<AncestorCouple> spouseCouples, int allDescendentsWidth) {
-
-        return getTreeModel();
-    }
-
-    @Override
     public TreeModel addAllParents(Position heraldryPosition, AncestorPerson child) {
         ParentsDto parentsDto;
         if (child.getAncestorGenerations() == 1) {
@@ -221,11 +210,6 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
         }
 
         return getTreeModel();
-    }
-
-    @Override
-    public Position addCoupleFamily(Position firstChildPosition, AncestorCouple couple, int descendentsWidth) {
-        return null;
     }
 
 }

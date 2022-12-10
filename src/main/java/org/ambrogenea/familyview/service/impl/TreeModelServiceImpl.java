@@ -28,10 +28,12 @@ public class TreeModelServiceImpl implements TreeModelService {
 
     @Override
     public void addPerson(Position position, AncestorPerson person) {
-        final PersonRecord personRecord = new PersonRecord(person, position);
-        treeModel.addPerson(personRecord);
-        if (configuration.isShowResidence()) {
-            addResidence(personRecord);
+        if (person != null) {
+            final PersonRecord personRecord = new PersonRecord(person, position);
+            treeModel.addPerson(personRecord);
+            if (configuration.isShowResidence()) {
+                addResidence(personRecord);
+            }
         }
     }
 

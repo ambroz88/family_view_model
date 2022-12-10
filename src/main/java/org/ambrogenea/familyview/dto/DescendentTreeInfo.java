@@ -1,19 +1,52 @@
 package org.ambrogenea.familyview.dto;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class DescendentTreeInfo {
 
     private int maxCouplesCount;
     private int maxSinglesCount;
+    private int couplesCount;
+    private int singlesCount;
     private int maxGenerationsCount;
 
     public DescendentTreeInfo() {
         maxCouplesCount = 0;
         maxSinglesCount = 0;
+        couplesCount = 0;
+        singlesCount = 0;
         maxGenerationsCount = 0;
+    }
+
+    public int getCouplesCount() {
+        return couplesCount;
+    }
+
+    public void setCouplesCount(int couplesCount) {
+        this.couplesCount = couplesCount;
+        if (couplesCount > maxCouplesCount) {
+            setMaxCouplesCount(couplesCount);
+        }
+    }
+
+    public int getSinglesCount() {
+        return singlesCount;
+    }
+
+    public void setSinglesCount(int singlesCount) {
+        this.singlesCount = singlesCount;
+        if (singlesCount > maxSinglesCount) {
+            setMaxSinglesCount(singlesCount);
+        }
+    }
+
+    public void increaseCouplesCount() {
+        setCouplesCount(getCouplesCount() + 1);
+    }
+
+    public void increaseSinglesCount() {
+        setSinglesCount(getSinglesCount() + 1);
     }
 
     public int getMaxCouplesCount() {
@@ -24,20 +57,12 @@ public class DescendentTreeInfo {
         this.maxCouplesCount = maxCouplesCount;
     }
 
-    public void increaseMaxCouplesCount() {
-        this.maxCouplesCount++;
-    }
-
     public int getMaxSinglesCount() {
         return maxSinglesCount;
     }
 
     public void setMaxSinglesCount(int maxSinglesCount) {
         this.maxSinglesCount = maxSinglesCount;
-    }
-
-    public void increaseMaxSinglesCount() {
-        this.maxSinglesCount++;
     }
 
     public int getMaxGenerationsCount() {

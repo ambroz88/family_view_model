@@ -8,7 +8,6 @@ import org.ambrogenea.familyview.domain.DatePlace;
 import org.ambrogenea.familyview.enums.Sex;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class AncestorCouple {
@@ -112,6 +111,8 @@ public class AncestorCouple {
 
     public void setChildren(List<AncestorPerson> children) {
         this.children = new ArrayList<>();
+        int maxSingles = 0;
+        int maxCouples = 0;
         int actualSingles = 0;
         int actualCouples = 0;
         for (AncestorPerson child : children) {
@@ -121,8 +122,9 @@ public class AncestorCouple {
             if (child.getSpouseCouples().isEmpty()) {
                 actualSingles++;
             } else {
-                actualCouples += child.getSpouseCouple().getDescendentTreeInfo().getMaxCouplesCount();
-                actualSingles += child.getSpouseCouple().getDescendentTreeInfo().getMaxSinglesCount();
+                actualCouples++;
+                maxCouples += child.getSpouseCouple().getDescendentTreeInfo().getMaxCouplesCount();
+                maxSingles += child.getSpouseCouple().getDescendentTreeInfo().getMaxSinglesCount();
             }
 
             if (child.getSpouseCouple() == null) {
@@ -133,13 +135,9 @@ public class AncestorCouple {
             getDescendentTreeInfo().addChildGenerations(generationsCount);
         }
 
-        if (isNotSingle() && (actualSingles <= 2 && actualCouples <= 1)) {
-            getDescendentTreeInfo().setMaxSinglesCount(0);
-            getDescendentTreeInfo().setMaxCouplesCount(1);
-        } else {
-            getDescendentTreeInfo().setMaxSinglesCount(actualSingles);
-            getDescendentTreeInfo().setMaxCouplesCount(actualCouples);
-        }
+        getDescendentTreeInfo().setSinglesCount(actualSingles);
+        getDescendentTreeInfo().setCouplesCount(actualCouples);
+        getDescendentTreeInfo().validateMaxCounts(maxSingles, maxCouples);
     }
 
     public void addChildren(AncestorPerson child) {
@@ -147,8 +145,10 @@ public class AncestorCouple {
         int generationsCount;
         if (child.getSpouseCouples().isEmpty()) {
             generationsCount = 1;
+            getDescendentTreeInfo().increaseSinglesCount();
         } else {
             generationsCount = 1 + child.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
+            getDescendentTreeInfo().increaseCouplesCount();
         }
         getDescendentTreeInfo().addChildGenerations(generationsCount);
     }
