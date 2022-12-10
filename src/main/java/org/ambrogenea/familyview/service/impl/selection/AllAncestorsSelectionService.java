@@ -5,11 +5,13 @@ import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.domain.Person;
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.service.ConfigurationService;
 import org.ambrogenea.familyview.service.SelectionService;
 
 public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {
 
-    public AllAncestorsSelectionService() {
+    public AllAncestorsSelectionService(ConfigurationService configuration) {
+        super(configuration);
     }
 
     public AllAncestorsSelectionService(FamilyData familyData) {
