@@ -52,6 +52,16 @@ public class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
+    public int nextSiblingX() {
+        return getSiblingImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
+    @Override
+    public int nextChildrenX() {
+        return getAdultImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
+    @Override
     public int getAdultImageWidth() {
         return configuration.getAdultImageWidth();
     }

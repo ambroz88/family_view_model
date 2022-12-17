@@ -8,7 +8,6 @@ import org.ambrogenea.familyview.enums.Relation;
 
 public interface TreeModelService {
     void addPerson(Position center, AncestorPerson person);
-    void addRootPerson(Position center, AncestorPerson person);
     void addMarriage(Position labelPosition, String text, LabelType labelType);
     void addLine(Position start, Position end, Relation lineType);
     void addHeraldry(Position childPosition, String simpleBirthPlace);

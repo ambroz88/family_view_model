@@ -21,6 +21,8 @@ public interface ConfigurationService {
     Locale getLocale();
     void setLocale(Locale locale);
     int getHeraldryVerticalDistance();
+    int nextSiblingX();
+    int nextChildrenX();
 
     //------------- CONFIGURATION SETTERS AND GETTERS ----------------
     int getAdultImageWidth();

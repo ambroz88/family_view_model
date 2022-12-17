@@ -14,7 +14,6 @@ import org.ambrogenea.familyview.service.impl.tree.AllAncestorTreeService;
 import org.ambrogenea.familyview.service.impl.tree.FatherLineageTreeService;
 import org.ambrogenea.familyview.service.impl.tree.MotherLineageTreeService;
 import org.ambrogenea.familyview.service.impl.tree.ParentLineageTreeService;
-import org.ambrogenea.familyview.utils.Tools;
 
 public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
 
@@ -24,9 +23,7 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
 
         TreeService treeService = new AllAncestorTreeService();
-        TreeModel treeModel = treeService.generateTreeModel(rootPerson, configurationService);
-        treeModel.setTreeName("Vývod z předků " + Tools.getNameIn2ndFall(rootPerson));
-        return treeModel;
+        return treeService.generateTreeModel(rootPerson, configurationService);
     }
 
     @Override
@@ -35,9 +32,7 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
 
         TreeService treeService = new FatherLineageTreeService();
-        TreeModel treeModel = treeService.generateTreeModel(rootPerson, configurationService);
-        treeModel.setTreeName("Rodová linie " + Tools.getNameIn2ndFall(rootPerson));
-        return treeModel;
+        return treeService.generateTreeModel(rootPerson, configurationService);
     }
 
     @Override
@@ -46,9 +41,7 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
 
         TreeService treeService = new MotherLineageTreeService();
-        TreeModel treeModel = treeService.generateTreeModel(rootPerson, configurationService);
-        treeModel.setTreeName("Rodová linie matky " + Tools.getNameIn2ndFall(rootPerson));
-        return treeModel;
+        return treeService.generateTreeModel(rootPerson, configurationService);
     }
 
     @Override
@@ -57,9 +50,7 @@ public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
         AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
 
         TreeService treeService = new ParentLineageTreeService();
-        TreeModel treeModel = treeService.generateTreeModel(rootPerson, configurationService);
-        treeModel.setTreeName("Rodové linie rodičů " + Tools.getNameIn2ndFall(rootPerson));
-        return treeModel;
+        return treeService.generateTreeModel(rootPerson, configurationService);
     }
 
 }
