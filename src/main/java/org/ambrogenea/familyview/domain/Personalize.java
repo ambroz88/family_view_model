@@ -9,11 +9,8 @@ import org.ambrogenea.familyview.enums.Sex;
 public interface Personalize {
 
     String getFirstName();
-
     String getSurname();
-
     String getName();
-
     Sex getSex();
 
 }

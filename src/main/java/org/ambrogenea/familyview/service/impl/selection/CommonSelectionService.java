@@ -10,13 +10,16 @@ import org.ambrogenea.familyview.domain.FamilyData;
 import org.ambrogenea.familyview.domain.Person;
 import org.ambrogenea.familyview.dto.AncestorCouple;
 import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.service.ConfigurationService;
 
 public class CommonSelectionService {
 
     private FamilyData familyData;
     private int generationLimit;
+    private ConfigurationService configuration;
 
-    public CommonSelectionService() {
+    public CommonSelectionService(ConfigurationService configuration) {
+        this.configuration = configuration;
     }
 
     public CommonSelectionService(FamilyData familyData) {
@@ -29,7 +32,9 @@ public class CommonSelectionService {
                     Couple dbCouple = familyData.getSpouseMap().get(coupleID);
                     if (dbCouple != null) {
                         AncestorCouple couple = new AncestorCouple(dbCouple);
-                        addChildren(couple);
+                        if (configuration.isShowChildren()) {
+                            addChildren(couple);
+                        }
                         return couple;
                     } else {
                         return null;
@@ -54,38 +59,44 @@ public class CommonSelectionService {
     }
 
     protected void addSiblings(AncestorPerson person, String parentId) {
-        Couple parents = getFamilyData().getSpouseMap().get(parentId);
-        if (parents != null) {
-            ArrayList<String> children = parents.getChildrenIndexes();
-            int position = 0;
-            AncestorPerson sibling;
-            Person dbPerson;
+        if (configuration.isShowSiblings()) {
+            Couple parents = getFamilyData().getSpouseMap().get(parentId);
+            if (parents != null) {
+                ArrayList<String> children = parents.getChildrenIndexes();
+                int position = 0;
+                AncestorPerson sibling;
+                Person dbPerson;
 
-            while (!children.get(position).equals(person.getId())) {
-                dbPerson = familyData.getPersonById(children.get(position));
-                sibling = new AncestorPerson(dbPerson);
-                sibling.setDirectLineage(false);
-                sibling.setSpouseCouples(addSpouseWithChildren(dbPerson.getSpouseID()));
+                while (!children.get(position).equals(person.getId())) {
+                    dbPerson = familyData.getPersonById(children.get(position));
+                    sibling = new AncestorPerson(dbPerson);
+                    sibling.setDirectLineage(false);
 
-                person.addOlderSibling(sibling);
-                if (sibling.getSpouse() != null) {
-                    person.addOlderSiblingsSpouse();
+                    if (configuration.isShowSiblingSpouses()) {
+                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID()));
+                    }
+                    person.addOlderSibling(sibling);
+                    if (sibling.getSpouse() != null) {
+                        person.addOlderSiblingsSpouse();
+                    }
+                    position++;
                 }
+
                 position++;
-            }
+                while (position < children.size()) {
+                    dbPerson = familyData.getPersonById(children.get(position));
+                    sibling = new AncestorPerson(dbPerson);
+                    sibling.setDirectLineage(false);
 
-            position++;
-            while (position < children.size()) {
-                dbPerson = familyData.getPersonById(children.get(position));
-                sibling = new AncestorPerson(dbPerson);
-                sibling.setDirectLineage(false);
-                sibling.setSpouseCouples(addSpouseWithChildren(dbPerson.getSpouseID()));
-
-                person.addYoungerSibling(sibling);
-                if (sibling.getSpouse() != null) {
-                    person.addYoungerSiblingsSpouse();
+                    if (configuration.isShowSiblingSpouses()) {
+                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID()));
+                    }
+                    person.addYoungerSibling(sibling);
+                    if (sibling.getSpouse() != null) {
+                        person.addYoungerSiblingsSpouse();
+                    }
+                    position++;
                 }
-                position++;
             }
         }
     }
@@ -191,8 +202,10 @@ public class CommonSelectionService {
             Person child = familyData.getPersonById(childId);
             if (child != null) {
                 childAncestor = new AncestorPerson(child);
-                childAncestor.setSpouseCouples(addSpouseWithChildren(child.getSpouseID()));
-                childAncestor.setDirectLineage(false);
+                if (configuration.isShowSiblingSpouses()) {
+                    childAncestor.setSpouseCouples(addSpouse(child.getSpouseID()));
+                }
+                childAncestor.setDirectLineage(true);
                 spouse.addChildren(childAncestor);
             }
         }

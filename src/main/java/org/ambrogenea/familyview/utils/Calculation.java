@@ -23,11 +23,11 @@ public class Calculation {
     public static LinkedList<Double> PAPER_DIMENSIONS = new LinkedList<>(Arrays.asList(A4_WIDTH, A3_WIDTH, A2_WIDTH, A1_WIDTH, A0_WIDTH));
 
     public static PageSetup standardizePageSetup(PageSetup setup) {
-        int newWidth = getStandardPixelSize(setup.getWidth());
-        int newHeight = getStandardPixelSize(setup.getHeight());
-        int deltaY = (newHeight - setup.getHeight()) / 2;
-        int newX = setup.getStartPosition().getX() + (newWidth - setup.getWidth()) / 2;
-        int newY = setup.getStartPosition().getY() + deltaY;
+        int newWidth = getStandardPixelSize(setup.pictureWidth());
+        int newHeight = getStandardPixelSize(setup.pictureHeight());
+        int deltaY = (newHeight - setup.pictureHeight()) / 2;
+        int newX = setup.startPosition().x() + (newWidth - setup.pictureWidth()) / 2;
+        int newY = setup.startPosition().y() + deltaY;
 
         return new PageSetup(new Position(newX, newY), newWidth, newHeight);
     }

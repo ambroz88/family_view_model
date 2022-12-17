@@ -4,7 +4,6 @@ import org.ambrogenea.familyview.configuration.Configuration;
 import org.ambrogenea.familyview.constant.Dimensions;
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.domain.FamilyData;
-import org.ambrogenea.familyview.dto.AncestorPerson;
 import org.ambrogenea.familyview.enums.Diagrams;
 import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.PropertyName;
@@ -13,8 +12,6 @@ import org.ambrogenea.familyview.service.ConfigurationService;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Locale;
-
-import static org.ambrogenea.familyview.constant.Spaces.HORIZONTAL_GAP;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -52,6 +49,16 @@ public class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getHeraldryVerticalDistance() {
         return (getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2;
+    }
+
+    @Override
+    public int nextSiblingX() {
+        return getSiblingImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
+    @Override
+    public int nextChildrenX() {
+        return getAdultImageWidth() + Spaces.HORIZONTAL_GAP;
     }
 
     @Override

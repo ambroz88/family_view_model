@@ -14,11 +14,11 @@ public class PageMaxCoordinates {
     PageSetup pageSetup;
 
     public void verifyExtremes(Position position) {
-        setMaxX(position.getX());
-        setMinX(position.getX());
+        setMaxX(position.x());
+        setMinX(position.x());
 
-        setMaxY(position.getY());
-        setMinY(position.getY());
+        setMaxY(position.y());
+        setMinY(position.y());
     }
 
     public int getMinX() {

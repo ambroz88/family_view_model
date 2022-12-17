@@ -2,7 +2,6 @@ package org.ambrogenea.familyview.service.impl;
 
 import org.ambrogenea.familyview.constant.Spaces;
 import org.ambrogenea.familyview.dto.AncestorPerson;
-import org.ambrogenea.familyview.enums.LabelShape;
 import org.ambrogenea.familyview.enums.LabelType;
 import org.ambrogenea.familyview.service.ConfigurationExtensionService;
 import org.ambrogenea.familyview.service.ConfigurationService;
@@ -10,6 +9,7 @@ import org.ambrogenea.familyview.service.ConfigurationService;
 public class HorizontalConfigurationService implements ConfigurationExtensionService {
 
     private final ConfigurationService configService;
+
     public HorizontalConfigurationService(ConfigurationService configurationService) {
         this.configService = configurationService;
     }

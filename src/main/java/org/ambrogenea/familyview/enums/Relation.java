@@ -10,9 +10,9 @@ public enum Relation {
 
     public int getInt() {
         if (this.equals(DIRECT)) {
-            return 2;
+            return 3;
         } else {
-            return 1;
+            return 2;
         }
     }
 }
