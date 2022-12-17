@@ -1,22 +1,20 @@
 package org.ambrogenea.familyview.domain;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
+import org.ambrogenea.familyview.enums.DateSpecification;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
-import org.ambrogenea.familyview.enums.Date;
-
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class DatePlace {
 
-    private LocalDate date;
-    private Date determination;
+    private Date date;
+    private DateSpecification dateSpecification;
     private String place;
     private String datePattern;
 
@@ -25,20 +23,20 @@ public class DatePlace {
         datePattern = "d MMM yyyy";
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public Date getDetermination() {
-        return determination;
+    public DateSpecification getDateSpecification() {
+        return dateSpecification;
     }
 
-    public void setDetermination(Date determination) {
-        this.determination = determination;
+    public void setDateSpecification(DateSpecification dateSpecification) {
+        this.dateSpecification = dateSpecification;
     }
 
     public String getPlace() {
@@ -54,9 +52,9 @@ public class DatePlace {
     }
 
     public void parseDateText(String date) {
-        String posibleDetermination = date.split(" ", 2)[0];
+        String possibleSpecification = date.split(" ", 2)[0];
         try {
-            determination = Date.valueOf(posibleDetermination);
+            dateSpecification = DateSpecification.valueOf(possibleSpecification);
 
             String parsedDate = date.split(" ", 2)[1];
             parseDate(parsedDate);
@@ -66,28 +64,42 @@ public class DatePlace {
     }
 
     private void parseDate(String date) {
+        String normalizeDate = date.toLowerCase();
+        if (!normalizeDate.contains("sept")) {
+            normalizeDate = normalizeDate.replace("sep", "sept");
+        }
         try {
-            this.date = LocalDate.parse(date, new DateTimeFormatterBuilder()
-                    .parseCaseInsensitive()
-                    .appendPattern("d MMM yyyy")
-                    .toFormatter(Locale.ENGLISH)
-            );
-        } catch (DateTimeParseException | NumberFormatException e) {
-
+            parseFullDate(normalizeDate, Locale.UK);
+        } catch (ParseException e) {
             try {
-                this.date = LocalDate.ofYearDay(Integer.valueOf(date), 1);
-                this.datePattern = "yyyy";
-            } catch (DateTimeParseException | NumberFormatException exp) {
+                Locale czech = new Locale("cs", "CZ");
+                parseFullDate(normalizeDate, czech);
+            } catch (ParseException exp) {
                 try {
-                    this.date = LocalDate.parse(date, new DateTimeFormatterBuilder()
-                            .parseCaseInsensitive()
-                            .appendPattern("MMM yyyy")
-                            .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
-                            .toFormatter(Locale.ENGLISH)
-                    );
-                    this.datePattern = "MMM yyyy";
-                } catch (DateTimeParseException | NumberFormatException excep) {
+                    this.date = new SimpleDateFormat("yyyy").parse(normalizeDate);
+                    this.datePattern = "yyyy";
+                } catch (ParseException ex) {
                     this.datePattern = null;
+                }
+            }
+        }
+    }
+
+    private void parseFullDate(String date, Locale locale) throws ParseException {
+        try {
+            this.date = DateFormat.getDateInstance(DateFormat.LONG, locale).parse(date);
+            this.datePattern = "d MMM yyyy";
+        } catch (ParseException ex1) {
+            try {
+                this.date = DateFormat.getDateInstance(DateFormat.MEDIUM, locale).parse(date);
+                this.datePattern = "d MMM yyyy";
+            } catch (ParseException ex2) {
+                try {
+                    this.date = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(date);
+                    this.datePattern = "d MMM yyyy";
+                } catch (ParseException ex3) {
+                    this.date = new SimpleDateFormat("MMM yyyy", locale).parse(date);
+                    this.datePattern = "MMM yyyy";
                 }
             }
         }
@@ -95,14 +107,14 @@ public class DatePlace {
 
     public String getLocalizedDate(Locale locale) {
         if (datePattern == null) {
-            return "Unknown";
+            return "?";
         }
         if (date != null) {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern(datePattern, locale);
-            if (determination != null) {
-                return determination.getString(locale) + " " + date.format(dtf);
+            SimpleDateFormat dtf = new SimpleDateFormat(datePattern, locale);
+            if (dateSpecification != null) {
+                return dateSpecification.getString(locale) + " " + dtf.format(date);
             }
-            return date.format(dtf);
+            return dtf.format(date);
         } else {
             return "";
         }

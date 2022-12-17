@@ -5,8 +5,8 @@ import org.ambrogenea.familyview.domain.Personalize;
 import org.ambrogenea.familyview.domain.Residence;
 import org.ambrogenea.familyview.enums.Sex;
 
-import java.time.Period;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public record PersonRecord(
         Position position,
@@ -58,8 +58,9 @@ public record PersonRecord(
     public int getAge() {
         int ageInYears = -1;
         if (birthDatePlace().getDate() != null && deathDatePlace().getDate() != null) {
-            ageInYears = Period.between(birthDatePlace().getDate(),
-                    deathDatePlace().getDate()).getYears();
+            ageInYears = (int) (TimeUnit.DAYS.convert(
+                    deathDatePlace().getDate().getTime() - birthDatePlace().getDate().getTime(), TimeUnit.MILLISECONDS
+            ) / 365);
         }
         return ageInYears;
     }
