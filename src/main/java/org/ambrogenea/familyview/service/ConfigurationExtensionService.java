@@ -1,6 +1,6 @@
 package org.ambrogenea.familyview.service;
 
-import org.ambrogenea.familyview.dto.AncestorPerson;
+import org.ambrogenea.familyview.dto.tree.Position;
 import org.ambrogenea.familyview.enums.LabelType;
 
 /**
@@ -11,17 +11,15 @@ public interface ConfigurationExtensionService {
     int getMarriageLabelWidth();
     int getMarriageLabelHeight();
     int getCoupleWidth();
-    int getHalfSpouseLabelSpace();
-    int getGapBetweenCouples();
-    int getAllAncestorsCoupleIncrease();
     int getSpouseDistance();
+    int getSiblingSpouseDistance();
+    Position getSiblingsWifePosition(Position husbandPosition);
+    Position getFatherPositionFromHeraldry(Position heraldryPosition);
+    Position getMotherPositionFromHeraldry(Position heraldryPosition);
+    Position getSiblingsMarriagePosition(Position siblingPosition);
     int getFatherHorizontalDistance();
     int getMotherHorizontalDistance();
-    int getCoupleVerticalDifference();
-    int getFatherVerticalDistance();
-    int getMotherVerticalDistance();
     int getMarriageLabelVerticalDistance();
     LabelType getMarriageLabelType();
     int getGenerationsVerticalDistance();
-    int getParentGenerationWidth(AncestorPerson person);
 }

@@ -32,6 +32,9 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
     public AncestorPerson fromPersonWithParents(Person person, int generation) {
         AncestorPerson newPerson = new AncestorPerson(person);
         newPerson.setDirectLineage(true);
+        if (generation < 2) {
+            addSiblings(newPerson, person.getParentID());
+        }
         if (generation + 1 <= getGenerationLimit()) {
             addAllParents(newPerson, person.getParentID(), generation + 1);
         }
@@ -43,7 +46,7 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
             Couple parents = getFamilyData().getSpouseMap().get(parentId);
 
             if (parents != null) {
-                person.setParents(new AncestorCouple(parents));
+                person.setParents(new AncestorCouple(parents, true));
 
                 if (parents.getHusband() != null) {
                     AncestorPerson father = fromPersonWithParents(parents.getHusband(), generation);

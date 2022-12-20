@@ -31,7 +31,7 @@ public class CommonSelectionService {
                 .map(coupleID -> {
                     Couple dbCouple = familyData.getSpouseMap().get(coupleID);
                     if (dbCouple != null) {
-                        AncestorCouple couple = new AncestorCouple(dbCouple);
+                        AncestorCouple couple = new AncestorCouple(dbCouple, true);
                         if (configuration.isShowChildren()) {
                             addChildren(couple);
                         }
@@ -44,12 +44,12 @@ public class CommonSelectionService {
                 .collect(Collectors.toList());
     }
 
-    protected List<AncestorCouple> addSpouse(ArrayList<String> spouseId) {
+    protected List<AncestorCouple> addSpouse(ArrayList<String> spouseId, boolean isDirectLineage) {
         return spouseId.stream()
                 .map(coupleID -> {
                     Couple dbCouple = familyData.getSpouseMap().get(coupleID);
                     if (dbCouple != null) {
-                        return new AncestorCouple(dbCouple);
+                        return new AncestorCouple(dbCouple, isDirectLineage);
                     } else {
                         return null;
                     }
@@ -73,7 +73,7 @@ public class CommonSelectionService {
                     sibling.setDirectLineage(false);
 
                     if (configuration.isShowSiblingSpouses()) {
-                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID()));
+                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID(), false));
                     }
                     person.addOlderSibling(sibling);
                     if (sibling.getSpouse() != null) {
@@ -89,7 +89,7 @@ public class CommonSelectionService {
                     sibling.setDirectLineage(false);
 
                     if (configuration.isShowSiblingSpouses()) {
-                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID()));
+                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID(), false));
                     }
                     person.addYoungerSibling(sibling);
                     if (sibling.getSpouse() != null) {
@@ -127,7 +127,7 @@ public class CommonSelectionService {
     protected AncestorPerson fromPersonWithAllDescendents(Person person, int generation) {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
-        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID()));
+        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID(), true));
         if (generation + 1 <= generationLimit) {
             ancestorPerson.getSpouseCouples()
                     .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, generation + 1));
@@ -156,7 +156,7 @@ public class CommonSelectionService {
         Couple parents = getFamilyData().getSpouseMap().get(parentId);
 
         if (person != null && parents != null) {
-            person.setParents(new AncestorCouple(parents));
+            person.setParents(new AncestorCouple(parents, true));
 
             if (parents.getHusband() != null) {
                 AncestorPerson father = fromPersonWithManParents(parents.getHusband(), generation);
@@ -180,7 +180,7 @@ public class CommonSelectionService {
         Couple parents = getFamilyData().getSpouseMap().get(parentId);
 
         if (person != null && parents != null) {
-            person.setParents(new AncestorCouple(parents));
+            person.setParents(new AncestorCouple(parents, true));
 
             if (parents.getWife() != null) {
                 AncestorPerson mother = fromPersonWithManParents(parents.getWife(), 2);
@@ -203,7 +203,7 @@ public class CommonSelectionService {
             if (child != null) {
                 childAncestor = new AncestorPerson(child);
                 if (configuration.isShowSiblingSpouses()) {
-                    childAncestor.setSpouseCouples(addSpouse(child.getSpouseID()));
+                    childAncestor.setSpouseCouples(addSpouse(child.getSpouseID(), true));
                 }
                 childAncestor.setDirectLineage(true);
                 spouse.addChildren(childAncestor);

@@ -26,16 +26,16 @@ public class AncestorCouple {
         initEmpty();
     }
 
-    public AncestorCouple(Couple couple) {
+    public AncestorCouple(Couple couple, boolean isDirectLineage) {
         if (couple != null) {
             if (couple.getHusband() != null) {
                 this.husband = new AncestorPerson(couple.getHusband());
-                this.husband.setDirectLineage(true);
+                this.husband.setDirectLineage(isDirectLineage);
             }
 
             if (couple.getWife() != null) {
                 this.wife = new AncestorPerson(couple.getWife());
-                this.wife.setDirectLineage(true);
+                this.wife.setDirectLineage(isDirectLineage);
             }
             this.childrenID = new ArrayList<>(couple.getChildrenIndexes());
             this.children = new ArrayList<>();

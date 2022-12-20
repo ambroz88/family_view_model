@@ -33,6 +33,7 @@ public interface ConfigurationService {
     int getSiblingImageWidth();
     void setSiblingImageWidth(int siblingImageWidth);
     int getSiblingImageHeight();
+    int getSiblingImageHeightAlternative();
     void setSiblingImageHeight(int siblingImageHeight);
     int getAdultFontSize();
     void setAdultFontSize(int adultFontSize);

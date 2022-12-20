@@ -118,6 +118,15 @@ public class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
+    public int getSiblingImageHeightAlternative() {
+        int siblingImageHeight = configuration.getSiblingImageHeight();
+        if (getAdultDiagram().equals(Diagrams.SCROLL)) {
+            siblingImageHeight = (int) (siblingImageHeight * 0.8);
+        }
+        return siblingImageHeight;
+    }
+
+    @Override
     public void setSiblingImageHeight(int siblingImageHeight) {
         int oldValue = getSiblingImageHeight();
         if (Math.abs(oldValue - siblingImageHeight) > 4) {

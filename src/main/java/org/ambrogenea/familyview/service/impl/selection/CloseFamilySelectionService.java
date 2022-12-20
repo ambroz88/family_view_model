@@ -37,7 +37,7 @@ public class CloseFamilySelectionService extends CommonSelectionService implemen
         if (parentId != null) {
             Couple parents = getFamilyData().getSpouseMap().get(parentId);
             if (parents != null) {
-                ancestorParents = new AncestorCouple(parents);
+                ancestorParents = new AncestorCouple(parents, true);
             }
         }
         return ancestorParents;

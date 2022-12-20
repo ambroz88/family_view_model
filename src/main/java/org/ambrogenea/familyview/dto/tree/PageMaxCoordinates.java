@@ -64,7 +64,7 @@ public class PageMaxCoordinates {
     public PageSetup getPageSetup(ConfigurationService config) {
         if (pageSetup == null) {
             int horizontalBorder = config.getAdultImageWidth() / 2 + Spaces.SIBLINGS_GAP;
-            int verticalBorder = config.getAdultImageHeight() / 2 + Spaces.SIBLINGS_GAP;
+            int verticalBorder = config.getAdultImageHeightAlternative() / 2 + Spaces.SIBLINGS_GAP;
             maxX += horizontalBorder;
             minX -= horizontalBorder;
             maxY += verticalBorder + Spaces.TITLE_HEIGHT;

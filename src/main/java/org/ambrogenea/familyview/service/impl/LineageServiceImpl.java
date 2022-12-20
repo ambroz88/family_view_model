@@ -87,10 +87,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     private ParentsDto generateSwitchedParents(Position heraldryPosition, AncestorPerson child, ConfigurationExtensionService extensionConfig) {
         Position motherPosition;
         if (child.getMother() != null) {
-            motherPosition = heraldryPosition.addXAndY(
-                    -extensionConfig.getFatherHorizontalDistance(),
-                    -extensionConfig.getFatherVerticalDistance()
-            );
+            motherPosition = extensionConfig.getFatherPositionFromHeraldry(heraldryPosition);
             treeModelService.addPerson(motherPosition, child.getMother());
         } else {
             motherPosition = null;
@@ -98,16 +95,11 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
         Position fatherPosition;
         if (child.getFather() != null) {
-            int fatherXShift;
-            int fatherYShift;
             if (motherPosition == null) {
-                fatherXShift = 0;
-                fatherYShift = extensionConfig.getFatherVerticalDistance();
+                fatherPosition = extensionConfig.getFatherPositionFromHeraldry(heraldryPosition);
             } else {
-                fatherXShift = extensionConfig.getMotherHorizontalDistance();
-                fatherYShift = extensionConfig.getMotherVerticalDistance();
+                fatherPosition = extensionConfig.getMotherPositionFromHeraldry(heraldryPosition);
             }
-            fatherPosition = heraldryPosition.addXAndY(fatherXShift, -fatherYShift);
             treeModelService.addPerson(fatherPosition, child.getFather());
         } else {
             fatherPosition = null;
@@ -127,6 +119,8 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     private void addFatherFamily(AncestorPerson father, ParentsDto parentsDto) {
         int fatherSiblingsWidth = 0;
         if (configService.isShowSiblings() && father.getFather() != null) {
+            father.moveYoungerSiblingsToOlder();
+
             int fathersSiblings = father.getFather().getMaxYoungerSiblings();
             if (fathersSiblings > 0) {
                 fatherSiblingsWidth = fathersSiblings * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
@@ -136,23 +130,35 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
         Position fatherHeraldry = new Position(fatherHeraldryX, parentsDto.nextHeraldryY());
         generateFathersFamily(fatherHeraldry, father);
-        treeModelService.addLine(fatherHeraldry, parentsDto.husbandPosition(), Relation.DIRECT);
+        if (father.getOlderSiblings().isEmpty()) {
+            treeModelService.addLine(fatherHeraldry, parentsDto.husbandPosition(), Relation.DIRECT);
+        } else {
+            addSiblings(new Position(fatherHeraldryX + configService.getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
+            treeModelService.addLine(parentsDto.husbandPosition(), fatherHeraldry, Relation.DIRECT);
+        }
     }
 
     private void addMotherFamily(AncestorPerson mother, ParentsDto parentsDto) {
         int motherSiblingsWidth = 0;
         if (configService.isShowSiblings() && mother.getFather() != null) {
+            mother.moveOlderSiblingsToYounger();
+
             int mothersSiblings = mother.getFather().getMaxOlderSiblings();
             if (mothersSiblings > 0) {
                 motherSiblingsWidth = mothersSiblings * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
             }
         }
 
-        int motherX = parentsDto.wifePosition().x() + extensionConfig.getFatherHorizontalDistance() + motherSiblingsWidth;
+        int motherHeraldryX = parentsDto.wifePosition().x() + extensionConfig.getFatherHorizontalDistance() + motherSiblingsWidth;
 
-        Position motherHeraldry = new Position(motherX, parentsDto.nextHeraldryY());
+        Position motherHeraldry = new Position(motherHeraldryX, parentsDto.nextHeraldryY());
         generateFathersFamily(motherHeraldry, mother);
-        treeModelService.addLine(motherHeraldry, parentsDto.wifePosition(), Relation.DIRECT);
+        if (mother.getYoungerSiblings().isEmpty()) {
+            treeModelService.addLine(motherHeraldry, parentsDto.wifePosition(), Relation.DIRECT);
+        } else {
+            addSiblings(new Position(motherHeraldryX - extensionConfig.getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
+            treeModelService.addLine(parentsDto.wifePosition(), motherHeraldry, Relation.DIRECT);
+        }
     }
 
     @Override
@@ -182,6 +188,8 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                     parentsDto.nextHeraldryY()
             );
             if (mother.hasMinOneParent()) {
+//                mother.moveOlderSiblingsToYounger();
+//                addSiblings(parentsDto.husbandPosition(), mother);
                 treeModelService.addLine(motherHeraldryPosition, parentsDto.wifePosition(), Relation.DIRECT);
             }
             addAllParents(motherHeraldryPosition, mother);
@@ -204,6 +212,8 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                     parentsDto.nextHeraldryY()
             );
             if (father.hasMinOneParent()) {
+                father.moveYoungerSiblingsToOlder();
+                addSiblings(parentsDto.husbandPosition(), father);
                 treeModelService.addLine(fatherHeraldryPosition, parentsDto.husbandPosition(), Relation.DIRECT);
             }
             addAllParents(fatherHeraldryPosition, father);
