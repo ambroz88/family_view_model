@@ -10,8 +10,11 @@ import org.ambrogenea.familyview.service.SelectionService;
 
 public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {
 
+    private ConfigurationService configurationService;
+
     public AllAncestorsSelectionService(ConfigurationService configuration) {
         super(configuration);
+        configurationService = configuration;
     }
 
     public AllAncestorsSelectionService(FamilyData familyData) {
@@ -24,8 +27,9 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
 
         Person person = getFamilyData().getPersonById(personId);
         AncestorPerson ancestorPerson = fromPersonWithParents(person, 1);
-
-        ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        if (configurationService.isShowSpouses()) {
+            ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        }
         return ancestorPerson;
     }
 

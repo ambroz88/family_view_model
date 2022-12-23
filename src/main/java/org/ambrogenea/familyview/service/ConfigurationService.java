@@ -39,14 +39,14 @@ public interface ConfigurationService {
     void setAdultFontSize(int adultFontSize);
     int getSiblingFontSize();
     void setSiblingFontSize(int siblingFontSize);
-    Diagrams getAdultDiagram();
-    void setAdultDiagram(Diagrams adultDiagram);
+    Diagrams getDiagram();
+    void setDiagram(Diagrams adultDiagram);
     LabelShape getLabelShape();
     void setLabelShape(LabelShape labelShape);
-    String getAdultManImagePath();
-    String getAdultWomanImagePath();
-    int getAdultVerticalShift();
-    void setAdultVerticalShift(int adultVerticalShift);
+    String getManImagePath();
+    String getWomanImagePath();
+    int getVerticalShift();
+    void setVerticalShift(int adultVerticalShift);
 
     boolean isShowSiblings();
     void setShowSiblings(boolean showSiblings);
@@ -56,8 +56,6 @@ public interface ConfigurationService {
     void setShowSiblingSpouses(boolean showSiblingSpouses);
     int getGenerationCount();
     void setGenerationCount(int generationCount);
-    boolean isShowParents();
-    void setShowParents(boolean showParents);
     boolean isShowChildren();
     void setShowChildren(boolean showChildren);
     boolean isShowParentLineage();

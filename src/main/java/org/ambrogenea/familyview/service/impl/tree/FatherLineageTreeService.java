@@ -15,15 +15,14 @@ public class FatherLineageTreeService implements TreeService {
     public TreeModel generateTreeModel(AncestorPerson rootPerson, ConfigurationService configuration) {
         final String treeName = "Rodová linie ";
         LineageService lineageService = new LineageServiceImpl(rootPerson, treeName, configuration);
-        Position heraldryPosition = lineageService.addClosestFamily(rootPerson);
+        Position heraldryPosition = lineageService.addSiblingsAndDescendents(rootPerson);
 
         TreeModel treeModel;
         if (rootPerson.getFather() != null) {
             treeModel = lineageService.generateFathersFamily(heraldryPosition, rootPerson);
-        } else if (rootPerson.getMother() != null) {
-            treeModel = lineageService.generateMotherFamily(heraldryPosition, rootPerson);
         } else {
-            treeModel = new TreeModel(PersonRecordMapper.map(rootPerson, new Position()), treeName);
+            lineageService.generateHorizontalParents(heraldryPosition, rootPerson);
+            treeModel = lineageService.getTreeModel();
         }
 
         return treeModel;

@@ -83,7 +83,7 @@ public class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getAdultImageHeightAlternative() {
         int imageHeight = getAdultImageHeight();
-        if (getAdultDiagram().equals(Diagrams.SCROLL)) {
+        if (getDiagram().equals(Diagrams.SCROLL)) {
             imageHeight = (int) (imageHeight * 0.8);
         }
         return imageHeight;
@@ -120,7 +120,7 @@ public class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getSiblingImageHeightAlternative() {
         int siblingImageHeight = configuration.getSiblingImageHeight();
-        if (getAdultDiagram().equals(Diagrams.SCROLL)) {
+        if (getDiagram().equals(Diagrams.SCROLL)) {
             siblingImageHeight = (int) (siblingImageHeight * 0.8);
         }
         return siblingImageHeight;
@@ -160,14 +160,14 @@ public class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public Diagrams getAdultDiagram() {
-        return configuration.getAdultDiagram();
+    public Diagrams getDiagram() {
+        return configuration.getDiagram();
     }
 
     @Override
-    public void setAdultDiagram(Diagrams adultDiagram) {
-        Diagrams oldValue = getAdultDiagram();
-        configuration.setAdultDiagram(adultDiagram);
+    public void setDiagram(Diagrams adultDiagram) {
+        Diagrams oldValue = getDiagram();
+        configuration.setDiagram(adultDiagram);
         int imageWidth;
         int imageHeight;
         if (adultDiagram == Diagrams.HERALDRY) {
@@ -188,8 +188,8 @@ public class DefaultConfigurationService implements ConfigurationService {
         setSiblingImageWidth(imageWidth);
         setSiblingImageHeight(imageHeight);
 
-        setAdultManImagePath("diagrams/" + adultDiagram + "_man.png");
-        setAdultWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
+        setManImagePath("diagrams/" + adultDiagram + "_man.png");
+        setWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
         firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultDiagram);
     }
 
@@ -204,32 +204,32 @@ public class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public String getAdultManImagePath() {
-        return configuration.getAdultManImagePath();
+    public String getManImagePath() {
+        return configuration.getManImagePath();
     }
 
-    private void setAdultManImagePath(String adultManImagePath) {
-        configuration.setAdultManImagePath(adultManImagePath);
-    }
-
-    @Override
-    public String getAdultWomanImagePath() {
-        return configuration.getAdultWomanImagePath();
-    }
-
-    private void setAdultWomanImagePath(String adultWomanImagePath) {
-        configuration.setAdultWomanImagePath(adultWomanImagePath);
+    private void setManImagePath(String adultManImagePath) {
+        configuration.setManImagePath(adultManImagePath);
     }
 
     @Override
-    public int getAdultVerticalShift() {
-        return configuration.getAdultVerticalShift();
+    public String getWomanImagePath() {
+        return configuration.getWomanImagePath();
+    }
+
+    private void setWomanImagePath(String adultWomanImagePath) {
+        configuration.setWomanImagePath(adultWomanImagePath);
     }
 
     @Override
-    public void setAdultVerticalShift(int adultVerticalShift) {
-        int oldValue = getAdultVerticalShift();
-        configuration.setAdultVerticalShift(adultVerticalShift);
+    public int getVerticalShift() {
+        return configuration.getVerticalShift();
+    }
+
+    @Override
+    public void setVerticalShift(int adultVerticalShift) {
+        int oldValue = getVerticalShift();
+        configuration.setVerticalShift(adultVerticalShift);
         firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalShift);
     }
 
@@ -271,16 +271,6 @@ public class DefaultConfigurationService implements ConfigurationService {
     @Override
     public void setGenerationCount(int generationCount) {
         configuration.setGenerationCount(generationCount);
-    }
-
-    @Override
-    public boolean isShowParents() {
-        return configuration.isShowParents();
-    }
-
-    @Override
-    public void setShowParents(boolean showParents) {
-        configuration.setShowParents(showParents);
     }
 
     @Override

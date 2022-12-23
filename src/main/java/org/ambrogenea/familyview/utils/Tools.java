@@ -42,7 +42,7 @@ public final class Tools {
     public static int calculateGenerations(AncestorPerson person, ConfigurationService config) {
         int generationCount = 1;
 
-        if (config.isShowParents() && person.hasMinOneParent()) {
+        if (person.hasMinOneParent()) {
             generationCount++;
         }
         if (config.isShowChildren() && person.getAllChildrenCount() > 0) {

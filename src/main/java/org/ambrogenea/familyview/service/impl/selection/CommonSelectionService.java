@@ -104,7 +104,9 @@ public class CommonSelectionService {
     protected AncestorPerson fromPersonWithManParents(Person person, int generation) {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
-        ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        if (generation > 1 || (generation == 1 && configuration.isShowSpouses())) {
+            ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        }
 
         if (generation + 1 <= generationLimit) {
             addSiblings(ancestorPerson, person.getParentID());
@@ -116,7 +118,9 @@ public class CommonSelectionService {
     protected AncestorPerson fromPersonWithWomanParents(Person person) {
         AncestorPerson ancestorPerson = new AncestorPerson(person);
         ancestorPerson.setDirectLineage(true);
-        ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        if (configuration.isShowSpouses()) {
+            ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        }
         if (2 <= generationLimit) {
             addSiblings(ancestorPerson, person.getParentID());
             addWomanParents(ancestorPerson, person.getParentID());

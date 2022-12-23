@@ -16,17 +16,17 @@ public class PersonConfiguration {
 
     private int adultImageWidth;
     private int adultImageHeight;
-    private int adultVerticalShift;
     private int adultFontSize;
 
     private int siblingImageWidth;
     private int siblingImageHeight;
     private int siblingFontSize;
 
-    private Diagrams adultDiagram;
+    private int verticalShift;
+    private Diagrams diagram;
     private LabelShape labelShape;
-    private String adultManImagePath;
-    private String adultWomanImagePath;
+    private String manImagePath;
+    private String womanImagePath;
 
     private boolean showMarriage;
 
@@ -40,16 +40,16 @@ public class PersonConfiguration {
     public PersonConfiguration() {
         adultImageWidth = 190;
         adultImageHeight = 130;
-        adultVerticalShift = 0;
         siblingImageWidth = 170;
         siblingImageHeight = 120;
         adultFontSize = 12;
         siblingFontSize = 11;
+        verticalShift = 0;
 
-        adultDiagram = Diagrams.SCROLL;
+        diagram = Diagrams.SCROLL;
         labelShape = LabelShape.OVAL;
-        adultManImagePath = "diagrams/" + adultDiagram + "_man.png";
-        adultWomanImagePath = "diagrams/" + adultDiagram + "_woman.png";
+        manImagePath = "diagrams/" + diagram + "_man.png";
+        womanImagePath = "diagrams/" + diagram + "_woman.png";
 
         showAge = true;
         showPlaces = true;
@@ -94,12 +94,12 @@ public class PersonConfiguration {
         this.adultImageHeight = adultImageHeight;
     }
 
-    public int getAdultVerticalShift() {
-        return adultVerticalShift;
+    public int getVerticalShift() {
+        return verticalShift;
     }
 
-    public void setAdultVerticalShift(int adultVerticalShift) {
-        this.adultVerticalShift = adultVerticalShift;
+    public void setVerticalShift(int verticalShift) {
+        this.verticalShift = verticalShift;
     }
 
     public int getSiblingImageWidth() {
@@ -134,12 +134,12 @@ public class PersonConfiguration {
         this.siblingFontSize = siblingFontSize;
     }
 
-    public Diagrams getAdultDiagram() {
-        return adultDiagram;
+    public Diagrams getDiagram() {
+        return diagram;
     }
 
-    public void setAdultDiagram(Diagrams adultDiagram) {
-        this.adultDiagram = adultDiagram;
+    public void setDiagram(Diagrams diagram) {
+        this.diagram = diagram;
     }
 
     public LabelShape getLabelShape() {
@@ -150,20 +150,20 @@ public class PersonConfiguration {
         this.labelShape = labelShape;
     }
 
-    public String getAdultManImagePath() {
-        return adultManImagePath;
+    public String getManImagePath() {
+        return manImagePath;
     }
 
-    public void setAdultManImagePath(String adultManImagePath) {
-        this.adultManImagePath = adultManImagePath;
+    public void setManImagePath(String manImagePath) {
+        this.manImagePath = manImagePath;
     }
 
-    public String getAdultWomanImagePath() {
-        return adultWomanImagePath;
+    public String getWomanImagePath() {
+        return womanImagePath;
     }
 
-    public void setAdultWomanImagePath(String adultWomanImagePath) {
-        this.adultWomanImagePath = adultWomanImagePath;
+    public void setWomanImagePath(String womanImagePath) {
+        this.womanImagePath = womanImagePath;
     }
 
     public boolean isShowMarriage() {

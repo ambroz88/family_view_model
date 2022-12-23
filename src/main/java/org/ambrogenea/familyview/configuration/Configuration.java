@@ -10,7 +10,6 @@ public final class Configuration extends PersonConfiguration {
     private boolean showSiblings;
     private boolean showSpouses;
     private boolean showSiblingSpouses;
-    private boolean showParents;
     private boolean showChildren;
     private boolean showHeraldry;
     private boolean resetMode;
@@ -21,7 +20,6 @@ public final class Configuration extends PersonConfiguration {
         showSiblings = true;
         showSpouses = true;
         showSiblingSpouses = false;
-        showParents = true;
         showChildren = true;
         showCouplesVertical = false;
         showHeraldry = true;
@@ -67,14 +65,6 @@ public final class Configuration extends PersonConfiguration {
 
     public void setShowSiblingSpouses(boolean showSiblingSpouses) {
         this.showSiblingSpouses = showSiblingSpouses;
-    }
-
-    public boolean isShowParents() {
-        return showParents;
-    }
-
-    public void setShowParents(boolean showParents) {
-        this.showParents = showParents;
     }
 
     public boolean isShowChildren() {
