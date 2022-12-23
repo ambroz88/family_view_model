@@ -1,0 +1,76 @@
+package cz.ambrogenea.familyvision.service.impl.selection;
+
+import cz.ambrogenea.familyvision.domain.Couple;
+import cz.ambrogenea.familyvision.domain.FamilyData;
+import cz.ambrogenea.familyvision.domain.Person;
+import cz.ambrogenea.familyvision.dto.AncestorCouple;
+import cz.ambrogenea.familyvision.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.service.ConfigurationService;
+import cz.ambrogenea.familyvision.service.SelectionService;
+
+public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {
+
+    private ConfigurationService configurationService;
+
+    public AllAncestorsSelectionService(ConfigurationService configuration) {
+        super(configuration);
+        configurationService = configuration;
+    }
+
+    public AllAncestorsSelectionService(FamilyData familyData) {
+        super(familyData);
+    }
+
+    @Override
+    public AncestorPerson select(String personId, int generationLimit) {
+        setGenerationLimit(generationLimit);
+
+        Person person = getFamilyData().getPersonById(personId);
+        AncestorPerson ancestorPerson = fromPersonWithParents(person, 1);
+        if (configurationService.isShowSpouses()) {
+            ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        }
+        return ancestorPerson;
+    }
+
+    public AncestorPerson fromPersonWithParents(Person person, int generation) {
+        AncestorPerson newPerson = new AncestorPerson(person);
+        newPerson.setDirectLineage(true);
+        if (generation < 2) {
+            addSiblings(newPerson, person.getParentID());
+        }
+        if (generation + 1 <= getGenerationLimit()) {
+            addAllParents(newPerson, person.getParentID(), generation + 1);
+        }
+        return newPerson;
+    }
+
+    protected void addAllParents(AncestorPerson person, String parentId, int generation) {
+        if (parentId != null) {
+            Couple parents = getFamilyData().getSpouseMap().get(parentId);
+
+            if (parents != null) {
+                person.setParents(new AncestorCouple(parents, true));
+
+                if (parents.getHusband() != null) {
+                    AncestorPerson father = fromPersonWithParents(parents.getHusband(), generation);
+                    father.addChildrenCode(person.getAncestorLine());
+                    person.setFather(father);
+                }
+
+                if (parents.getWife() != null) {
+                    AncestorPerson mother = fromPersonWithParents(parents.getWife(), generation);
+                    mother.addChildrenCode(person.getAncestorLine());
+                    person.setMother(mother);
+                }
+
+                if (parents.hasHusband() && parents.hasWife()) {
+                    person.getFather().getSpouseCouples().add(new AncestorCouple(person.getFather(), person.getMother()));
+                    person.getMother().getSpouseCouples().add(new AncestorCouple(person.getFather(), person.getMother()));
+                }
+            }
+
+        }
+    }
+
+}
