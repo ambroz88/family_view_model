@@ -3,7 +3,6 @@ package cz.ambrogenea.familyvision.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.ambrogenea.familyvision.domain.Couple;
 import cz.ambrogenea.familyvision.domain.DatePlace;
 import cz.ambrogenea.familyvision.enums.Sex;
 
@@ -20,30 +19,16 @@ public class AncestorCouple {
     private DatePlace datePlace;
     private DescendentTreeInfo descendentTreeInfo;
 
+    public AncestorCouple() {
+        children = new ArrayList<>();
+        datePlace = new DatePlace();
+        descendentTreeInfo = new DescendentTreeInfo();
+    }
+
     public AncestorCouple(AncestorPerson husband, AncestorPerson wife) {
         this.husband = husband;
         this.wife = wife;
         initEmpty();
-    }
-
-    public AncestorCouple(Couple couple, boolean isDirectLineage) {
-        if (couple != null) {
-            if (couple.getHusband() != null) {
-                this.husband = new AncestorPerson(couple.getHusband());
-                this.husband.setDirectLineage(isDirectLineage);
-            }
-
-            if (couple.getWife() != null) {
-                this.wife = new AncestorPerson(couple.getWife());
-                this.wife.setDirectLineage(isDirectLineage);
-            }
-            this.childrenID = new ArrayList<>(couple.getChildrenIndexes());
-            this.children = new ArrayList<>();
-            this.datePlace = couple.getDatePlace();
-            this.descendentTreeInfo = new DescendentTreeInfo();
-        } else {
-            initEmpty();
-        }
     }
 
     private void initEmpty() {
@@ -99,6 +84,10 @@ public class AncestorCouple {
 
     public ArrayList<String> getChildrenIndexes() {
         return childrenID;
+    }
+
+    public void setChildrenID(ArrayList<String> childrenID) {
+        this.childrenID = childrenID;
     }
 
     public void addChildrenIndex(String childID) {

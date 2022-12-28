@@ -51,6 +51,14 @@ public class DatePlace {
         this.place = place;
     }
 
+    public String getDatePattern() {
+        return datePattern;
+    }
+
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
+    }
+
     public void parseDateText(String date) {
         String possibleSpecification = date.split(" ", 2)[0];
         try {

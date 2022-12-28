@@ -1,13 +1,12 @@
 package cz.ambrogenea.familyvision.service.impl;
 
 import cz.ambrogenea.familyvision.configuration.Configuration;
-import cz.ambrogenea.familyvision.constant.Spaces;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.constant.Dimensions;
-import cz.ambrogenea.familyvision.domain.FamilyData;
-import cz.ambrogenea.familyvision.enums.Diagrams;
+import cz.ambrogenea.familyvision.constant.Spaces;
+import cz.ambrogenea.familyvision.enums.Diagram;
 import cz.ambrogenea.familyvision.enums.LabelShape;
 import cz.ambrogenea.familyvision.enums.PropertyName;
+import cz.ambrogenea.familyvision.service.ConfigurationService;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -24,16 +23,6 @@ public class DefaultConfigurationService implements ConfigurationService {
     public DefaultConfigurationService(Configuration configuration) {
         this.configuration = configuration;
         prop = new PropertyChangeSupport(this);
-    }
-
-    @Override
-    public FamilyData getFamilyData() {
-        return configuration.getFamilyData();
-    }
-
-    @Override
-    public void setFamilyData(FamilyData familyData) {
-        configuration.setFamilyData(familyData);
     }
 
     @Override
@@ -83,7 +72,7 @@ public class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getAdultImageHeightAlternative() {
         int imageHeight = getAdultImageHeight();
-        if (getDiagram().equals(Diagrams.SCROLL)) {
+        if (getDiagram().equals(Diagram.SCROLL)) {
             imageHeight = (int) (imageHeight * 0.8);
         }
         return imageHeight;
@@ -120,7 +109,7 @@ public class DefaultConfigurationService implements ConfigurationService {
     @Override
     public int getSiblingImageHeightAlternative() {
         int siblingImageHeight = configuration.getSiblingImageHeight();
-        if (getDiagram().equals(Diagrams.SCROLL)) {
+        if (getDiagram().equals(Diagram.SCROLL)) {
             siblingImageHeight = (int) (siblingImageHeight * 0.8);
         }
         return siblingImageHeight;
@@ -160,23 +149,23 @@ public class DefaultConfigurationService implements ConfigurationService {
     }
 
     @Override
-    public Diagrams getDiagram() {
+    public Diagram getDiagram() {
         return configuration.getDiagram();
     }
 
     @Override
-    public void setDiagram(Diagrams adultDiagram) {
-        Diagrams oldValue = getDiagram();
+    public void setDiagram(Diagram adultDiagram) {
+        Diagram oldValue = getDiagram();
         configuration.setDiagram(adultDiagram);
         int imageWidth;
         int imageHeight;
-        if (adultDiagram == Diagrams.HERALDRY) {
+        if (adultDiagram == Diagram.HERALDRY) {
             imageWidth = Dimensions.PORTRAIT_IMAGE_WIDTH;
             imageHeight = Dimensions.PORTRAIT_IMAGE_HEIGHT;
-        } else if (adultDiagram == Diagrams.SCROLL) {
+        } else if (adultDiagram == Diagram.SCROLL) {
             imageWidth = Dimensions.SCROLL_IMAGE_WIDTH;
             imageHeight = Dimensions.SCROLL_IMAGE_HEIGHT;
-        } else if (adultDiagram == Diagrams.DOUBLE_WAVE) {
+        } else if (adultDiagram == Diagram.DOUBLE_WAVE) {
             imageWidth = Dimensions.DOUBLE_WAVE_IMAGE_WIDTH;
             imageHeight = Dimensions.DOUBLE_WAVE_IMAGE_HEIGHT;
         } else {

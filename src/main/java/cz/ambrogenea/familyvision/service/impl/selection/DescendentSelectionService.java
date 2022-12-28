@@ -1,10 +1,10 @@
 package cz.ambrogenea.familyvision.service.impl.selection;
 
-import cz.ambrogenea.familyvision.domain.FamilyData;
 import cz.ambrogenea.familyvision.domain.Person;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.SelectionService;
+import cz.ambrogenea.familyvision.service.Services;
 
 public class DescendentSelectionService extends CommonSelectionService implements SelectionService {
 
@@ -12,14 +12,10 @@ public class DescendentSelectionService extends CommonSelectionService implement
         super(configuration);
     }
 
-    public DescendentSelectionService(FamilyData familyData) {
-        super(familyData);
-    }
-
     @Override
     public AncestorPerson select(String personId, int generationLimit) {
         setGenerationLimit(generationLimit);
-        Person person = getFamilyData().getPersonById(personId);
+        Person person = Services.person().getPersonByGedcomId(personId);
         return fromPersonWithAllDescendents(person, 1);
     }
 

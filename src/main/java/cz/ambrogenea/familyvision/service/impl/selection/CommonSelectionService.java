@@ -1,37 +1,34 @@
 package cz.ambrogenea.familyvision.service.impl.selection;
 
-import java.util.ArrayList;
+import cz.ambrogenea.familyvision.domain.Marriage;
+import cz.ambrogenea.familyvision.domain.Person;
+import cz.ambrogenea.familyvision.dto.AncestorCouple;
+import cz.ambrogenea.familyvision.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.dto.MarriageDto;
+import cz.ambrogenea.familyvision.mapper.dto.AncestorCoupleMapper;
+import cz.ambrogenea.familyvision.mapper.dto.AncestorPersonMapper;
+import cz.ambrogenea.familyvision.service.ConfigurationService;
+import cz.ambrogenea.familyvision.service.Services;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import cz.ambrogenea.familyvision.domain.Couple;
-import cz.ambrogenea.familyvision.domain.FamilyData;
-import cz.ambrogenea.familyvision.domain.Person;
-import cz.ambrogenea.familyvision.dto.AncestorCouple;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
-
 public class CommonSelectionService {
 
-    private FamilyData familyData;
     private int generationLimit;
-    private ConfigurationService configuration;
+    private final ConfigurationService configuration;
 
     public CommonSelectionService(ConfigurationService configuration) {
         this.configuration = configuration;
     }
 
-    public CommonSelectionService(FamilyData familyData) {
-        this.familyData = familyData;
-    }
-
-    protected List<AncestorCouple> addSpouseWithChildren(ArrayList<String> spouseId) {
+    protected List<AncestorCouple> addSpouseWithChildren(List<String> spouseId) {
         return spouseId.stream()
                 .map(coupleID -> {
-                    Couple dbCouple = familyData.getSpouseMap().get(coupleID);
+                    Marriage dbCouple = Services.marriage().getMarriageByGedcomId(coupleID);
                     if (dbCouple != null) {
-                        AncestorCouple couple = new AncestorCouple(dbCouple, true);
+                        AncestorCouple couple = AncestorCoupleMapper.mapWithoutKids(dbCouple, true);
                         if (configuration.isShowChildren()) {
                             addChildren(couple);
                         }
@@ -44,12 +41,12 @@ public class CommonSelectionService {
                 .collect(Collectors.toList());
     }
 
-    protected List<AncestorCouple> addSpouse(ArrayList<String> spouseId, boolean isDirectLineage) {
+    protected List<AncestorCouple> addSpouse(List<String> spouseId, boolean isDirectLineage) {
         return spouseId.stream()
                 .map(coupleID -> {
-                    Couple dbCouple = familyData.getSpouseMap().get(coupleID);
+                    Marriage dbCouple = Services.marriage().getMarriageByGedcomId(coupleID);
                     if (dbCouple != null) {
-                        return new AncestorCouple(dbCouple, isDirectLineage);
+                        return AncestorCoupleMapper.mapWithoutKids(dbCouple, isDirectLineage);
                     } else {
                         return null;
                     }
@@ -60,40 +57,44 @@ public class CommonSelectionService {
 
     protected void addSiblings(AncestorPerson person, String parentId) {
         if (configuration.isShowSiblings()) {
-            Couple parents = getFamilyData().getSpouseMap().get(parentId);
+            Marriage parents = Services.marriage().getMarriageByGedcomId(parentId);
             if (parents != null) {
-                ArrayList<String> children = parents.getChildrenIndexes();
+                List<String> children = parents.getChildrenIds();
                 int position = 0;
                 AncestorPerson sibling;
                 Person dbPerson;
 
-                while (!children.get(position).equals(person.getId())) {
-                    dbPerson = familyData.getPersonById(children.get(position));
-                    sibling = new AncestorPerson(dbPerson);
-                    sibling.setDirectLineage(false);
+                while (!children.get(position).equals(person.getGedcomId())) {
+                    dbPerson = Services.person().getPersonByGedcomId(children.get(position));
+                    if (dbPerson != null) {
+                        sibling = AncestorPersonMapper.map(dbPerson);
+                        sibling.setDirectLineage(false);
 
-                    if (configuration.isShowSiblingSpouses()) {
-                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID(), false));
-                    }
-                    person.addOlderSibling(sibling);
-                    if (sibling.getSpouse() != null) {
-                        person.addOlderSiblingsSpouse();
+                        if (configuration.isShowSiblingSpouses()) {
+                            sibling.setSpouses(addSpouse(dbPerson.getSpouseId(), false));
+                        }
+                        person.addOlderSibling(sibling);
+                        if (sibling.getSpouse() != null) {
+                            person.addOlderSiblingsSpouse();
+                        }
                     }
                     position++;
                 }
 
                 position++;
                 while (position < children.size()) {
-                    dbPerson = familyData.getPersonById(children.get(position));
-                    sibling = new AncestorPerson(dbPerson);
-                    sibling.setDirectLineage(false);
+                    dbPerson = Services.person().getPersonByGedcomId(children.get(position));
+                    if (dbPerson != null) {
+                        sibling = AncestorPersonMapper.map(dbPerson);
+                        sibling.setDirectLineage(false);
 
-                    if (configuration.isShowSiblingSpouses()) {
-                        sibling.setSpouseCouples(addSpouse(dbPerson.getSpouseID(), false));
-                    }
-                    person.addYoungerSibling(sibling);
-                    if (sibling.getSpouse() != null) {
-                        person.addYoungerSiblingsSpouse();
+                        if (configuration.isShowSiblingSpouses()) {
+                            sibling.setSpouses(addSpouse(dbPerson.getSpouseId(), false));
+                        }
+                        person.addYoungerSibling(sibling);
+                        if (sibling.getSpouse() != null) {
+                            person.addYoungerSiblingsSpouse();
+                        }
                     }
                     position++;
                 }
@@ -102,53 +103,58 @@ public class CommonSelectionService {
     }
 
     protected AncestorPerson fromPersonWithManParents(Person person, int generation) {
-        AncestorPerson ancestorPerson = new AncestorPerson(person);
-        ancestorPerson.setDirectLineage(true);
-        if (generation > 1 || (generation == 1 && configuration.isShowSpouses())) {
-            ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
-        }
+        if (person != null) {
+            AncestorPerson ancestorPerson = AncestorPersonMapper.map(person);
+            ancestorPerson.setDirectLineage(true);
+            if (generation > 1 || (generation == 1 && configuration.isShowSpouses())) {
+                ancestorPerson.setSpouses(addSpouseWithChildren(person.getSpouseId()));
+            }
 
-        if (generation + 1 <= generationLimit) {
-            addSiblings(ancestorPerson, person.getParentID());
-            addManParents(ancestorPerson, person.getParentID(), generation + 1);
+            if (generation + 1 <= generationLimit) {
+                addSiblings(ancestorPerson, person.getParentId());
+                addManParents(ancestorPerson, person.getParentId(), generation + 1);
+            }
+            return ancestorPerson;
         }
-        return ancestorPerson;
+        return null;
     }
 
     protected AncestorPerson fromPersonWithWomanParents(Person person) {
-        AncestorPerson ancestorPerson = new AncestorPerson(person);
-        ancestorPerson.setDirectLineage(true);
-        if (configuration.isShowSpouses()) {
-            ancestorPerson.setSpouseCouples(addSpouseWithChildren(person.getSpouseID()));
+        if (person != null) {
+            AncestorPerson ancestorPerson = AncestorPersonMapper.map(person);
+            ancestorPerson.setDirectLineage(true);
+            if (configuration.isShowSpouses()) {
+                ancestorPerson.setSpouses(addSpouseWithChildren(person.getSpouseId()));
+            }
+            if (2 <= generationLimit) {
+                addSiblings(ancestorPerson, person.getParentId());
+                addWomanParents(ancestorPerson, person.getParentId());
+            }
+            return ancestorPerson;
         }
-        if (2 <= generationLimit) {
-            addSiblings(ancestorPerson, person.getParentID());
-            addWomanParents(ancestorPerson, person.getParentID());
-        }
-        return ancestorPerson;
+        return null;
     }
 
     protected AncestorPerson fromPersonWithAllDescendents(Person person, int generation) {
-        AncestorPerson ancestorPerson = new AncestorPerson(person);
-        ancestorPerson.setDirectLineage(true);
-        ancestorPerson.setSpouseCouples(addSpouse(person.getSpouseID(), true));
-        if (generation + 1 <= generationLimit) {
-            ancestorPerson.getSpouseCouples()
-                    .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, generation + 1));
+        if (person != null) {
+            AncestorPerson ancestorPerson = AncestorPersonMapper.map(person);
+            ancestorPerson.setDirectLineage(true);
+            ancestorPerson.setSpouses(addSpouse(person.getSpouseId(), true));
+            if (generation + 1 <= generationLimit) {
+                ancestorPerson.getSpouseCouples()
+                        .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, generation + 1));
+            }
+            return ancestorPerson;
         }
-        return ancestorPerson;
+        return null;
     }
 
     private void addChildrenToCouple(AncestorCouple spouseCouple, int generation) {
         List<AncestorPerson> children = spouseCouple.getChildrenIndexes()
                 .stream()
                 .map(childId -> {
-                    Person dbChild = getFamilyData().getPersonById(childId);
-                    if (dbChild != null) {
-                        return fromPersonWithAllDescendents(dbChild, generation);
-                    } else {
-                        return null;
-                    }
+                    Person dbChild = Services.person().getPersonByGedcomId(childId);
+                    return fromPersonWithAllDescendents(dbChild, generation);
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
@@ -157,18 +163,16 @@ public class CommonSelectionService {
     }
 
     private void addManParents(AncestorPerson person, String parentId, int generation) {
-        Couple parents = getFamilyData().getSpouseMap().get(parentId);
+        MarriageDto parents = Services.marriage().getMarriageDtoByGedcomId(parentId);
 
         if (person != null && parents != null) {
-            person.setParents(new AncestorCouple(parents, true));
+            person.setParents(AncestorCoupleMapper.mapWithoutKids(parents, true));
 
-            if (parents.getHusband() != null) {
-                AncestorPerson father = fromPersonWithManParents(parents.getHusband(), generation);
-                father.addChildrenCode(person.getAncestorLine());
+            if (parents.husband() != null) {
+                AncestorPerson father = fromPersonWithManParents(parents.husband(), generation);
                 person.setFather(father);
             } else {
-                AncestorPerson mother = fromPersonWithManParents(parents.getWife(), generation);
-                mother.addChildrenCode(person.getAncestorLine());
+                AncestorPerson mother = fromPersonWithManParents(parents.wife(), generation);
                 person.setMother(mother);
 
                 person.setMaxOlderSiblings(mother.getMaxOlderSiblings());
@@ -181,14 +185,13 @@ public class CommonSelectionService {
     }
 
     private void addWomanParents(AncestorPerson person, String parentId) {
-        Couple parents = getFamilyData().getSpouseMap().get(parentId);
+        MarriageDto parents = Services.marriage().getMarriageDtoByGedcomId(parentId);
 
         if (person != null && parents != null) {
-            person.setParents(new AncestorCouple(parents, true));
+            person.setParents(AncestorCoupleMapper.mapWithoutKids(parents, true));
 
-            if (parents.getWife() != null) {
-                AncestorPerson mother = fromPersonWithManParents(parents.getWife(), 2);
-                mother.addChildrenCode(person.getAncestorLine());
+            if (parents.wife() != null) {
+                AncestorPerson mother = fromPersonWithManParents(parents.wife(), 2);
                 person.setMother(mother);
 
                 person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), mother.getOlderSiblings().size()));
@@ -203,24 +206,16 @@ public class CommonSelectionService {
     private void addChildren(AncestorCouple spouse) {
         AncestorPerson childAncestor;
         for (String childId : spouse.getChildrenIndexes()) {
-            Person child = familyData.getPersonById(childId);
+            Person child = Services.person().getPersonByGedcomId(childId);
             if (child != null) {
-                childAncestor = new AncestorPerson(child);
+                childAncestor = AncestorPersonMapper.map(child);
                 if (configuration.isShowSiblingSpouses()) {
-                    childAncestor.setSpouseCouples(addSpouse(child.getSpouseID(), true));
+                    childAncestor.setSpouses(addSpouse(child.getSpouseId(), true));
                 }
                 childAncestor.setDirectLineage(true);
                 spouse.addChildren(childAncestor);
             }
         }
-    }
-
-    public FamilyData getFamilyData() {
-        return familyData;
-    }
-
-    public void setFamilyData(FamilyData familyData) {
-        this.familyData = familyData;
     }
 
     public int getGenerationLimit() {

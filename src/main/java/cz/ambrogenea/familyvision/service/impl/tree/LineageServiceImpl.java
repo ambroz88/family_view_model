@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.service.impl;
+package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.dto.tree.TreeModel;
@@ -8,6 +8,8 @@ import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.LineageService;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.ParentsDto;
+import cz.ambrogenea.familyvision.service.impl.HorizontalConfigurationService;
+import cz.ambrogenea.familyvision.service.impl.VerticalConfigurationService;
 
 import java.util.Objects;
 

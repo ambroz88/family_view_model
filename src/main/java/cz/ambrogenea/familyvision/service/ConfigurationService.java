@@ -4,8 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Locale;
 
 import cz.ambrogenea.familyvision.configuration.Configuration;
-import cz.ambrogenea.familyvision.domain.FamilyData;
-import cz.ambrogenea.familyvision.enums.Diagrams;
+import cz.ambrogenea.familyvision.enums.Diagram;
 import cz.ambrogenea.familyvision.enums.LabelShape;
 import cz.ambrogenea.familyvision.enums.PropertyName;
 
@@ -15,8 +14,6 @@ import cz.ambrogenea.familyvision.enums.PropertyName;
  */
 public interface ConfigurationService {
     //------------- COMMON config methods ----------------
-    FamilyData getFamilyData();
-    void setFamilyData(FamilyData ancestorModel);
     Locale getLocale();
     void setLocale(Locale locale);
     int getHeraldryVerticalDistance();
@@ -38,8 +35,8 @@ public interface ConfigurationService {
     void setAdultFontSize(int adultFontSize);
     int getSiblingFontSize();
     void setSiblingFontSize(int siblingFontSize);
-    Diagrams getDiagram();
-    void setDiagram(Diagrams adultDiagram);
+    Diagram getDiagram();
+    void setDiagram(Diagram adultDiagram);
     LabelShape getLabelShape();
     void setLabelShape(LabelShape labelShape);
     String getManImagePath();

@@ -1,8 +1,5 @@
 package cz.ambrogenea.familyvision.service.impl.parsing;
 
-import cz.ambrogenea.familyvision.service.impl.selection.FathersSelectionService;
-import cz.ambrogenea.familyvision.service.impl.tree.FatherLineageTreeService;
-import cz.ambrogenea.familyvision.domain.FamilyData;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.parsing.DocumentInputs;
 import cz.ambrogenea.familyvision.dto.tree.PageSetup;
@@ -10,6 +7,8 @@ import cz.ambrogenea.familyvision.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.DocumentGeneratorService;
 import cz.ambrogenea.familyvision.service.TreeService;
+import cz.ambrogenea.familyvision.service.impl.selection.FathersSelectionService;
+import cz.ambrogenea.familyvision.service.impl.tree.FatherLineageTreeService;
 import cz.ambrogenea.familyvision.utils.Tools;
 import cz.ambrogenea.familyvision.word.WordGenerator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -26,9 +25,9 @@ public class A4WordGeneratorService implements DocumentGeneratorService {
     }
 
     @Override
-    public List<DocumentInputs> generateFamilies(String personId, FamilyData familyData) {
+    public List<DocumentInputs> generateFamilies(String personId) {
         List<DocumentInputs> inputs = new ArrayList<>();
-        FathersSelectionService fathersSelectionService = new FathersSelectionService(familyData);
+        FathersSelectionService fathersSelectionService = new FathersSelectionService(configuration);
         AncestorPerson rootPerson = fathersSelectionService.select(personId, 20);
 
         if (rootPerson != null) {

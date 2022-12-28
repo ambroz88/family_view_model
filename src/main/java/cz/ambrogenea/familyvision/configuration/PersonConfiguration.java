@@ -1,7 +1,6 @@
 package cz.ambrogenea.familyvision.configuration;
 
-import cz.ambrogenea.familyvision.domain.FamilyData;
-import cz.ambrogenea.familyvision.enums.Diagrams;
+import cz.ambrogenea.familyvision.enums.Diagram;
 import cz.ambrogenea.familyvision.enums.LabelShape;
 
 import java.util.Locale;
@@ -11,7 +10,6 @@ import java.util.Locale;
  */
 public class PersonConfiguration {
 
-    private FamilyData familyData;
     private Locale locale;
 
     private int adultImageWidth;
@@ -23,7 +21,7 @@ public class PersonConfiguration {
     private int siblingFontSize;
 
     private int verticalShift;
-    private Diagrams diagram;
+    private Diagram diagram;
     private LabelShape labelShape;
     private String manImagePath;
     private String womanImagePath;
@@ -46,7 +44,7 @@ public class PersonConfiguration {
         siblingFontSize = 11;
         verticalShift = 0;
 
-        diagram = Diagrams.SCROLL;
+        diagram = Diagram.SCROLL;
         labelShape = LabelShape.OVAL;
         manImagePath = "diagrams/" + diagram + "_man.png";
         womanImagePath = "diagrams/" + diagram + "_woman.png";
@@ -60,14 +58,6 @@ public class PersonConfiguration {
         showTemple = false;
 
         locale = new Locale("cs");
-    }
-
-    public FamilyData getFamilyData() {
-        return familyData;
-    }
-
-    public void setFamilyData(FamilyData familyData) {
-        this.familyData = familyData;
     }
 
     public Locale getLocale() {
@@ -134,11 +124,11 @@ public class PersonConfiguration {
         this.siblingFontSize = siblingFontSize;
     }
 
-    public Diagrams getDiagram() {
+    public Diagram getDiagram() {
         return diagram;
     }
 
-    public void setDiagram(Diagrams diagram) {
+    public void setDiagram(Diagram diagram) {
         this.diagram = diagram;
     }
 

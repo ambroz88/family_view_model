@@ -4,7 +4,7 @@ package cz.ambrogenea.familyvision.enums;
  *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public enum Diagrams {
+public enum Diagram {
     SCROLL, HERALDRY, STICKY_NOTES, WAVE, DOUBLE_WAVE, OVAL;
 
     private static final String SCROLL_STRING = "scroll";
@@ -14,7 +14,7 @@ public enum Diagrams {
     private static final String DOUBLE_WAVE_STRING = "doubleWave";
     private static final String OVAL_STRING = "oval";
 
-    public static Diagrams fromString(String name) {
+    public static Diagram fromString(String name) {
         return switch (name) {
             case HERALDRY_STRING -> HERALDRY;
             case STICKY_NOTES_STRING -> STICKY_NOTES;

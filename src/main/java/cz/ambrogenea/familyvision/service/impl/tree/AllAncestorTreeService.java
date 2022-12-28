@@ -9,7 +9,6 @@ import cz.ambrogenea.familyvision.service.CommonAncestorService;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.TreeService;
-import cz.ambrogenea.familyvision.service.impl.CommonAncestorServiceImpl;
 import cz.ambrogenea.familyvision.service.impl.HorizontalConfigurationService;
 import cz.ambrogenea.familyvision.service.impl.VerticalConfigurationService;
 

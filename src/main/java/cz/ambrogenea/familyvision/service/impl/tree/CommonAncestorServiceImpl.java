@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.service.impl;
+package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.dto.FamilyDto;
@@ -13,6 +13,9 @@ import cz.ambrogenea.familyvision.enums.LabelType;
 import cz.ambrogenea.familyvision.enums.Relation;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.TreeModelService;
+import cz.ambrogenea.familyvision.service.impl.HorizontalConfigurationService;
+import cz.ambrogenea.familyvision.service.impl.TreeModelServiceImpl;
+import cz.ambrogenea.familyvision.service.impl.VerticalConfigurationService;
 
 public class CommonAncestorServiceImpl implements CommonAncestorService {
 
@@ -106,16 +109,24 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
         addPerson(spousePosition.addXAndY(-config.getSpouseDistance(), 0), rootSpouse);
         addPerson(spousePosition, spouseCouple.getSpouse(rootSpouse.getSex()));
+        String marriageDate = "";
+        if (spouseCouple.getDatePlace() != null) {
+            marriageDate = spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale());
+        }
         treeModelService.addMarriage(spousePosition.addXAndY(-config.getSpouseDistance() / 2, 0),
-                spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale()),
+                marriageDate,
                 LabelType.TALL);
     }
 
     private void addSpouseWithMarriage(Position spousePosition, AncestorCouple spouseCouple, AncestorPerson rootSpouse) {
         HorizontalConfigurationService config = new HorizontalConfigurationService(configService);
         addPerson(spousePosition, spouseCouple.getSpouse(rootSpouse.getSex()));
+        String marriageDate = "";
+        if (spouseCouple.getDatePlace() != null) {
+            marriageDate = spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale());
+        }
         treeModelService.addMarriage(spousePosition.addXAndY(-config.getSpouseDistance() / 2, 0),
-                spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale()),
+                marriageDate,
                 LabelType.TALL);
     }
 
@@ -259,9 +270,13 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     private void addSiblingsCouple(Position spousePosition, AncestorCouple spouseCouple, AncestorPerson rootSpouse) {
         addPerson(spousePosition, rootSpouse);
         addPerson(extensionConfig.getSiblingsWifePosition(spousePosition), spouseCouple.getSpouse(rootSpouse.getSex()));
+        String marriageDate = "";
+        if (spouseCouple.getDatePlace() != null) {
+            marriageDate = spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale());
+        }
         treeModelService.addMarriage(
                 extensionConfig.getSiblingsMarriagePosition(spousePosition),
-                spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale()),
+                marriageDate,
                 extensionConfig.getMarriageLabelType()
         );
     }
@@ -323,12 +338,16 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 treeModelService.addHeraldry(heraldryPosition, child.getBirthDatePlace().getSimplePlace());
             }
             if (fatherPosition != null && motherPosition != null) {
+                String marriageDate = "";
+                if (child.getParents().getDatePlace() != null) {
+                    marriageDate = child.getParents().getDatePlace().getLocalizedDate(configService.getLocale());
+                }
                 treeModelService.addMarriage(
                         heraldryPosition.addXAndY(
                                 0,
                                 -extensionConfig.getMarriageLabelVerticalDistance()
                         ),
-                        child.getParents().getDatePlace().getLocalizedDate(configService.getLocale()), extensionConfig.getMarriageLabelType()
+                        marriageDate, extensionConfig.getMarriageLabelType()
                 );
             }
             return new ParentsDto(fatherPosition, motherPosition, heraldryPosition.y() - extensionConfig.getGenerationsVerticalDistance());

@@ -1,12 +1,10 @@
 package cz.ambrogenea.familyvision.service;
 
-import cz.ambrogenea.familyvision.domain.FamilyData;
+import org.xml.sax.SAXParseException;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public interface ParsingService {
-
-    FamilyData parse(InputStream stream) throws IOException;
-
+    String saveData(InputStream stream) throws IOException, SAXParseException;
 }

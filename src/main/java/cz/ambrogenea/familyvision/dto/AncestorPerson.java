@@ -1,146 +1,77 @@
 package cz.ambrogenea.familyvision.dto;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import cz.ambrogenea.familyvision.domain.DatePlace;
-import cz.ambrogenea.familyvision.domain.Person;
 import cz.ambrogenea.familyvision.domain.Personalize;
 import cz.ambrogenea.familyvision.domain.Residence;
 import cz.ambrogenea.familyvision.enums.Sex;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- *
  * @author Jiri Ambroz
  */
 public class AncestorPerson implements Personalize {
 
-    public static final int CODE_MALE = -1;
-    public static final int CODE_FEMALE = 1;
-
-    private final String id;
-
+    private final String gedcomId;
     private final String firstName;
     private final String surname;
-    private Sex sex;
-    private DatePlace birthDatePlace;
-    private DatePlace deathDatePlace;
+    private final Sex sex;
+    private final boolean living;
+    private final DatePlace birthDatePlace;
+    private final DatePlace deathDatePlace;
     private final String occupation;
-    private boolean living;
+    private final List<Residence> residences;
+    private final LinkedList<AncestorPerson> youngerSiblings;
+    private final LinkedList<AncestorPerson> olderSiblings;
+
     private boolean directLineage;
-
-    private final ArrayList<Residence> residenceList;
-
-    private AncestorCouple parents;
     private List<AncestorCouple> spouses;
-
-    private ArrayList<Integer> ancestorLine;
-    private LinkedList<AncestorPerson> youngerSiblings;
-    private LinkedList<AncestorPerson> olderSiblings;
-    private int maxYoungerSiblingsSpouse;
-    private int maxOlderSiblingsSpouse;
+    private AncestorCouple parents;
     private int ancestorGenerations;
     private int fatherGenerations;
     private int motherGenerations;
     private double lastParentsCount;
     private double innerParentsCount;
+    private int maxYoungerSiblingsSpouse;
+    private int maxOlderSiblingsSpouse;
     private int maxOlderSiblings;
     private int maxYoungerSiblings;
 
-    public AncestorPerson(AncestorPerson person) {
-        if (person != null) {
-            this.id = person.getId();
-            this.firstName = person.getFirstName();
-            this.surname = person.getSurname();
-            this.sex = person.getSex();
-            this.living = person.isLiving();
-            this.birthDatePlace = person.getBirthDatePlace();
-            this.deathDatePlace = person.getDeathDatePlace();
-            this.occupation = person.getOccupation();
-            this.residenceList = new ArrayList<>(person.getResidenceList());
-
-            initSiblings();
-            directLineage = person.isDirectLineage();
-            innerParentsCount = person.getInnerParentsCount();
-            this.ancestorLine = new ArrayList<>(person.getAncestorLine());
-            this.ancestorGenerations = person.getAncestorGenerations();
-            this.fatherGenerations = person.getFatherGenerations();
-            this.motherGenerations = person.getMotherGenerations();
-            Collections.copy(person.getYoungerSiblings(), youngerSiblings);
-            Collections.copy(person.getOlderSiblings(), olderSiblings);
-            maxYoungerSiblingsSpouse = person.getMaxYoungerSiblingsSpouse();
-            maxOlderSiblingsSpouse = person.getMaxOlderSiblingsSpouse();
-            if (person.getSpouseCouple() != null) {
-                this.spouses = new LinkedList<>(person.getSpouseCouples());
-            } else {
-                this.spouses = new LinkedList<>();
-            }
-        } else {
-            this.directLineage = false;
-            this.id = "";
-            firstName = "";
-            surname = "";
-            birthDatePlace = new DatePlace();
-            deathDatePlace = new DatePlace();
-            occupation = "";
-            residenceList = new ArrayList<>();
-            initEmpty();
-        }
-    }
-
-    public AncestorPerson(Person person) {
-        this.id = person.getId();
-        this.firstName = person.getFirstName();
-        if (person.getMarriageName() != null && person.getSurname() == null) {
-            this.surname = person.getMarriageName();
-        } else {
-            this.surname = person.getSurname();
-        }
-        this.sex = person.getSex();
-        this.living = person.isLiving();
-        this.birthDatePlace = person.getBirthDatePlace();
-        this.deathDatePlace = person.getDeathDatePlace();
-        this.occupation = person.getOccupation();
-        this.residenceList = new ArrayList<>(person.getResidenceList());
-
+    public AncestorPerson(String gedcomId, String firstName, String surname, Sex sex, boolean living,
+                          DatePlace birthDatePlace, DatePlace deathDatePlace, String occupation,
+                          List<Residence> residences) {
+        this.gedcomId = gedcomId;
+        this.firstName = firstName;
+        this.surname = surname;
+        this.sex = sex;
+        this.living = living;
+        this.birthDatePlace = birthDatePlace;
+        this.deathDatePlace = deathDatePlace;
+        this.occupation = occupation;
+        this.residences = residences;
+        this.spouses = new ArrayList<>();
+        this.youngerSiblings = new LinkedList<>();
+        this.olderSiblings = new LinkedList<>();
         initEmpty();
-        fillAncestorLine();
     }
 
     private void initEmpty() {
-        living = false;
         directLineage = true;
-
+        parents = new AncestorCouple();
         ancestorGenerations = 0;
         fatherGenerations = 0;
         motherGenerations = 0;
         lastParentsCount = 0;
         innerParentsCount = 0;
-        ancestorLine = new ArrayList<>();
-        spouses = new LinkedList<>();
 
-        initSiblings();
-    }
-
-    private void initSiblings() {
-        youngerSiblings = new LinkedList<>();
-        olderSiblings = new LinkedList<>();
         maxYoungerSiblingsSpouse = 0;
         maxOlderSiblingsSpouse = 0;
         maxOlderSiblings = 0;
         maxYoungerSiblings = 0;
     }
 
-    private void fillAncestorLine() {
-        ancestorLine.clear();
-        if (sex.equals(Sex.MALE)) {
-            ancestorLine.add(CODE_MALE);
-        } else {
-            ancestorLine.add(CODE_FEMALE);
-        }
-    }
 
     public void setFather(AncestorPerson father) {
         parents.setHusband(father);
@@ -207,6 +138,10 @@ public class AncestorPerson implements Personalize {
         }
     }
 
+    public AncestorCouple getParents() {
+        return parents;
+    }
+
     public void setParents(AncestorCouple parents) {
         this.parents = parents;
         if (parents != null && !parents.isEmpty()) {
@@ -219,10 +154,6 @@ public class AncestorPerson implements Personalize {
                 ancestorGenerations = getFather().getAncestorGenerations() + 1;
             }
         }
-    }
-
-    public AncestorCouple getParents() {
-        return parents;
     }
 
     public AncestorPerson getFather() {
@@ -285,18 +216,6 @@ public class AncestorPerson implements Personalize {
 
     public void setInnerParentsCount(double parentsCount) {
         this.innerParentsCount = parentsCount;
-    }
-
-    public ArrayList<Integer> getAncestorLine() {
-        return ancestorLine;
-    }
-
-    public void addChildrenCode(ArrayList<Integer> childrenCodes) {
-        ancestorLine.addAll(0, childrenCodes);
-    }
-
-    public void addAncestorCode(int code) {
-        ancestorLine.add(code);
     }
 
     public LinkedList<AncestorPerson> getYoungerSiblings() {
@@ -397,6 +316,10 @@ public class AncestorPerson implements Personalize {
         }
     }
 
+    public void setSpouses(List<AncestorCouple> spouses) {
+        this.spouses = spouses;
+    }
+
     public int getSpouseCount() {
         int count = 0;
         for (AncestorCouple spouse : spouses) {
@@ -427,10 +350,6 @@ public class AncestorPerson implements Personalize {
         return spouses;
     }
 
-    public void setSpouseCouples(List<AncestorCouple> spouses) {
-        this.spouses = new ArrayList<>(spouses);
-    }
-
     public int getChildrenCount(int wifeNumber) {
         int count = 0;
         if (getSpouseCouple(wifeNumber) != null) {
@@ -447,8 +366,8 @@ public class AncestorPerson implements Personalize {
         return count;
     }
 
-    public String getId() {
-        return id;
+    public String getGedcomId() {
+        return gedcomId;
     }
 
     @Override
@@ -480,16 +399,8 @@ public class AncestorPerson implements Personalize {
         return birthDatePlace;
     }
 
-    public void setBirthDatePlace(DatePlace birthDatePlace) {
-        this.birthDatePlace = birthDatePlace;
-    }
-
     public DatePlace getDeathDatePlace() {
         return deathDatePlace;
-    }
-
-    public void setDeathDatePlace(DatePlace deathDatePlace) {
-        this.deathDatePlace = deathDatePlace;
     }
 
     public String getOccupation() {
@@ -500,8 +411,8 @@ public class AncestorPerson implements Personalize {
         return living;
     }
 
-    public ArrayList<Residence> getResidenceList() {
-        return residenceList;
+    public List<Residence> getResidences() {
+        return residences;
     }
 
     @Override

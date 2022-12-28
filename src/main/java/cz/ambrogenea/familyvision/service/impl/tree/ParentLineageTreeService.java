@@ -11,7 +11,6 @@ import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.LineageService;
 import cz.ambrogenea.familyvision.service.TreeService;
 import cz.ambrogenea.familyvision.service.impl.HorizontalConfigurationService;
-import cz.ambrogenea.familyvision.service.impl.LineageServiceImpl;
 
 public class ParentLineageTreeService implements TreeService {
 
