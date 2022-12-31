@@ -1,17 +1,18 @@
 package cz.ambrogenea.familyvision.service.impl;
 
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.enums.LabelType;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
+import cz.ambrogenea.familyvision.service.VisualConfigurationService;
 
 public class VerticalConfigurationService implements ConfigurationExtensionService {
 
-    private final ConfigurationService configService;
+    private final VisualConfigurationService configService;
 
-    public VerticalConfigurationService(ConfigurationService configurationService) {
-        this.configService = configurationService;
+    public VerticalConfigurationService() {
+        this.configService = Config.visual();
     }
 
     @Override

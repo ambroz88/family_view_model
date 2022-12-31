@@ -1,7 +1,8 @@
 package cz.ambrogenea.familyvision.dto.tree;
 
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.constant.Spaces;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
+import cz.ambrogenea.familyvision.service.VisualConfigurationService;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
@@ -61,7 +62,8 @@ public class PageMaxCoordinates {
         }
     }
 
-    public PageSetup getPageSetup(ConfigurationService config) {
+    public PageSetup getPageSetup() {
+        VisualConfigurationService config = Config.visual();
         if (pageSetup == null) {
             int horizontalBorder = config.getAdultImageWidth() / 2 + Spaces.SIBLINGS_GAP;
             int verticalBorder = config.getAdultImageHeightAlternative() / 2 + Spaces.SIBLINGS_GAP;

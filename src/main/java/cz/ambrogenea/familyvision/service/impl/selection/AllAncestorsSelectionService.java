@@ -1,33 +1,22 @@
 package cz.ambrogenea.familyvision.service.impl.selection;
 
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.domain.Person;
 import cz.ambrogenea.familyvision.dto.AncestorCouple;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.MarriageDto;
 import cz.ambrogenea.familyvision.mapper.dto.AncestorCoupleMapper;
 import cz.ambrogenea.familyvision.mapper.dto.AncestorPersonMapper;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.SelectionService;
-import cz.ambrogenea.familyvision.service.Services;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {
 
-    private final ConfigurationService configurationService;
-
-    public AllAncestorsSelectionService(ConfigurationService configuration) {
-        super(configuration);
-        configurationService = configuration;
-    }
-
     @Override
-    public AncestorPerson select(String personId, int generationLimit) {
-        setGenerationLimit(generationLimit);
-
+    public AncestorPerson select(String personId) {
         Person person = Services.person().getPersonByGedcomId(personId);
-        AncestorPerson ancestorPerson = fromPersonWithParents(person, 1);
-        if (configurationService.isShowSpouses() && person != null) {
-            ancestorPerson.setSpouses(addSpouseWithChildren(person.getSpouseId()));
-        }
+        AncestorPerson ancestorPerson = fromRootPersonWithAllDescendents(person);
+        addAllParents(ancestorPerson, person.getParentId(), 1);
         return ancestorPerson;
     }
 
@@ -37,7 +26,7 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
         if (generation < 2) {
             addSiblings(newPerson, person.getParentId());
         }
-        if (generation + 1 <= getGenerationLimit()) {
+        if (generation <= Config.treeShape().getAncestorGenerations()) {
             addAllParents(newPerson, person.getParentId(), generation + 1);
         }
         return newPerson;

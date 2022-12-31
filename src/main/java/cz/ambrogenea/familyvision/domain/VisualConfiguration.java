@@ -1,5 +1,6 @@
-package cz.ambrogenea.familyvision.configuration;
+package cz.ambrogenea.familyvision.domain;
 
+import cz.ambrogenea.familyvision.enums.Background;
 import cz.ambrogenea.familyvision.enums.Diagram;
 import cz.ambrogenea.familyvision.enums.LabelShape;
 
@@ -8,64 +9,52 @@ import java.util.Locale;
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class PersonConfiguration {
-
-    private Locale locale;
-
+public class VisualConfiguration {
     private int adultImageWidth;
     private int adultImageHeight;
     private int adultFontSize;
-
     private int siblingImageWidth;
     private int siblingImageHeight;
     private int siblingFontSize;
 
-    private int verticalShift;
     private Diagram diagram;
-    private LabelShape labelShape;
-    private String manImagePath;
-    private String womanImagePath;
-
-    private boolean showMarriage;
+    private LabelShape marriageLabelShape;
+    private Background background;
+    private int verticalShift;
 
     private boolean showAge;
+    private boolean showOccupation;
+    private boolean showTitle;
     private boolean showPlaces;
     private boolean shortenPlaces;
-    private boolean showOccupation;
-    private boolean showResidence;
-    private boolean showTemple;
+    private boolean showOrdinances;
 
-    public PersonConfiguration() {
+    private Locale locale;
+    private boolean resetMode;
+
+
+    public VisualConfiguration() {
         adultImageWidth = 190;
         adultImageHeight = 130;
+        adultFontSize = 12;
         siblingImageWidth = 170;
         siblingImageHeight = 120;
-        adultFontSize = 12;
         siblingFontSize = 11;
-        verticalShift = 0;
 
         diagram = Diagram.SCROLL;
-        labelShape = LabelShape.OVAL;
-        manImagePath = "diagrams/" + diagram + "_man.png";
-        womanImagePath = "diagrams/" + diagram + "_woman.png";
+        marriageLabelShape = LabelShape.OVAL;
+        background = Background.TRANSPARENT;
+        verticalShift = 0;
 
         showAge = true;
-        showPlaces = true;
-        shortenPlaces = false;
         showOccupation = true;
-        showMarriage = true;
-        showResidence = false;
-        showTemple = false;
+        showTitle = false;
+        showPlaces = true;
+        shortenPlaces = true;
+        showOrdinances = false;
 
-        locale = new Locale("cs");
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
+        locale = new Locale("cs", "CZ");
+        resetMode = false;
     }
 
     public int getAdultImageWidth() {
@@ -84,12 +73,12 @@ public class PersonConfiguration {
         this.adultImageHeight = adultImageHeight;
     }
 
-    public int getVerticalShift() {
-        return verticalShift;
+    public int getAdultFontSize() {
+        return adultFontSize;
     }
 
-    public void setVerticalShift(int verticalShift) {
-        this.verticalShift = verticalShift;
+    public void setAdultFontSize(int adultFontSize) {
+        this.adultFontSize = adultFontSize;
     }
 
     public int getSiblingImageWidth() {
@@ -108,14 +97,6 @@ public class PersonConfiguration {
         this.siblingImageHeight = siblingImageHeight;
     }
 
-    public int getAdultFontSize() {
-        return adultFontSize;
-    }
-
-    public void setAdultFontSize(int adultFontSize) {
-        this.adultFontSize = adultFontSize;
-    }
-
     public int getSiblingFontSize() {
         return siblingFontSize;
     }
@@ -132,36 +113,28 @@ public class PersonConfiguration {
         this.diagram = diagram;
     }
 
-    public LabelShape getLabelShape() {
-        return labelShape;
+    public LabelShape getMarriageLabelShape() {
+        return marriageLabelShape;
     }
 
-    public void setLabelShape(LabelShape labelShape) {
-        this.labelShape = labelShape;
+    public void setMarriageLabelShape(LabelShape marriageLabelShape) {
+        this.marriageLabelShape = marriageLabelShape;
     }
 
-    public String getManImagePath() {
-        return manImagePath;
+    public Background getBackground() {
+        return background;
     }
 
-    public void setManImagePath(String manImagePath) {
-        this.manImagePath = manImagePath;
+    public void setBackground(Background background) {
+        this.background = background;
     }
 
-    public String getWomanImagePath() {
-        return womanImagePath;
+    public int getVerticalShift() {
+        return verticalShift;
     }
 
-    public void setWomanImagePath(String womanImagePath) {
-        this.womanImagePath = womanImagePath;
-    }
-
-    public boolean isShowMarriage() {
-        return showMarriage;
-    }
-
-    public void setShowMarriage(boolean showMarriage) {
-        this.showMarriage = showMarriage;
+    public void setVerticalShift(int verticalShift) {
+        this.verticalShift = verticalShift;
     }
 
     public boolean isShowAge() {
@@ -170,6 +143,22 @@ public class PersonConfiguration {
 
     public void setShowAge(boolean showAge) {
         this.showAge = showAge;
+    }
+
+    public boolean isShowOccupation() {
+        return showOccupation;
+    }
+
+    public void setShowOccupation(boolean showOccupation) {
+        this.showOccupation = showOccupation;
+    }
+
+    public boolean isShowTitle() {
+        return showTitle;
+    }
+
+    public void setShowTitle(boolean showTitle) {
+        this.showTitle = showTitle;
     }
 
     public boolean isShowPlaces() {
@@ -188,28 +177,27 @@ public class PersonConfiguration {
         this.shortenPlaces = shortenPlaces;
     }
 
-    public boolean isShowOccupation() {
-        return showOccupation;
+    public boolean isShowOrdinances() {
+        return showOrdinances;
     }
 
-    public void setShowOccupation(boolean showOccupation) {
-        this.showOccupation = showOccupation;
+    public void setShowOrdinances(boolean showOrdinances) {
+        this.showOrdinances = showOrdinances;
     }
 
-    public boolean isShowResidence() {
-        return showResidence;
+    public Locale getLocale() {
+        return locale;
     }
 
-    public void setShowResidence(boolean showResidence) {
-        this.showResidence = showResidence;
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
-    public boolean isShowTemple() {
-        return showTemple;
+    public boolean isResetMode() {
+        return resetMode;
     }
 
-    public void setShowTemple(boolean showTemple) {
-        this.showTemple = showTemple;
+    public void setResetMode(boolean resetMode) {
+        this.resetMode = resetMode;
     }
-
 }

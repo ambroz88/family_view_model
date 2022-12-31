@@ -1,22 +1,21 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.enums.Relation;
-import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
-import cz.ambrogenea.familyvision.service.LineageService;
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.ParentsDto;
-import cz.ambrogenea.familyvision.service.impl.HorizontalConfigurationService;
-import cz.ambrogenea.familyvision.service.impl.VerticalConfigurationService;
+import cz.ambrogenea.familyvision.dto.tree.Position;
+import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.enums.CoupleType;
+import cz.ambrogenea.familyvision.enums.Relation;
+import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
+import cz.ambrogenea.familyvision.service.LineageService;
 
 import java.util.Objects;
 
 public class LineageServiceImpl extends CommonAncestorServiceImpl implements LineageService {
 
-    public LineageServiceImpl(AncestorPerson rootPerson, String treeName, ConfigurationService configurationService) {
-        super(rootPerson, treeName, configurationService);
+    public LineageServiceImpl(AncestorPerson rootPerson, String treeName) {
+        super(rootPerson, treeName);
     }
 
     @Override
@@ -60,10 +59,10 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
     }
 
     private ParentsDto generateSwitchedParents(Position heraldryPosition, AncestorPerson child) {
-        if (configService.isShowCouplesVertical()) {
-            return generateSwitchedParents(heraldryPosition, child, new VerticalConfigurationService(configService));
+        if (Config.treeShape().getCoupleType() == CoupleType.VERTICAL) {
+            return generateSwitchedParents(heraldryPosition, child, Config.vertical());
         } else {
-            return generateSwitchedParents(heraldryPosition, child, new HorizontalConfigurationService(configService));
+            return generateSwitchedParents(heraldryPosition, child, Config.horizontal());
         }
     }
 

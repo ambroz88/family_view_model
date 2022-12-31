@@ -1,7 +1,6 @@
 package cz.ambrogenea.familyvision.dto.tree;
 
 import cz.ambrogenea.familyvision.domain.Residence;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.utils.Tools;
 
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ public record TreeModel(
                 new ArrayList<>(),
                 new PageMaxCoordinates()
         );
-//        persons.add(rootPerson);
     }
 
     public void addPerson(PersonRecord person) {
@@ -52,8 +50,8 @@ public record TreeModel(
         }
     }
 
-    public PageSetup getPageSetup(ConfigurationService config) {
-        return pageMaxCoordinates.getPageSetup(config);
+    public PageSetup getPageSetup() {
+        return pageMaxCoordinates.getPageSetup();
     }
 
 }

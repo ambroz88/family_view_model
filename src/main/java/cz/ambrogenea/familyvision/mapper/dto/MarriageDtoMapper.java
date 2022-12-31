@@ -2,7 +2,7 @@ package cz.ambrogenea.familyvision.mapper.dto;
 
 import cz.ambrogenea.familyvision.domain.Marriage;
 import cz.ambrogenea.familyvision.dto.MarriageDto;
-import cz.ambrogenea.familyvision.service.Services;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class MarriageDtoMapper {
 

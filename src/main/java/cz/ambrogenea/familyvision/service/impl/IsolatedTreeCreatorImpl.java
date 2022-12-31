@@ -2,7 +2,6 @@ package cz.ambrogenea.familyvision.service.impl;
 
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.IsolatedTreeCreator;
 import cz.ambrogenea.familyvision.service.SelectionService;
 import cz.ambrogenea.familyvision.service.TreeService;
@@ -18,39 +17,39 @@ import cz.ambrogenea.familyvision.service.impl.tree.ParentLineageTreeService;
 public class IsolatedTreeCreatorImpl implements IsolatedTreeCreator {
 
     @Override
-    public TreeModel generateAllAncestorCreator(ConfigurationService configurationService, String personId) {
-        SelectionService selectionService = new AllAncestorsSelectionService(configurationService);
-        AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
+    public TreeModel generateAllAncestorCreator(String personId) {
+        SelectionService selectionService = new AllAncestorsSelectionService();
+        AncestorPerson rootPerson = selectionService.select(personId);
 
         TreeService treeService = new AllAncestorTreeService();
-        return treeService.generateTreeModel(rootPerson, configurationService);
+        return treeService.generateTreeModel(rootPerson);
     }
 
     @Override
-    public TreeModel generateFatherLineageCreator(ConfigurationService configurationService, String personId) {
-        SelectionService selectionService = new FathersSelectionService(configurationService);
-        AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
+    public TreeModel generateFatherLineageCreator(String personId) {
+        SelectionService selectionService = new FathersSelectionService();
+        AncestorPerson rootPerson = selectionService.select(personId);
 
         TreeService treeService = new FatherLineageTreeService();
-        return treeService.generateTreeModel(rootPerson, configurationService);
+        return treeService.generateTreeModel(rootPerson);
     }
 
     @Override
-    public TreeModel generateMotherLineageCreator(ConfigurationService configurationService, String personId) {
-        SelectionService selectionService = new MothersSelectionService(configurationService);
-        AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
+    public TreeModel generateMotherLineageCreator(String personId) {
+        SelectionService selectionService = new MothersSelectionService();
+        AncestorPerson rootPerson = selectionService.select(personId);
 
         TreeService treeService = new MotherLineageTreeService();
-        return treeService.generateTreeModel(rootPerson, configurationService);
+        return treeService.generateTreeModel(rootPerson);
     }
 
     @Override
-    public TreeModel generateParentLineageCreator(ConfigurationService configurationService, String personId) {
-        SelectionService selectionService = new ParentsSelectionService(configurationService);
-        AncestorPerson rootPerson = selectionService.select(personId, configurationService.getGenerationCount());
+    public TreeModel generateParentLineageCreator(String personId) {
+        SelectionService selectionService = new ParentsSelectionService();
+        AncestorPerson rootPerson = selectionService.select(personId);
 
         TreeService treeService = new ParentLineageTreeService();
-        return treeService.generateTreeModel(rootPerson, configurationService);
+        return treeService.generateTreeModel(rootPerson);
     }
 
 }

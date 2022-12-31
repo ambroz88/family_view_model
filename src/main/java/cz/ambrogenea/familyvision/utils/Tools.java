@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.utils;
 
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.domain.Personalize;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.enums.Sex;
+import cz.ambrogenea.familyvision.service.util.Config;
 
 import java.net.URL;
 import java.util.Properties;
@@ -39,13 +39,13 @@ public final class Tools {
         return placeName;
     }
 
-    public static int calculateGenerations(AncestorPerson person, ConfigurationService config) {
+    public static int calculateGenerations(AncestorPerson person) {
         int generationCount = 1;
 
         if (person.hasMinOneParent()) {
             generationCount++;
         }
-        if (config.isShowChildren() && person.getAllChildrenCount() > 0) {
+        if (Config.treeShape().getDescendentGenerations() > 0 && person.getAllChildrenCount() > 0) {
             generationCount++;
         }
         return generationCount;

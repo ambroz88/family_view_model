@@ -8,7 +8,7 @@ import cz.ambrogenea.familyvision.mapper.dto.MarriageDtoMapper;
 import cz.ambrogenea.familyvision.model.command.MarriageCreateCommand;
 import cz.ambrogenea.familyvision.repository.MarriageRepository;
 import cz.ambrogenea.familyvision.service.MarriageService;
-import cz.ambrogenea.familyvision.service.Services;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class MarriageServiceImpl implements MarriageService {
 

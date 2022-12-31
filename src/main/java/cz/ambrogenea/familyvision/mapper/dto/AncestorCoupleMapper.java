@@ -5,7 +5,7 @@ import cz.ambrogenea.familyvision.domain.Person;
 import cz.ambrogenea.familyvision.dto.AncestorCouple;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.MarriageDto;
-import cz.ambrogenea.familyvision.service.Services;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 import java.util.ArrayList;
 

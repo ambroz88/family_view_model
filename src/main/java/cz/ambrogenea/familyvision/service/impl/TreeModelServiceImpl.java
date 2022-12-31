@@ -1,26 +1,27 @@
 package cz.ambrogenea.familyvision.service.impl;
 
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.Residence;
+import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.tree.*;
+import cz.ambrogenea.familyvision.enums.LabelType;
 import cz.ambrogenea.familyvision.enums.Relation;
 import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.mapper.PersonRecordMapper;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.TreeModelService;
+import cz.ambrogenea.familyvision.service.VisualConfigurationService;
 import cz.ambrogenea.familyvision.utils.Tools;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.enums.LabelType;
 
 public class TreeModelServiceImpl implements TreeModelService {
 
-    private final ConfigurationService configuration;
+    private final VisualConfigurationService configuration;
     private final TreeModel treeModel;
 
-    public TreeModelServiceImpl(AncestorPerson rootPerson, String treeName, ConfigurationService configuration) {
-        this.configuration = configuration;
+    public TreeModelServiceImpl(AncestorPerson rootPerson, String treeName) {
+        this.configuration = Config.visual();
         final PersonRecord personRecord = PersonRecordMapper.map(rootPerson, new Position());
-        if (configuration.isShowResidence()) {
+        if (Config.treeShape().isShowResidence()) {
             addResidence(personRecord);
         }
         this.treeModel = new TreeModel(personRecord, treeName);
@@ -31,7 +32,7 @@ public class TreeModelServiceImpl implements TreeModelService {
         if (person != null) {
             final PersonRecord personRecord = PersonRecordMapper.map(person, position);
             treeModel.addPerson(personRecord);
-            if (configuration.isShowResidence()) {
+            if (Config.treeShape().isShowResidence()) {
                 addResidence(personRecord);
             }
         }

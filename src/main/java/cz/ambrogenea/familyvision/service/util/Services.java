@@ -1,5 +1,7 @@
-package cz.ambrogenea.familyvision.service;
+package cz.ambrogenea.familyvision.service.util;
 
+import cz.ambrogenea.familyvision.service.MarriageService;
+import cz.ambrogenea.familyvision.service.PersonService;
 import cz.ambrogenea.familyvision.service.impl.MarriageServiceImpl;
 import cz.ambrogenea.familyvision.service.impl.PersonServiceImpl;
 

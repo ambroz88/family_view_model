@@ -1,7 +1,6 @@
 package cz.ambrogenea.familyvision.enums;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public enum Diagram {
@@ -35,7 +34,17 @@ public enum Diagram {
             case DOUBLE_WAVE -> DOUBLE_WAVE_STRING;
             case OVAL -> OVAL_STRING;
         };
+    }
 
+    public static String[] getStrings() {
+        return new String[]{
+                SCROLL.name(),
+                HERALDRY.name(),
+                STICKY_NOTES.name(),
+                WAVE.name(),
+                DOUBLE_WAVE.name(),
+                OVAL.name(),
+        };
     }
 
 }

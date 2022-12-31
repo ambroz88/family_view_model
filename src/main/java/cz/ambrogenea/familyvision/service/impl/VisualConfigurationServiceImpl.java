@@ -1,28 +1,24 @@
 package cz.ambrogenea.familyvision.service.impl;
 
-import cz.ambrogenea.familyvision.configuration.Configuration;
+import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.constant.Dimensions;
 import cz.ambrogenea.familyvision.constant.Spaces;
+import cz.ambrogenea.familyvision.enums.Background;
 import cz.ambrogenea.familyvision.enums.Diagram;
 import cz.ambrogenea.familyvision.enums.LabelShape;
-import cz.ambrogenea.familyvision.enums.PropertyName;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
+import cz.ambrogenea.familyvision.service.VisualConfigurationService;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Locale;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class DefaultConfigurationService implements ConfigurationService {
+public class VisualConfigurationServiceImpl implements VisualConfigurationService {
 
-    private final Configuration configuration;
-    private final PropertyChangeSupport prop;
+    private final VisualConfiguration configuration;
 
-    public DefaultConfigurationService(Configuration configuration) {
+    public VisualConfigurationServiceImpl(VisualConfiguration configuration) {
         this.configuration = configuration;
-        prop = new PropertyChangeSupport(this);
     }
 
     @Override
@@ -60,7 +56,6 @@ public class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getAdultImageWidth();
         if (Math.abs(oldValue - adultImageWidth) > 4) {
             configuration.setAdultImageWidth(adultImageWidth);
-            firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageWidth);
         }
     }
 
@@ -83,7 +78,6 @@ public class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getAdultImageHeight();
         if (Math.abs(oldValue - adultImageHeight) > 4) {
             configuration.setAdultImageHeight(adultImageHeight);
-            firePropertyChange(PropertyName.LINEAGE_SIZE_CHANGE, oldValue, adultImageHeight);
         }
     }
 
@@ -97,7 +91,6 @@ public class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getSiblingImageWidth();
         if (Math.abs(oldValue - siblingImageWidth) > 4) {
             configuration.setSiblingImageWidth(siblingImageWidth);
-            firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageWidth);
         }
     }
 
@@ -120,7 +113,6 @@ public class DefaultConfigurationService implements ConfigurationService {
         int oldValue = getSiblingImageHeight();
         if (Math.abs(oldValue - siblingImageHeight) > 4) {
             configuration.setSiblingImageHeight(siblingImageHeight);
-            firePropertyChange(PropertyName.SIBLING_SIZE_CHANGE, oldValue, siblingImageHeight);
         }
     }
 
@@ -131,9 +123,7 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setAdultFontSize(int adultFontSize) {
-        int oldValue = getAdultFontSize();
         configuration.setAdultFontSize(adultFontSize);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultFontSize);
     }
 
     @Override
@@ -143,9 +133,7 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setSiblingFontSize(int siblingFontSize) {
-        int oldValue = getSiblingFontSize();
         configuration.setSiblingFontSize(siblingFontSize);
-        firePropertyChange(PropertyName.SIBLING_CONFIG_CHANGE, oldValue, siblingFontSize);
     }
 
     @Override
@@ -155,7 +143,6 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setDiagram(Diagram adultDiagram) {
-        Diagram oldValue = getDiagram();
         configuration.setDiagram(adultDiagram);
         int imageWidth;
         int imageHeight;
@@ -176,38 +163,26 @@ public class DefaultConfigurationService implements ConfigurationService {
         setAdultImageHeight(imageHeight);
         setSiblingImageWidth(imageWidth);
         setSiblingImageHeight(imageHeight);
-
-        setManImagePath("diagrams/" + adultDiagram + "_man.png");
-        setWomanImagePath("diagrams/" + adultDiagram + "_woman.png");
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultDiagram);
     }
 
     @Override
-    public LabelShape getLabelShape() {
-        return configuration.getLabelShape();
+    public LabelShape getMarriageLabelShape() {
+        return configuration.getMarriageLabelShape();
     }
 
     @Override
-    public void setLabelShape(LabelShape labelShape) {
-        configuration.setLabelShape(labelShape);
+    public void setMarriageLabelShape(LabelShape labelShape) {
+        configuration.setMarriageLabelShape(labelShape);
     }
 
     @Override
-    public String getManImagePath() {
-        return configuration.getManImagePath();
-    }
-
-    private void setManImagePath(String adultManImagePath) {
-        configuration.setManImagePath(adultManImagePath);
+    public Background getBackground() {
+        return configuration.getBackground();
     }
 
     @Override
-    public String getWomanImagePath() {
-        return configuration.getWomanImagePath();
-    }
-
-    private void setWomanImagePath(String adultWomanImagePath) {
-        configuration.setWomanImagePath(adultWomanImagePath);
+    public void setBackground(Background background) {
+        configuration.setBackground(background);
     }
 
     @Override
@@ -217,69 +192,7 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setVerticalShift(int adultVerticalShift) {
-        int oldValue = getVerticalShift();
         configuration.setVerticalShift(adultVerticalShift);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, adultVerticalShift);
-    }
-
-    @Override
-    public boolean isShowSiblings() {
-        return configuration.isShowSiblings();
-    }
-
-    @Override
-    public void setShowSiblings(boolean showSiblings) {
-        configuration.setShowSiblings(showSiblings);
-    }
-
-    @Override
-    public boolean isShowSpouses() {
-        return configuration.isShowSpouses();
-    }
-
-    @Override
-    public void setShowSpouses(boolean showSpouses) {
-        configuration.setShowSpouses(showSpouses);
-    }
-
-    @Override
-    public boolean isShowSiblingSpouses() {
-        return configuration.isShowSiblingSpouses();
-    }
-
-    @Override
-    public void setShowSiblingSpouses(boolean showSiblingSpouses) {
-        configuration.setShowSiblingSpouses(showSiblingSpouses);
-    }
-
-    @Override
-    public int getGenerationCount() {
-        return configuration.getGenerationCount();
-    }
-
-    @Override
-    public void setGenerationCount(int generationCount) {
-        configuration.setGenerationCount(generationCount);
-    }
-
-    @Override
-    public boolean isShowChildren() {
-        return configuration.isShowChildren();
-    }
-
-    @Override
-    public void setShowChildren(boolean showChildren) {
-        configuration.setShowChildren(showChildren);
-    }
-
-    @Override
-    public boolean isShowParentLineage() {
-        return configuration.isShowParentLineage();
-    }
-
-    @Override
-    public void setShowParentLineage(boolean showParentLineage) {
-        configuration.setShowParentLineage(showParentLineage);
     }
 
     @Override
@@ -289,9 +202,7 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setShowAge(boolean showAge) {
-        boolean oldValue = isShowAge();
         configuration.setShowAge(showAge);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showAge);
     }
 
     @Override
@@ -301,9 +212,7 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setShowPlaces(boolean showPlaces) {
-        boolean oldValue = isShowPlaces();
         configuration.setShowPlaces(showPlaces);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showPlaces);
     }
 
     @Override
@@ -313,41 +222,17 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setShortenPlaces(boolean shortenPlaces) {
-        boolean oldValue = isShortenPlaces();
         configuration.setShortenPlaces(shortenPlaces);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, shortenPlaces);
     }
 
     @Override
-    public boolean isShowTemple() {
-        return configuration.isShowTemple();
+    public boolean isShowOrdinances() {
+        return configuration.isShowOrdinances();
     }
 
     @Override
-    public void setShowTemple(boolean showTemple) {
-        boolean oldValue = isShowTemple();
-        configuration.setShowTemple(showTemple);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showTemple);
-    }
-
-    @Override
-    public boolean isShowMarriage() {
-        return configuration.isShowMarriage();
-    }
-
-    @Override
-    public void setShowMarriage(boolean showMarriage) {
-        configuration.setShowMarriage(showMarriage);
-    }
-
-    @Override
-    public boolean isShowHeraldry() {
-        return configuration.isShowHeraldry();
-    }
-
-    @Override
-    public void setShowHeraldry(boolean showHeraldry) {
-        configuration.setShowHeraldry(showHeraldry);
+    public void setShowOrdinances(boolean showOrdinances) {
+        configuration.setShowOrdinances(showOrdinances);
     }
 
     @Override
@@ -357,29 +242,17 @@ public class DefaultConfigurationService implements ConfigurationService {
 
     @Override
     public void setShowOccupation(boolean showOccupation) {
-        boolean oldValue = isShowOccupation();
         configuration.setShowOccupation(showOccupation);
-        firePropertyChange(PropertyName.LINEAGE_CONFIG_CHANGE, oldValue, showOccupation);
     }
 
     @Override
-    public boolean isShowResidence() {
-        return configuration.isShowResidence();
+    public boolean isShowTitle() {
+        return configuration.isShowTitle();
     }
 
     @Override
-    public void setShowResidence(boolean showResidence) {
-        configuration.setShowResidence(showResidence);
-    }
-
-    @Override
-    public boolean isShowCouplesVertical() {
-        return configuration.isShowCouplesVertical();
-    }
-
-    @Override
-    public void setShowCouplesVertical(boolean showCouplesVertical) {
-        configuration.setShowCouplesVertical(showCouplesVertical);
+    public void setShowTitle(boolean showTitle) {
+        configuration.setShowTitle(showTitle);
     }
 
     @Override
@@ -392,22 +265,4 @@ public class DefaultConfigurationService implements ConfigurationService {
         configuration.setResetMode(resetMode);
     }
 
-    @Override
-    public void firePropertyChange(PropertyName propName, Object oldValue, Object newValue) {
-        prop.firePropertyChange(propName.name(), oldValue, newValue);
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        prop.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        prop.removePropertyChangeListener(listener);
-    }
-
-    public Configuration getConfiguration() {
-        return configuration;
-    }
 }

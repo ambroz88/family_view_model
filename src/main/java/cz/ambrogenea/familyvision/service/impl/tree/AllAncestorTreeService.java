@@ -1,5 +1,6 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.ParentsDto;
 import cz.ambrogenea.familyvision.dto.tree.Position;
@@ -7,21 +8,19 @@ import cz.ambrogenea.familyvision.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.enums.Relation;
 import cz.ambrogenea.familyvision.service.CommonAncestorService;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
-import cz.ambrogenea.familyvision.service.ConfigurationService;
 import cz.ambrogenea.familyvision.service.TreeService;
-import cz.ambrogenea.familyvision.service.impl.HorizontalConfigurationService;
-import cz.ambrogenea.familyvision.service.impl.VerticalConfigurationService;
+import cz.ambrogenea.familyvision.service.VisualConfigurationService;
 
 public class AllAncestorTreeService implements TreeService {
 
     private CommonAncestorService ancestorService;
-    private ConfigurationService configService;
+    private VisualConfigurationService configService;
 
     @Override
-    public TreeModel generateTreeModel(AncestorPerson rootPerson, ConfigurationService configuration) {
+    public TreeModel generateTreeModel(AncestorPerson rootPerson) {
         final String treeName = "Vývod z předků ";
-        configService = configuration;
-        ancestorService = new CommonAncestorServiceImpl(rootPerson, treeName, configuration);
+        configService = Config.visual();
+        ancestorService = new CommonAncestorServiceImpl(rootPerson, treeName);
         Position heraldryPosition = ancestorService.addSiblingsAndDescendents(rootPerson);
 
         addAllParents(heraldryPosition, rootPerson);
@@ -35,8 +34,8 @@ public class AllAncestorTreeService implements TreeService {
         } else {
             parentsDto = ancestorService.generateHorizontalParents(heraldryPosition, child);
         }
-        ConfigurationExtensionService horizontalConfig = new HorizontalConfigurationService(configService);
-        ConfigurationExtensionService verticalConfig = new VerticalConfigurationService(configService);
+        ConfigurationExtensionService horizontalConfig = Config.horizontal();
+        ConfigurationExtensionService verticalConfig = Config.vertical();
 
         if (child.getMother() != null) {
             AncestorPerson mother = child.getMother();
