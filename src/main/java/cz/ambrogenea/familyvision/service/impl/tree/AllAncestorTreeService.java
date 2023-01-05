@@ -53,9 +53,14 @@ public class AllAncestorTreeService implements TreeService {
                     parentsDto.nextHeraldryY()
             );
             if (mother.hasMinOneParent()) {
-//                mother.moveOlderSiblingsToYounger();
-//                addSiblings(parentsDto.husbandPosition(), mother);
-                ancestorService.addLine(motherHeraldryPosition, parentsDto.wifePosition(), Relation.DIRECT);
+                mother.moveOlderSiblingsToYounger();
+                ancestorService.addSiblings(new Position(motherHeraldryPosition.x() - Config.horizontal().getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
+                if (mother.getYoungerSiblings().isEmpty()) {
+                    ancestorService.addLine(motherHeraldryPosition, parentsDto.wifePosition(), Relation.DIRECT);
+                } else {
+                    ancestorService.addLine(parentsDto.wifePosition(), motherHeraldryPosition, Relation.DIRECT);
+                }
+
             }
             addAllParents(motherHeraldryPosition, mother);
         }
@@ -78,8 +83,12 @@ public class AllAncestorTreeService implements TreeService {
             );
             if (father.hasMinOneParent()) {
                 father.moveYoungerSiblingsToOlder();
-                ancestorService.addSiblings(parentsDto.husbandPosition(), father);
-                ancestorService.addLine(fatherHeraldryPosition, parentsDto.husbandPosition(), Relation.DIRECT);
+                ancestorService.addSiblings(new Position(fatherHeraldryPosition.x() + configService.getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
+                if (father.getOlderSiblings().isEmpty()) {
+                    ancestorService.addLine(fatherHeraldryPosition, parentsDto.husbandPosition(), Relation.DIRECT);
+                } else {
+                    ancestorService.addLine(parentsDto.husbandPosition(), fatherHeraldryPosition, Relation.DIRECT);
+                }
             }
             addAllParents(fatherHeraldryPosition, father);
         }

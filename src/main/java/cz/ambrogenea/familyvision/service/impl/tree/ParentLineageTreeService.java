@@ -20,7 +20,12 @@ public class ParentLineageTreeService implements TreeService {
     @Override
     public TreeModel generateTreeModel(AncestorPerson rootPerson) {
         configService = Config.visual();
-        final String treeName = "Rodové linie rodičů ";
+        final String treeName;
+        if (Config.treeShape().getAncestorGenerations() == 0) {
+            treeName = "Rodové linie rodičů ";
+        } else {
+            treeName = "Rozrod ";
+        }
         lineageService = new LineageServiceImpl(rootPerson, treeName);
         Position heraldryPosition = lineageService.addSiblingsAndDescendents(rootPerson);
 

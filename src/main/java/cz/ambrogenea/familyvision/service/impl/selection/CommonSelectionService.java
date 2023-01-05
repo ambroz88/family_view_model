@@ -99,7 +99,7 @@ public class CommonSelectionService {
     protected AncestorPerson fromPersonWithWomanParents(Person person) {
         if (person != null) {
             AncestorPerson ancestorPerson = fromRootPersonWithAllDescendents(person);
-            if (2 <= configuration.getAncestorGenerations()) {
+            if (1 <= configuration.getAncestorGenerations()) {
                 addSiblings(ancestorPerson, person.getParentId());
                 addWomanParents(ancestorPerson, person.getParentId());
             }
@@ -159,6 +159,9 @@ public class CommonSelectionService {
 
             if (parents.husband() != null) {
                 AncestorPerson father = fromPersonWithManParents(parents.husband(), generation);
+                if (person.getParents().getWife() != null) {
+                    father.getSpouseCouples().add(person.getParents());
+                }
                 person.setFather(father);
             } else {
                 AncestorPerson mother = fromPersonWithManParents(parents.wife(), generation);
@@ -181,6 +184,9 @@ public class CommonSelectionService {
 
             if (parents.wife() != null) {
                 AncestorPerson mother = fromPersonWithManParents(parents.wife(), 2);
+                if (person.getParents().getHusband() != null) {
+                    mother.getSpouseCouples().add(person.getParents());
+                }
                 person.setMother(mother);
 
                 person.setMaxOlderSiblings(Math.max(person.getMaxOlderSiblings(), mother.getOlderSiblings().size()));
