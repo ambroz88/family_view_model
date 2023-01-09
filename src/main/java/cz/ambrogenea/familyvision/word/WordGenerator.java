@@ -1,23 +1,14 @@
 package cz.ambrogenea.familyvision.word;
 
-import java.io.File;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.util.Units;
-import org.apache.poi.xwpf.usermodel.BreakType;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 
 /**
  *

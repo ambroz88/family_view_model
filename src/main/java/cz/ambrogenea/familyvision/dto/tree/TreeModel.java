@@ -50,8 +50,4 @@ public record TreeModel(
         }
     }
 
-    public PageSetup getPageSetup() {
-        return pageMaxCoordinates.getPageSetup();
-    }
-
 }

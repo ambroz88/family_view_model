@@ -1,30 +1,29 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
-import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.constant.Spaces;
+import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.ParentsDto;
 import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.enums.Relation;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.LineageService;
 import cz.ambrogenea.familyvision.service.TreeService;
-import cz.ambrogenea.familyvision.service.VisualConfigurationService;
+import cz.ambrogenea.familyvision.service.util.Config;
 
 public class ParentLineageTreeService implements TreeService {
 
     private LineageService lineageService;
-    private VisualConfigurationService configService;
+    private VisualConfiguration configService;
 
     @Override
     public TreeModel generateTreeModel(AncestorPerson rootPerson) {
         configService = Config.visual();
         final String treeName;
         if (Config.treeShape().getAncestorGenerations() == 0) {
-            treeName = "Rodové linie rodičů ";
-        } else {
             treeName = "Rozrod ";
+        } else {
+            treeName = "Rodové linie rodičů ";
         }
         lineageService = new LineageServiceImpl(rootPerson, treeName);
         Position heraldryPosition = lineageService.addSiblingsAndDescendents(rootPerson);
@@ -67,10 +66,10 @@ public class ParentLineageTreeService implements TreeService {
         Position fatherHeraldry = new Position(fatherHeraldryX, parentsDto.nextHeraldryY());
         lineageService.generateFathersFamily(fatherHeraldry, father);
         if (father.getOlderSiblings().isEmpty()) {
-            lineageService.addLine(fatherHeraldry, parentsDto.husbandPosition(), Relation.DIRECT);
+            lineageService.addLine(fatherHeraldry, parentsDto.husbandPosition());
         } else {
             lineageService.addSiblings(new Position(fatherHeraldryX + configService.getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
-            lineageService.addLine(parentsDto.husbandPosition(), fatherHeraldry, Relation.DIRECT);
+            lineageService.addLine(parentsDto.husbandPosition(), fatherHeraldry);
         }
     }
 
@@ -91,10 +90,10 @@ public class ParentLineageTreeService implements TreeService {
         Position motherHeraldry = new Position(motherHeraldryX, parentsDto.nextHeraldryY());
         lineageService.generateFathersFamily(motherHeraldry, mother);
         if (mother.getYoungerSiblings().isEmpty()) {
-            lineageService.addLine(motherHeraldry, parentsDto.wifePosition(), Relation.DIRECT);
+            lineageService.addLine(motherHeraldry, parentsDto.wifePosition());
         } else {
             lineageService.addSiblings(new Position(motherHeraldryX - extensionConfig.getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
-            lineageService.addLine(parentsDto.wifePosition(), motherHeraldry, Relation.DIRECT);
+            lineageService.addLine(parentsDto.wifePosition(), motherHeraldry);
         }
     }
 

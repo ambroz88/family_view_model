@@ -6,7 +6,6 @@ import cz.ambrogenea.familyvision.dto.ParentsDto;
 import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.enums.CoupleType;
-import cz.ambrogenea.familyvision.enums.Relation;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.LineageService;
 
@@ -28,7 +27,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 AncestorPerson parent = Objects.requireNonNullElse(person.getFather(), person.getMother());
 
                 if (parent.hasMinOneParent()) {
-                    treeModelService.addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
+                    treeModelService.addLine(parentPosition, nextHeraldryPosition);
                 }
                 addSiblings(parentPosition, parent);
 
@@ -48,7 +47,7 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
                 AncestorPerson parent = Objects.requireNonNullElse(person.getMother(), person.getFather());
 
                 if (parent.hasMinOneParent()) {
-                    treeModelService.addLine(parentPosition, nextHeraldryPosition, Relation.DIRECT);
+                    treeModelService.addLine(parentPosition, nextHeraldryPosition);
                 }
                 addSiblings(parentPosition, parent);
 

@@ -1,18 +1,18 @@
 package cz.ambrogenea.familyvision.service.impl;
 
-import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.constant.Spaces;
+import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.enums.LabelType;
+import cz.ambrogenea.familyvision.repository.VisualConfigurationRepository;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
-import cz.ambrogenea.familyvision.service.VisualConfigurationService;
 
 public class HorizontalConfigurationService implements ConfigurationExtensionService {
 
-    private final VisualConfigurationService configService;
+    private final VisualConfiguration configuration;
 
     public HorizontalConfigurationService() {
-        this.configService = Config.visual();
+        this.configuration = VisualConfigurationRepository.get().find();
     }
 
     @Override
@@ -27,17 +27,17 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
 
     @Override
     public int getCoupleWidth() {
-        return 2 * configService.getAdultImageWidth() + getMarriageLabelWidth();
+        return 2 * configuration.getAdultImageWidth() + getMarriageLabelWidth();
     }
 
     @Override
     public int getSpouseDistance() {
-        return configService.getAdultImageWidth() + getMarriageLabelWidth();
+        return configuration.getAdultImageWidth() + getMarriageLabelWidth();
     }
 
     @Override
     public int getSiblingSpouseDistance() {
-        return configService.getSiblingImageWidth() + getMarriageLabelWidth();
+        return configuration.getSiblingImageWidth() + getMarriageLabelWidth();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
     public Position getFatherPositionFromHeraldry(Position heraldryPosition) {
         return heraldryPosition.addXAndY(
                 -getSpouseDistance() / 2,
-                -configService.getHeraldryVerticalDistance()
+                -configuration.getHeraldryVerticalDistance()
         );
     }
 
@@ -60,7 +60,7 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
     public Position getMotherPositionFromHeraldry(Position heraldryPosition) {
         return heraldryPosition.addXAndY(
                 getSpouseDistance() / 2,
-                -configService.getHeraldryVerticalDistance()
+                -configuration.getHeraldryVerticalDistance()
         );
     }
 
@@ -81,7 +81,7 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
 
     @Override
     public int getMarriageLabelVerticalDistance() {
-        return configService.getHeraldryVerticalDistance();
+        return configuration.getHeraldryVerticalDistance();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class HorizontalConfigurationService implements ConfigurationExtensionSer
 
     @Override
     public int getGenerationsVerticalDistance() {
-        return configService.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP;
+        return configuration.getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP;
     }
 
     private int getCoupleVerticalDifference() {

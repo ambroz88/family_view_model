@@ -13,9 +13,9 @@ public class FatherLineageTreeService implements TreeService {
     public TreeModel generateTreeModel(AncestorPerson rootPerson) {
         final String treeName;
         if (Config.treeShape().getAncestorGenerations() == 0) {
-            treeName = "Rodová linie ";
-        } else {
             treeName = "Rozrod ";
+        } else {
+            treeName = "Rodová linie ";
         }
         LineageService lineageService = new LineageServiceImpl(rootPerson, treeName);
         Position heraldryPosition = lineageService.addSiblingsAndDescendents(rootPerson);

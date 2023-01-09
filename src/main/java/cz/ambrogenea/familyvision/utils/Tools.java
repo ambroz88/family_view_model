@@ -5,9 +5,6 @@ import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.service.util.Config;
 
-import java.net.URL;
-import java.util.Properties;
-
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
@@ -20,23 +17,6 @@ public final class Tools {
         plainText = plainText.replace("ö", "o");
         plainText = plainText.replace(" ", "");
         return plainText;
-    }
-
-    public static String cityShortVersion(String placeName) {
-        String filePath;
-        URL fileURL = Tools.class.getResource("/text/CityShortcuts.properties");
-
-        if (fileURL != null) {
-            filePath = fileURL.getPath();
-            Properties prop = FileIO.loadProperties(filePath);
-
-            String normalizeName = placeName.toLowerCase().replace(" ", "");
-            if (prop.containsKey(normalizeName)) {
-                return prop.getProperty(normalizeName);
-            }
-        }
-
-        return placeName;
     }
 
     public static int calculateGenerations(AncestorPerson person) {
@@ -52,10 +32,10 @@ public final class Tools {
     }
 
     public static String getNameIn2ndFall(Personalize person) {
-        String firstName = person.getFirstName();
-        String surName = person.getSurname();
+        String firstName = person.firstName();
+        String surName = person.surname();
 
-        if (person.getSex().equals(Sex.MALE)) {
+        if (person.sex().equals(Sex.MALE)) {
 
             if (firstName.endsWith("í")) {
                 int index = firstName.lastIndexOf("í");

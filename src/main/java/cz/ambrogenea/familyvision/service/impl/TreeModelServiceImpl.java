@@ -1,21 +1,20 @@
 package cz.ambrogenea.familyvision.service.impl;
 
-import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.Residence;
+import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.tree.*;
 import cz.ambrogenea.familyvision.enums.LabelType;
-import cz.ambrogenea.familyvision.enums.Relation;
 import cz.ambrogenea.familyvision.enums.Sex;
-import cz.ambrogenea.familyvision.mapper.PersonRecordMapper;
+import cz.ambrogenea.familyvision.mapper.dto.PersonRecordMapper;
 import cz.ambrogenea.familyvision.service.TreeModelService;
-import cz.ambrogenea.familyvision.service.VisualConfigurationService;
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.utils.Tools;
 
 public class TreeModelServiceImpl implements TreeModelService {
 
-    private final VisualConfigurationService configuration;
+    private final VisualConfiguration configuration;
     private final TreeModel treeModel;
 
     public TreeModelServiceImpl(AncestorPerson rootPerson, String treeName) {
@@ -50,7 +49,7 @@ public class TreeModelServiceImpl implements TreeModelService {
                 if (person.directLineage()) {
                     yShift = -configuration.getAdultImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5);
 
-                    if (person.getSex().equals(Sex.FEMALE)) {
+                    if (person.sex().equals(Sex.FEMALE)) {
                         position = person.position().addXAndY(
                                 (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2, yShift);
                     } else {
@@ -76,31 +75,31 @@ public class TreeModelServiceImpl implements TreeModelService {
     }
 
     @Override
-    public void addLine(Position start, Position end, Relation lineType) {
+    public void addLine(Position start, Position end) {
         if (start.x() == end.x() || start.y() == end.y()) {
-            Line straightLine = new Line(start.x(), start.y(), end.x(), end.y(), lineType);
+            Line straightLine = new Line(start.x(), start.y(), end.x(), end.y());
             treeModel.lines().add(straightLine);
         } else {
             Line horizontal;
             Line vertical;
             Arc arc;
             if (start.x() < end.x()) {
-                horizontal = new Line(start.x() + Arc.RADIUS, end.y(), end.x(), end.y(), lineType);
+                horizontal = new Line(start.x() + Arc.RADIUS, end.y(), end.x(), end.y());
                 if (start.y() < end.y()) {//ancestors
-                    vertical = new Line(start.x(), start.y(), start.x(), end.y() - Arc.RADIUS, lineType);
-                    arc = new Arc(new Position(start.x(), end.y() - 2 * Arc.RADIUS), 180, lineType);
+                    vertical = new Line(start.x(), start.y(), start.x(), end.y() - Arc.RADIUS);
+                    arc = new Arc(new Position(start.x(), end.y() - 2 * Arc.RADIUS), 180);
                 } else {//children
-                    vertical = new Line(start.x(), start.y(), start.x(), end.y() + Arc.RADIUS, lineType);
-                    arc = new Arc(new Position(start.x(), end.y()), 90, lineType);
+                    vertical = new Line(start.x(), start.y(), start.x(), end.y() + Arc.RADIUS);
+                    arc = new Arc(new Position(start.x(), end.y()), 90);
                 }
             } else {
-                horizontal = new Line(start.x() - Arc.RADIUS, end.y(), end.x(), end.y(), lineType);
+                horizontal = new Line(start.x() - Arc.RADIUS, end.y(), end.x(), end.y());
                 if (start.y() < end.y()) {
-                    vertical = new Line(start.x(), start.y(), start.x(), end.y() - Arc.RADIUS, lineType);
-                    arc = new Arc(new Position(start.x() - 2 * Arc.RADIUS, end.y() - 2 * Arc.RADIUS), -90, lineType);
+                    vertical = new Line(start.x(), start.y(), start.x(), end.y() - Arc.RADIUS);
+                    arc = new Arc(new Position(start.x() - 2 * Arc.RADIUS, end.y() - 2 * Arc.RADIUS), -90);
                 } else {
-                    vertical = new Line(start.x(), start.y(), start.x(), end.y() + Arc.RADIUS, lineType);
-                    arc = new Arc(new Position(start.x() - 2 * Arc.RADIUS, end.y()), 0, lineType);
+                    vertical = new Line(start.x(), start.y(), start.x(), end.y() + Arc.RADIUS);
+                    arc = new Arc(new Position(start.x() - 2 * Arc.RADIUS, end.y()), 0);
                 }
             }
 

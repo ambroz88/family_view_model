@@ -1,5 +1,6 @@
 package cz.ambrogenea.familyvision.domain;
 
+import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.enums.Background;
 import cz.ambrogenea.familyvision.enums.Diagram;
 import cz.ambrogenea.familyvision.enums.LabelShape;
@@ -57,6 +58,18 @@ public class VisualConfiguration {
         resetMode = false;
     }
 
+    public int getHeraldryVerticalDistance() {
+        return (getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2;
+    }
+
+    public int nextSiblingX() {
+        return getSiblingImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
+    public int nextChildrenX() {
+        return getAdultImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
     public int getAdultImageWidth() {
         return adultImageWidth;
     }
@@ -67,6 +80,14 @@ public class VisualConfiguration {
 
     public int getAdultImageHeight() {
         return adultImageHeight;
+    }
+
+    public int getAdultImageHeightAlternative() {
+        int imageHeight = getAdultImageHeight();
+        if (getDiagram().equals(Diagram.SCROLL)) {
+            imageHeight = (int) (imageHeight * 0.8);
+        }
+        return imageHeight;
     }
 
     public void setAdultImageHeight(int adultImageHeight) {
@@ -93,6 +114,14 @@ public class VisualConfiguration {
         return siblingImageHeight;
     }
 
+    public int getSiblingImageHeightAlternative() {
+        int siblingImageHeight = getSiblingImageHeight();
+        if (getDiagram().equals(Diagram.SCROLL)) {
+            siblingImageHeight = (int) (siblingImageHeight * 0.8);
+        }
+        return siblingImageHeight;
+    }
+
     public void setSiblingImageHeight(int siblingImageHeight) {
         this.siblingImageHeight = siblingImageHeight;
     }
@@ -109,8 +138,8 @@ public class VisualConfiguration {
         return diagram;
     }
 
-    public void setDiagram(Diagram diagram) {
-        this.diagram = diagram;
+    public void setDiagram(Diagram adultDiagram) {
+        this.diagram = adultDiagram;
     }
 
     public LabelShape getMarriageLabelShape() {

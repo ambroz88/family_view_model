@@ -1,19 +1,26 @@
 package cz.ambrogenea.familyvision.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.enums.LineageType;
+import cz.ambrogenea.familyvision.mapper.response.TreeModelResponseMapper;
+import cz.ambrogenea.familyvision.model.response.tree.TreeModelResponse;
 import cz.ambrogenea.familyvision.service.SelectionService;
 import cz.ambrogenea.familyvision.service.TreeService;
-import cz.ambrogenea.familyvision.service.impl.selection.*;
-import cz.ambrogenea.familyvision.service.impl.tree.*;
+import cz.ambrogenea.familyvision.service.impl.selection.AllAncestorsSelectionService;
+import cz.ambrogenea.familyvision.service.impl.selection.LineageSelectionService;
+import cz.ambrogenea.familyvision.service.impl.tree.AllAncestorTreeService;
+import cz.ambrogenea.familyvision.service.impl.tree.FatherLineageTreeService;
+import cz.ambrogenea.familyvision.service.impl.tree.MotherLineageTreeService;
+import cz.ambrogenea.familyvision.service.impl.tree.ParentLineageTreeService;
 import cz.ambrogenea.familyvision.service.util.Config;
+import cz.ambrogenea.familyvision.service.util.JsonParser;
 
 public class TreeGeneratorController {
 
-    private static AncestorPerson rootPerson;
+    private AncestorPerson rootPerson;
 
-    public static TreeModel generateTree(String gedcomId) {
+    public String generateTree(String gedcomId) {
         SelectionService selectionService;
         if (Config.treeShape().getLineageType() == LineageType.ALL) {
             selectionService = new AllAncestorsSelectionService();
@@ -29,10 +36,15 @@ public class TreeGeneratorController {
         };
 
         rootPerson = selectionService.select(gedcomId);
-        return treeService.generateTreeModel(rootPerson);
+        try {
+            TreeModelResponse treeModelResponse = TreeModelResponseMapper.map(treeService.generateTreeModel(rootPerson));
+            return JsonParser.get().writeValueAsString(treeModelResponse);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 
-    public static TreeModel updateTree() {
+    public String updateTree() {
         TreeService treeService = switch (Config.treeShape().getLineageType()) {
             case FATHER -> new FatherLineageTreeService();
             case MOTHER -> new MotherLineageTreeService();
@@ -40,7 +52,12 @@ public class TreeGeneratorController {
             case ALL -> new AllAncestorTreeService();
         };
 
-        return treeService.generateTreeModel(rootPerson);
+        try {
+            TreeModelResponse treeModelResponse = TreeModelResponseMapper.map(treeService.generateTreeModel(rootPerson));
+            return JsonParser.get().writeValueAsString(treeModelResponse);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 
 }

@@ -14,5 +14,4 @@ public record MarriageDto(
         DatePlace weddingDatePlace,
         List<String> childrenIds
 ) {
-
 }

@@ -16,7 +16,4 @@ public record FamilyDto(
         );
     }
 
-    public Position maxChildrenPosition(){
-        return new Position(maxX(), lastChildrenPosition().y());
-    }
 }

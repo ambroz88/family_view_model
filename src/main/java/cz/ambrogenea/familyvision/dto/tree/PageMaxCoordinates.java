@@ -1,9 +1,5 @@
 package cz.ambrogenea.familyvision.dto.tree;
 
-import cz.ambrogenea.familyvision.service.util.Config;
-import cz.ambrogenea.familyvision.constant.Spaces;
-import cz.ambrogenea.familyvision.service.VisualConfigurationService;
-
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
@@ -12,7 +8,6 @@ public class PageMaxCoordinates {
     int minY = 0;
     int maxX = 0;
     int maxY = 0;
-    PageSetup pageSetup;
 
     public void verifyExtremes(Position position) {
         setMaxX(position.x());
@@ -62,27 +57,5 @@ public class PageMaxCoordinates {
         }
     }
 
-    public PageSetup getPageSetup() {
-        VisualConfigurationService config = Config.visual();
-        if (pageSetup == null) {
-            int horizontalBorder = config.getAdultImageWidth() / 2 + Spaces.SIBLINGS_GAP;
-            int verticalBorder = config.getAdultImageHeightAlternative() / 2 + Spaces.SIBLINGS_GAP;
-            maxX += horizontalBorder;
-            minX -= horizontalBorder;
-            maxY += verticalBorder;
-            if (Config.visual().isShowTitle()) {
-                maxY += Spaces.TITLE_HEIGHT;
-            }
-            minY -= verticalBorder;
-            pageSetup = new PageSetup(
-                    new Position(
-                            getMinX(),
-                            getMinY()
-                    ),
-                    getMaxX() - getMinX(),
-                    getMaxY() - getMinY()
-            );
-        }
-        return pageSetup;
-    }
+
 }

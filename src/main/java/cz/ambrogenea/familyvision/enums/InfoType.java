@@ -15,15 +15,6 @@ public enum InfoType {
         this.info = type;
     }
 
-    public static InfoType getInfo(String infoType) {
-        for (InfoType value : InfoType.values()) {
-            if (value.toString().equals(infoType)) {
-                return value;
-            }
-        }
-        return NONE;
-    }
-
     @Override
     public String toString() {
         return info;

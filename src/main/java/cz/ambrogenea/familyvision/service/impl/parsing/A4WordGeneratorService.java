@@ -2,8 +2,9 @@ package cz.ambrogenea.familyvision.service.impl.parsing;
 
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.parsing.DocumentInputs;
-import cz.ambrogenea.familyvision.dto.tree.PageSetup;
 import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.mapper.response.PageSetupResponseMapper;
+import cz.ambrogenea.familyvision.model.response.tree.PageSetupResponse;
 import cz.ambrogenea.familyvision.service.DocumentGeneratorService;
 import cz.ambrogenea.familyvision.service.TreeService;
 import cz.ambrogenea.familyvision.service.impl.selection.LineageSelectionService;
@@ -50,7 +51,7 @@ public class A4WordGeneratorService implements DocumentGeneratorService {
 
         for (DocumentInputs input : familyInputs) {
             treeModel = input.getTreeModel();
-            PageSetup setup = treeModel.pageMaxCoordinates().getPageSetup();
+            PageSetupResponse setup = PageSetupResponseMapper.map(treeModel.pageMaxCoordinates());
             WordGenerator.setMaxHeight(input.getGenerationsShown());
             WordGenerator.createFamilyPage(doc, treeModel.treeName());
             WordGenerator.addImageToPage(doc, input.getImageStream(),

@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.mapper;
+package cz.ambrogenea.familyvision.mapper.dto;
 
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.tree.PersonRecord;

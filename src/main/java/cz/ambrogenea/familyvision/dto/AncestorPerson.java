@@ -1,7 +1,6 @@
 package cz.ambrogenea.familyvision.dto;
 
 import cz.ambrogenea.familyvision.domain.DatePlace;
-import cz.ambrogenea.familyvision.domain.Personalize;
 import cz.ambrogenea.familyvision.domain.Residence;
 import cz.ambrogenea.familyvision.enums.Sex;
 
@@ -12,7 +11,7 @@ import java.util.List;
 /**
  * @author Jiri Ambroz
  */
-public class AncestorPerson implements Personalize {
+public class AncestorPerson {
 
     private final String gedcomId;
     private final String firstName;
@@ -214,10 +213,6 @@ public class AncestorPerson implements Personalize {
         return innerParentsCount;
     }
 
-    public void setInnerParentsCount(double parentsCount) {
-        this.innerParentsCount = parentsCount;
-    }
-
     public LinkedList<AncestorPerson> getYoungerSiblings() {
         return youngerSiblings;
     }
@@ -232,10 +227,6 @@ public class AncestorPerson implements Personalize {
 
     public void addOlderSibling(AncestorPerson olderSibling) {
         this.olderSiblings.add(olderSibling);
-    }
-
-    public int getAllSiblingsCount() {
-        return this.getOlderSiblings().size() + this.getYoungerSiblings().size();
     }
 
     public int getMaxYoungerSiblingsSpouse() {
@@ -320,16 +311,6 @@ public class AncestorPerson implements Personalize {
         this.spouses = spouses;
     }
 
-    public int getSpouseCount() {
-        int count = 0;
-        for (AncestorCouple spouse : spouses) {
-            if (spouse.isNotSingle()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     public AncestorCouple getSpouseCouple() {
         if (spouses.isEmpty()) {
             return null;
@@ -350,14 +331,6 @@ public class AncestorPerson implements Personalize {
         return spouses;
     }
 
-    public int getChildrenCount(int wifeNumber) {
-        int count = 0;
-        if (getSpouseCouple(wifeNumber) != null) {
-            count = getSpouseCouple(wifeNumber).getChildren().size();
-        }
-        return count;
-    }
-
     public int getAllChildrenCount() {
         int count = 0;
         for (AncestorCouple spouse : getSpouseCouples()) {
@@ -370,17 +343,14 @@ public class AncestorPerson implements Personalize {
         return gedcomId;
     }
 
-    @Override
     public String getFirstName() {
         return firstName;
     }
 
-    @Override
     public String getSurname() {
         return surname;
     }
 
-    @Override
     public String getName() {
         if (getFirstName().isEmpty()) {
             return getSurname();
@@ -390,7 +360,6 @@ public class AncestorPerson implements Personalize {
         return getFirstName() + " " + getSurname();
     }
 
-    @Override
     public Sex getSex() {
         return sex;
     }

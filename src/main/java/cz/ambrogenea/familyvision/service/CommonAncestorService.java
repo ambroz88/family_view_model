@@ -4,7 +4,6 @@ import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.ParentsDto;
 import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.enums.Relation;
 
 public interface CommonAncestorService {
     Position addSiblingsAndDescendents(AncestorPerson person);
@@ -13,7 +12,7 @@ public interface CommonAncestorService {
     ParentsDto generateHorizontalParents(Position heraldryPosition, AncestorPerson child);
     ParentsDto generateVerticalParents(Position heraldryPosition, AncestorPerson child);
 
-    void addLine(Position start, Position end, Relation lineType);
+    void addLine(Position start, Position end);
     void addPerson(Position center, AncestorPerson person);
     TreeModel getTreeModel();
 
