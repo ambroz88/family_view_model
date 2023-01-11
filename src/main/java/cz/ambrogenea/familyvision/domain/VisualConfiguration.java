@@ -1,0 +1,232 @@
+package cz.ambrogenea.familyvision.domain;
+
+import cz.ambrogenea.familyvision.constant.Spaces;
+import cz.ambrogenea.familyvision.enums.Background;
+import cz.ambrogenea.familyvision.enums.Diagram;
+import cz.ambrogenea.familyvision.enums.LabelShape;
+
+import java.util.Locale;
+
+/**
+ * @author Jiri Ambroz <ambroz88@seznam.cz>
+ */
+public class VisualConfiguration {
+    private int adultImageWidth;
+    private int adultImageHeight;
+    private int adultFontSize;
+    private int siblingImageWidth;
+    private int siblingImageHeight;
+    private int siblingFontSize;
+
+    private Diagram diagram;
+    private LabelShape marriageLabelShape;
+    private Background background;
+    private int verticalShift;
+
+    private boolean showAge;
+    private boolean showOccupation;
+    private boolean showTitle;
+    private boolean showPlaces;
+    private boolean shortenPlaces;
+    private boolean showOrdinances;
+
+    private Locale locale;
+    private boolean resetMode;
+
+
+    public VisualConfiguration() {
+        adultImageWidth = 190;
+        adultImageHeight = 130;
+        adultFontSize = 12;
+        siblingImageWidth = 170;
+        siblingImageHeight = 120;
+        siblingFontSize = 11;
+
+        diagram = Diagram.SCROLL;
+        marriageLabelShape = LabelShape.OVAL;
+        background = Background.TRANSPARENT;
+        verticalShift = 0;
+
+        showAge = true;
+        showOccupation = true;
+        showTitle = false;
+        showPlaces = true;
+        shortenPlaces = true;
+        showOrdinances = false;
+
+        locale = new Locale("cs", "CZ");
+        resetMode = false;
+    }
+
+    public int getHeraldryVerticalDistance() {
+        return (getAdultImageHeightAlternative() + Spaces.VERTICAL_GAP) / 2;
+    }
+
+    public int nextSiblingX() {
+        return getSiblingImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
+    public int nextChildrenX() {
+        return getAdultImageWidth() + Spaces.HORIZONTAL_GAP;
+    }
+
+    public int getAdultImageWidth() {
+        return adultImageWidth;
+    }
+
+    public void setAdultImageWidth(int adultImageWidth) {
+        this.adultImageWidth = adultImageWidth;
+    }
+
+    public int getAdultImageHeight() {
+        return adultImageHeight;
+    }
+
+    public int getAdultImageHeightAlternative() {
+        int imageHeight = getAdultImageHeight();
+        if (getDiagram().equals(Diagram.SCROLL)) {
+            imageHeight = (int) (imageHeight * 0.8);
+        }
+        return imageHeight;
+    }
+
+    public void setAdultImageHeight(int adultImageHeight) {
+        this.adultImageHeight = adultImageHeight;
+    }
+
+    public int getAdultFontSize() {
+        return adultFontSize;
+    }
+
+    public void setAdultFontSize(int adultFontSize) {
+        this.adultFontSize = adultFontSize;
+    }
+
+    public int getSiblingImageWidth() {
+        return siblingImageWidth;
+    }
+
+    public void setSiblingImageWidth(int siblingImageWidth) {
+        this.siblingImageWidth = siblingImageWidth;
+    }
+
+    public int getSiblingImageHeight() {
+        return siblingImageHeight;
+    }
+
+    public int getSiblingImageHeightAlternative() {
+        int siblingImageHeight = getSiblingImageHeight();
+        if (getDiagram().equals(Diagram.SCROLL)) {
+            siblingImageHeight = (int) (siblingImageHeight * 0.8);
+        }
+        return siblingImageHeight;
+    }
+
+    public void setSiblingImageHeight(int siblingImageHeight) {
+        this.siblingImageHeight = siblingImageHeight;
+    }
+
+    public int getSiblingFontSize() {
+        return siblingFontSize;
+    }
+
+    public void setSiblingFontSize(int siblingFontSize) {
+        this.siblingFontSize = siblingFontSize;
+    }
+
+    public Diagram getDiagram() {
+        return diagram;
+    }
+
+    public void setDiagram(Diagram adultDiagram) {
+        this.diagram = adultDiagram;
+    }
+
+    public LabelShape getMarriageLabelShape() {
+        return marriageLabelShape;
+    }
+
+    public void setMarriageLabelShape(LabelShape marriageLabelShape) {
+        this.marriageLabelShape = marriageLabelShape;
+    }
+
+    public Background getBackground() {
+        return background;
+    }
+
+    public void setBackground(Background background) {
+        this.background = background;
+    }
+
+    public int getVerticalShift() {
+        return verticalShift;
+    }
+
+    public void setVerticalShift(int verticalShift) {
+        this.verticalShift = verticalShift;
+    }
+
+    public boolean isShowAge() {
+        return showAge;
+    }
+
+    public void setShowAge(boolean showAge) {
+        this.showAge = showAge;
+    }
+
+    public boolean isShowOccupation() {
+        return showOccupation;
+    }
+
+    public void setShowOccupation(boolean showOccupation) {
+        this.showOccupation = showOccupation;
+    }
+
+    public boolean isShowTitle() {
+        return showTitle;
+    }
+
+    public void setShowTitle(boolean showTitle) {
+        this.showTitle = showTitle;
+    }
+
+    public boolean isShowPlaces() {
+        return showPlaces;
+    }
+
+    public void setShowPlaces(boolean showPlaces) {
+        this.showPlaces = showPlaces;
+    }
+
+    public boolean isShortenPlaces() {
+        return shortenPlaces;
+    }
+
+    public void setShortenPlaces(boolean shortenPlaces) {
+        this.shortenPlaces = shortenPlaces;
+    }
+
+    public boolean isShowOrdinances() {
+        return showOrdinances;
+    }
+
+    public void setShowOrdinances(boolean showOrdinances) {
+        this.showOrdinances = showOrdinances;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public boolean isResetMode() {
+        return resetMode;
+    }
+
+    public void setResetMode(boolean resetMode) {
+        this.resetMode = resetMode;
+    }
+}
