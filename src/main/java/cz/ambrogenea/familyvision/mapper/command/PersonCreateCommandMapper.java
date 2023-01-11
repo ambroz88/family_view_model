@@ -2,6 +2,7 @@ package cz.ambrogenea.familyvision.mapper.command;
 
 import cz.ambrogenea.familyvision.enums.InfoType;
 import cz.ambrogenea.familyvision.enums.Sex;
+import cz.ambrogenea.familyvision.mapper.util.Verification;
 import cz.ambrogenea.familyvision.model.command.DatePlaceCreateCommand;
 import cz.ambrogenea.familyvision.model.command.PersonCreateCommand;
 import cz.ambrogenea.familyvision.model.command.ResidenceCreateCommand;
@@ -27,7 +28,7 @@ public class PersonCreateCommandMapper {
         if (firstName == null && surname == null) {
             if (name.contains("/")) {
                 String[] nameParts = name.split("/");
-                firstName = nameParts[0];
+                firstName = nameParts[0].trim();
                 if (nameParts.length > 1) {
                     surname = nameParts[1];
                 }
@@ -52,7 +53,7 @@ public class PersonCreateCommandMapper {
                     }
                 }
         );
-        createCommand.setGedcomId(gedcomPerson.getId());
+        createCommand.setGedcomId(Verification.gedcomId(gedcomPerson.getId()));
         createCommand.setFirstName(firstName);
         createCommand.setSurname(surname);
         createCommand.setResidenceList(residences);

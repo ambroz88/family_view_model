@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.mapper.command;
 
 import cz.ambrogenea.familyvision.enums.InfoType;
+import cz.ambrogenea.familyvision.mapper.util.Verification;
 import cz.ambrogenea.familyvision.model.command.DatePlaceCreateCommand;
 import cz.ambrogenea.familyvision.model.command.MarriageCreateCommand;
-import org.folg.gedcom.model.ChildRef;
 import org.folg.gedcom.model.Family;
 
 import java.util.stream.Collectors;
@@ -17,10 +17,10 @@ public class MarriageCreateCommandMapper {
         MarriageCreateCommand createCommand = new MarriageCreateCommand();
         createCommand.setGedcomFamilyId(gedcomFamily.getId());
         if (!gedcomFamily.getHusbandRefs().isEmpty()) {
-            createCommand.setGedcomHusbandId(gedcomFamily.getHusbandRefs().get(0).getRef());
+            createCommand.setGedcomHusbandId(Verification.gedcomId(gedcomFamily.getHusbandRefs().get(0).getRef()));
         }
         if (!gedcomFamily.getWifeRefs().isEmpty()) {
-            createCommand.setGedcomWifeId(gedcomFamily.getWifeRefs().get(0).getRef());
+            createCommand.setGedcomWifeId(Verification.gedcomId(gedcomFamily.getWifeRefs().get(0).getRef()));
         }
         gedcomFamily.getEventsFacts().forEach(fact -> {
                     if (fact.getTag().equals(InfoType.MARRIAGE.toString())) {
@@ -29,7 +29,7 @@ public class MarriageCreateCommandMapper {
                 }
         );
         createCommand.setChildrenGedcomIds(gedcomFamily.getChildRefs().stream()
-                .map(ChildRef::getRef)
+                .map(childRef -> Verification.gedcomId(childRef.getRef()))
                 .collect(Collectors.toList())
         );
         return createCommand;
