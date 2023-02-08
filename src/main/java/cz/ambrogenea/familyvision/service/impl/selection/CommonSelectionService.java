@@ -125,7 +125,7 @@ public class CommonSelectionService {
     }
 
     private void addChildrenToCouple(AncestorCouple spouseCouple, int generation) {
-        List<AncestorPerson> children = spouseCouple.getChildrenIndexes()
+        List<AncestorPerson> children = spouseCouple.getChildrenIds()
                 .stream()
                 .map(childId -> {
                     Person dbChild = Services.person().getPersonByGedcomId(childId);

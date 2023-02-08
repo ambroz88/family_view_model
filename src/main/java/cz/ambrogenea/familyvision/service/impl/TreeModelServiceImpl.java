@@ -3,6 +3,7 @@ package cz.ambrogenea.familyvision.service.impl;
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.Residence;
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
+import cz.ambrogenea.familyvision.dto.AncestorCouple;
 import cz.ambrogenea.familyvision.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.dto.tree.*;
 import cz.ambrogenea.familyvision.enums.LabelType;
@@ -70,8 +71,8 @@ public class TreeModelServiceImpl implements TreeModelService {
     }
 
     @Override
-    public void addMarriage(Position labelPosition, String text, LabelType labelType) {
-        treeModel.marriages().add(new Marriage(labelPosition, text, labelType));
+    public void addMarriage(Position labelPosition, String text, AncestorCouple couple, LabelType labelType) {
+        treeModel.marriages().add(new Marriage(labelPosition, text, couple.getBoys(), couple.getGirls(), labelType));
     }
 
     @Override

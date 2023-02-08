@@ -110,6 +110,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         }
         treeModelService.addMarriage(spousePosition.addXAndY(-config.getSpouseDistance() / 2, 0),
                 marriageDate,
+                spouseCouple,
                 LabelType.TALL);
     }
 
@@ -121,6 +122,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         }
         treeModelService.addMarriage(spousePosition.addXAndY(-Config.horizontal().getSpouseDistance() / 2, 0),
                 marriageDate,
+                spouseCouple,
                 LabelType.TALL);
     }
 
@@ -273,6 +275,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         treeModelService.addMarriage(
                 extensionConfig.getSiblingsMarriagePosition(spousePosition),
                 marriageDate,
+                spouseCouple,
                 extensionConfig.getMarriageLabelType()
         );
     }
@@ -343,7 +346,9 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                                 0,
                                 -extensionConfig.getMarriageLabelVerticalDistance()
                         ),
-                        marriageDate, extensionConfig.getMarriageLabelType()
+                        marriageDate,
+                        child.getParents(),
+                        extensionConfig.getMarriageLabelType()
                 );
             }
             return new ParentsDto(fatherPosition, motherPosition, heraldryPosition.y() - extensionConfig.getGenerationsVerticalDistance());

@@ -12,6 +12,8 @@ import cz.ambrogenea.familyvision.enums.Sex;
 public class AncestorCouple {
 
     private ArrayList<String> childrenID;
+    private int boys;
+    private int girls;
     private ArrayList<AncestorPerson> children;
 
     private AncestorPerson wife;
@@ -20,6 +22,8 @@ public class AncestorCouple {
     private DescendentTreeInfo descendentTreeInfo;
 
     public AncestorCouple() {
+        boys = 0;
+        girls = 0;
         children = new ArrayList<>();
         datePlace = new DatePlace();
         descendentTreeInfo = new DescendentTreeInfo();
@@ -32,6 +36,8 @@ public class AncestorCouple {
     }
 
     private void initEmpty() {
+        boys = 0;
+        girls = 0;
         childrenID = new ArrayList<>();
         children = new ArrayList<>();
         datePlace = new DatePlace();
@@ -82,7 +88,7 @@ public class AncestorCouple {
         return hasHusband() && hasWife();
     }
 
-    public ArrayList<String> getChildrenIndexes() {
+    public ArrayList<String> getChildrenIds() {
         return childrenID;
     }
 
@@ -90,12 +96,24 @@ public class AncestorCouple {
         this.childrenID = childrenID;
     }
 
-    public void addChildrenIndex(String childID) {
-        this.childrenID.add(childID);
-    }
-
     public ArrayList<AncestorPerson> getChildren() {
         return children;
+    }
+
+    public void addBoy() {
+        boys++;
+    }
+
+    public int getBoys() {
+        return boys;
+    }
+
+    public void addGirl() {
+        girls++;
+    }
+
+    public int getGirls() {
+        return girls;
     }
 
     public void setChildren(List<AncestorPerson> children) {
@@ -127,19 +145,6 @@ public class AncestorCouple {
         getDescendentTreeInfo().setSinglesCount(actualSingles);
         getDescendentTreeInfo().setCouplesCount(actualCouples);
         getDescendentTreeInfo().validateMaxCounts(maxSingles, maxCouples);
-    }
-
-    public void addChildren(AncestorPerson child) {
-        this.children.add(child);
-        int generationsCount;
-        if (child.getSpouseCouples().isEmpty()) {
-            generationsCount = 1;
-            getDescendentTreeInfo().increaseSinglesCount();
-        } else {
-            generationsCount = 1 + child.getSpouseCouple().getDescendentTreeInfo().getMaxGenerationsCount();
-            getDescendentTreeInfo().increaseCouplesCount();
-        }
-        getDescendentTreeInfo().addChildGenerations(generationsCount);
     }
 
     public DescendentTreeInfo getDescendentTreeInfo() {

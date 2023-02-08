@@ -13,6 +13,8 @@ public class MarriageResponseMapper {
                         marriage.position().y()
                 ),
                 marriage.date(),
+                marriage.boysCount(),
+                marriage.girlsCount(),
                 marriage.labelType()
         );
     }
