@@ -165,7 +165,11 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                     treeModelService.addLine(childrenSpouse, new Position(childrenSpouse.x(), heraldryPosition.y()));
                 }
             } else {
-                childrenPosition = childrenPosition.addXAndY(configService.nextChildrenX(), 0);
+                if (childrenCount == 1) {
+                    childrenPosition = new Position(coupleCenterPosition.x(), childrenPosition.y());
+                } else {
+                    childrenPosition = childrenPosition.addXAndY(configService.nextChildrenX(), 0);
+                }
                 maxX = Math.max(maxX, childrenPosition.x());
 
                 treeModelService.addPerson(childrenPosition, child);

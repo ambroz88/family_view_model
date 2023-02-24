@@ -116,7 +116,7 @@ public class CommonSelectionService {
                 ancestorPerson.setSpouses(addSpouse(person.getSpouseId(), true));
                 if (1 <= configuration.getDescendentGenerations()) {
                     ancestorPerson.getSpouseCouples()
-                            .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, 2));
+                            .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, 1));
                 }
             }
             return ancestorPerson;
@@ -141,10 +141,15 @@ public class CommonSelectionService {
         if (person != null) {
             AncestorPerson ancestorPerson = AncestorPersonMapper.map(person);
             ancestorPerson.setDirectLineage(true);
-            ancestorPerson.setSpouses(addSpouse(person.getSpouseId(), true));
-            if (generation <= configuration.getDescendentGenerations()) {
-                ancestorPerson.getSpouseCouples()
-                        .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, generation + 1));
+            List<AncestorCouple> spouses = addSpouse(person.getSpouseId(), true);
+            if (generation < configuration.getDescendentGenerations() ||
+                    (generation == configuration.getDescendentGenerations() && configuration.isShowSiblingSpouses())
+            ) {
+                ancestorPerson.setSpouses(spouses);
+                if (generation < configuration.getDescendentGenerations()) {
+                    ancestorPerson.getSpouseCouples()
+                            .forEach(spouseCouple -> addChildrenToCouple(spouseCouple, generation + 1));
+                }
             }
             return ancestorPerson;
         }

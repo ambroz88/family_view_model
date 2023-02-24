@@ -23,6 +23,7 @@ public class VisualConfigurationCommandMapper {
                 configurationRequest.showPlaces(),
                 configurationRequest.shortenPlaces(),
                 configurationRequest.showOrdinances(),
+                configurationRequest.showChildrenCount(),
                 configurationRequest.locale(),
                 configurationRequest.resetMode()
         );

@@ -23,7 +23,7 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
     public AncestorPerson fromPersonWithParents(Person person, int generation) {
         AncestorPerson newPerson = AncestorPersonMapper.map(person);
         newPerson.setDirectLineage(true);
-        if (generation < 3) {
+        if (generation < 2) {
             addSiblings(newPerson, person.getParentId());
         }
         if (generation <= Config.treeShape().getAncestorGenerations()) {
