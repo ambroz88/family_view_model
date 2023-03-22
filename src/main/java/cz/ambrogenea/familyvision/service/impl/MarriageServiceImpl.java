@@ -34,10 +34,12 @@ public class MarriageServiceImpl implements MarriageService {
     private void saveSpousesId(MarriageCreateCommand marriageCreateCommand) {
         Person husband = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomHusbandId());
         Person wife = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomWifeId());
-        if (husband != null && wife != null) {
+        if (husband != null) {
             husband.getSpouseId().add(marriageCreateCommand.getGedcomFamilyId());
-            wife.getSpouseId().add(marriageCreateCommand.getGedcomFamilyId());
             Services.person().savePerson(husband);
+        }
+        if (wife != null) {
+            wife.getSpouseId().add(marriageCreateCommand.getGedcomFamilyId());
             Services.person().savePerson(wife);
         }
     }
