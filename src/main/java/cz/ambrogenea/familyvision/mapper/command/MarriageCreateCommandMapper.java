@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  */
 public class MarriageCreateCommandMapper {
 
-    public static MarriageCreateCommand map(Family gedcomFamily) {
-        MarriageCreateCommand createCommand = new MarriageCreateCommand();
+    public static MarriageCreateCommand map(Family gedcomFamily, Long familyTreeId) {
+        MarriageCreateCommand createCommand = new MarriageCreateCommand(familyTreeId);
         createCommand.setGedcomFamilyId(gedcomFamily.getId());
         if (!gedcomFamily.getHusbandRefs().isEmpty()) {
             createCommand.setGedcomHusbandId(Verification.gedcomId(gedcomFamily.getHusbandRefs().get(0).getRef()));

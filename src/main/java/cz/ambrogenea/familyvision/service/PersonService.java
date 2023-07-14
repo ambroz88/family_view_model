@@ -8,6 +8,6 @@ import java.util.List;
 public interface PersonService {
     Person createPerson(PersonCreateCommand person);
     Person savePerson(Person person);
-    Person getPersonByGedcomId(String gedcomId);
-    List<Person> getPeopleInTree();
+    Person getPersonByGedcomId(String gedcomId, Long treeId);
+    List<Person> getPeopleInTree(Long treeId);
 }

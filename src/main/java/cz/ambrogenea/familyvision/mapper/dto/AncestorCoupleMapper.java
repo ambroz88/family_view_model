@@ -14,14 +14,14 @@ public class AncestorCoupleMapper {
 
     public static AncestorCouple mapWithoutKids(Marriage marriage, boolean isDirectLineage) {
         AncestorCouple couple = new AncestorCouple();
-        Person husband = Services.person().getPersonByGedcomId(marriage.getHusbandId());
+        Person husband = Services.person().getPersonByGedcomId(marriage.getHusbandId(), marriage.getFamilyTreeId());
         if (husband != null) {
             final AncestorPerson ancestorHusband = AncestorPersonMapper.map(husband);
             ancestorHusband.setDirectLineage(isDirectLineage);
             couple.setHusband(ancestorHusband);
         }
 
-        Person wife = Services.person().getPersonByGedcomId(marriage.getWifeId());
+        Person wife = Services.person().getPersonByGedcomId(marriage.getWifeId(), marriage.getFamilyTreeId());
         if (wife != null) {
             final AncestorPerson ancestorWife = AncestorPersonMapper.map(wife);
             ancestorWife.setDirectLineage(isDirectLineage);
@@ -53,7 +53,7 @@ public class AncestorCoupleMapper {
         couple.setChildrenID(new ArrayList<>(marriage.childrenIds()));
 
         marriage.childrenIds().forEach(childId -> {
-                    Person dbChild = Services.person().getPersonByGedcomId(childId);
+                    Person dbChild = Services.person().getPersonByGedcomId(childId, marriage.treeId());
                     if (dbChild.getSex().equals(Sex.FEMALE)) {
                         couple.addGirl();
                     } else {

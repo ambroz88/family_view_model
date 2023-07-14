@@ -11,6 +11,7 @@ import java.util.List;
 public record MarriageDto(
         Person husband,
         Person wife,
+        Long treeId,
         DatePlace weddingDatePlace,
         List<String> childrenIds
 ) {

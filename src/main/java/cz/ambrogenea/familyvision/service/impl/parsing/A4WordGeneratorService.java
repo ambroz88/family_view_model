@@ -20,9 +20,9 @@ import java.util.List;
 public class A4WordGeneratorService implements DocumentGeneratorService {
 
     @Override
-    public List<DocumentInputs> generateFamilies(String personId) {
+    public List<DocumentInputs> generateFamilies(String personId, Long treeId) {
         List<DocumentInputs> inputs = new ArrayList<>();
-        LineageSelectionService fathersSelectionService = new LineageSelectionService();
+        LineageSelectionService fathersSelectionService = new LineageSelectionService(treeId);
         AncestorPerson rootPerson = fathersSelectionService.select(personId);
 
         if (rootPerson != null) {

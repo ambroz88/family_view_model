@@ -18,8 +18,10 @@ import java.util.stream.Collectors;
 public class CommonSelectionService {
 
     private final TreeShapeConfiguration configuration;
+    protected final Long treeId;
 
-    public CommonSelectionService() {
+    public CommonSelectionService(Long treeId) {
+        this.treeId = treeId;
         this.configuration = Config.treeShape();
     }
 
@@ -47,7 +49,7 @@ public class CommonSelectionService {
                 Person dbPerson;
 
                 while (!children.get(position).equals(person.getGedcomId())) {
-                    dbPerson = Services.person().getPersonByGedcomId(children.get(position));
+                    dbPerson = Services.person().getPersonByGedcomId(children.get(position), treeId);
                     if (dbPerson != null) {
                         sibling = AncestorPersonMapper.map(dbPerson);
                         sibling.setDirectLineage(false);
@@ -65,7 +67,7 @@ public class CommonSelectionService {
 
                 position++;
                 while (position < children.size()) {
-                    dbPerson = Services.person().getPersonByGedcomId(children.get(position));
+                    dbPerson = Services.person().getPersonByGedcomId(children.get(position), treeId);
                     if (dbPerson != null) {
                         sibling = AncestorPersonMapper.map(dbPerson);
                         sibling.setDirectLineage(false);
@@ -128,7 +130,7 @@ public class CommonSelectionService {
         List<AncestorPerson> children = spouseCouple.getChildrenIds()
                 .stream()
                 .map(childId -> {
-                    Person dbChild = Services.person().getPersonByGedcomId(childId);
+                    Person dbChild = Services.person().getPersonByGedcomId(childId, treeId);
                     return fromPersonWithAllDescendents(dbChild, generation);
                 })
                 .filter(Objects::nonNull)

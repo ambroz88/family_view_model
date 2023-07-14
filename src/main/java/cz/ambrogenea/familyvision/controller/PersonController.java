@@ -11,17 +11,17 @@ import java.util.stream.Collectors;
 
 public class PersonController {
 
-    public String getPerson(String gedcomId) {
+    public String getPerson(String gedcomId, Long treeId) {
         try {
-            final Person response = Services.person().getPersonByGedcomId(gedcomId);
+            final Person response = Services.person().getPersonByGedcomId(gedcomId, treeId);
             return JsonParser.get().writeValueAsString(PersonResponseMapper.map(response));
         } catch (JsonProcessingException e) {
             return null;
         }
     }
 
-    public List<String> getAll() {
-        return Services.person().getPeopleInTree().stream().map(person -> {
+    public List<String> getAll(Long treeId) {
+        return Services.person().getPeopleInTree(treeId).stream().map(person -> {
                     try {
                         return JsonParser.get().writeValueAsString(PersonResponseMapper.map(person));
                     } catch (JsonProcessingException e) {

@@ -8,6 +8,7 @@ import java.util.List;
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class PersonCreateCommand {
+    final private Long familyTreeId;
     private String gedcomId;
     private String firstName;
     private String surname;
@@ -17,6 +18,14 @@ public class PersonCreateCommand {
     private DatePlaceCreateCommand birthDatePlace;
     private DatePlaceCreateCommand deathDatePlace;
     private List<ResidenceCreateCommand> residenceList;
+
+    public PersonCreateCommand(Long familyTreeId) {
+        this.familyTreeId = familyTreeId;
+    }
+
+    public Long getFamilyTreeId() {
+        return familyTreeId;
+    }
 
     public String getGedcomId() {
         return gedcomId;

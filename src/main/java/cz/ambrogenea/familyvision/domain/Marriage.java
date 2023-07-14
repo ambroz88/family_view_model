@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class Marriage {
     private String gedcomFamilyId;
+    private Long familyTreeId;
     private String husbandId;
     private String wifeId;
 
@@ -19,6 +20,14 @@ public class Marriage {
 
     public void setGedcomFamilyId(String gedcomFamilyId) {
         this.gedcomFamilyId = gedcomFamilyId;
+    }
+
+    public Long getFamilyTreeId() {
+        return familyTreeId;
+    }
+
+    public void setFamilyTreeId(Long familyTreeId) {
+        this.familyTreeId = familyTreeId;
     }
 
     public void setHusbandId(String husbandId) {

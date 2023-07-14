@@ -19,7 +19,7 @@ public class MarriageServiceImpl implements MarriageService {
         Marriage marriage = marriageRepository.save(MarriageMapper.map(marriageCreateCommand));
         saveSpousesId(marriageCreateCommand);
         marriage.getChildrenIds().forEach(childId -> {
-                    Person child = Services.person().getPersonByGedcomId(childId);
+                    Person child = Services.person().getPersonByGedcomId(childId, marriageCreateCommand.getFamilyTreeId());
                     if (child != null) {
                         child.setFatherId(marriageCreateCommand.getGedcomHusbandId());
                         child.setMotherId(marriageCreateCommand.getGedcomWifeId());
@@ -32,8 +32,8 @@ public class MarriageServiceImpl implements MarriageService {
     }
 
     private void saveSpousesId(MarriageCreateCommand marriageCreateCommand) {
-        Person husband = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomHusbandId());
-        Person wife = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomWifeId());
+        Person husband = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomHusbandId(), marriageCreateCommand.getFamilyTreeId());
+        Person wife = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomWifeId(), marriageCreateCommand.getFamilyTreeId());
         if (husband != null) {
             husband.getSpouseId().add(marriageCreateCommand.getGedcomFamilyId());
             Services.person().savePerson(husband);

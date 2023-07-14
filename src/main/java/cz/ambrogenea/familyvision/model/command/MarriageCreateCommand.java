@@ -6,11 +6,20 @@ import java.util.List;
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class MarriageCreateCommand {
+    final private Long familyTreeId;
     private String gedcomFamilyId;
     private String gedcomWifeId;
     private String gedcomHusbandId;
     private DatePlaceCreateCommand datePlace;
     private List<String> childrenGedcomIds;
+
+    public MarriageCreateCommand(Long familyTreeId) {
+        this.familyTreeId = familyTreeId;
+    }
+
+    public Long getFamilyTreeId() {
+        return familyTreeId;
+    }
 
     public String getGedcomFamilyId() {
         return gedcomFamilyId;

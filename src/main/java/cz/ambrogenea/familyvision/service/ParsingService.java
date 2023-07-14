@@ -6,5 +6,5 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface ParsingService {
-    String saveData(InputStream stream) throws IOException, SAXParseException;
+    String saveData(InputStream stream, Long familyTreeId) throws IOException, SAXParseException;
 }

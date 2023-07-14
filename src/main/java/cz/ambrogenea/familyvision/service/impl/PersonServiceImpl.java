@@ -23,13 +23,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person getPersonByGedcomId(String gedcomId) {
-        return personRepository.findByGedcomId(gedcomId).orElse(null);
+    public Person getPersonByGedcomId(String gedcomId, Long treeId) {
+        return personRepository.findByGedcomId(gedcomId, treeId).orElse(null);
     }
 
     @Override
-    public List<Person> getPeopleInTree() {
-        return personRepository.findAll();
+    public List<Person> getPeopleInTree(Long treeId) {
+        return personRepository.findAll(treeId);
     }
 
 }

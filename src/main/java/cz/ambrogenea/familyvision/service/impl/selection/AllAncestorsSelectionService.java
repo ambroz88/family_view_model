@@ -12,10 +12,15 @@ import cz.ambrogenea.familyvision.service.util.Services;
 
 public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {
 
+    public AllAncestorsSelectionService(Long treeId) {
+        super(treeId);
+    }
+
     @Override
     public AncestorPerson select(String personId) {
-        Person person = Services.person().getPersonByGedcomId(personId);
+        Person person = Services.person().getPersonByGedcomId(personId, treeId);
         AncestorPerson ancestorPerson = fromRootPersonWithAllDescendents(person);
+        addSiblings(ancestorPerson, person.getParentId());
         addAllParents(ancestorPerson, person.getParentId(), 1);
         return ancestorPerson;
     }
@@ -23,7 +28,7 @@ public class AllAncestorsSelectionService extends CommonSelectionService impleme
     public AncestorPerson fromPersonWithParents(Person person, int generation) {
         AncestorPerson newPerson = AncestorPersonMapper.map(person);
         newPerson.setDirectLineage(true);
-        if (generation < 2) {
+        if (generation < 4) {
             addSiblings(newPerson, person.getParentId());
         }
         if (generation <= Config.treeShape().getAncestorGenerations()) {

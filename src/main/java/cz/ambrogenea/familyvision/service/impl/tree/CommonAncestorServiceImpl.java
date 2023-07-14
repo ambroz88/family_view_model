@@ -17,6 +17,8 @@ import cz.ambrogenea.familyvision.service.TreeModelService;
 import cz.ambrogenea.familyvision.service.impl.TreeModelServiceImpl;
 import cz.ambrogenea.familyvision.service.util.Config;
 
+import java.util.List;
+
 public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     protected final VisualConfiguration configService;
@@ -144,18 +146,21 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         ConfigurationExtensionService config = Config.horizontal();
         int maxChildrenWidth;
         Position coupleCenterPosition;
+        Position spousePosition;
         if (spouseCouple.isNotSingle()) {
             maxChildrenWidth = Math.max(getMaxChildrenWidth(spouseCouple), config.getCoupleWidth());
             coupleCenterPosition = new Position(
                     prevFamilyDto.maxX() + (maxChildrenWidth + configService.getAdultImageWidth()) / 2 + Spaces.HORIZONTAL_GAP,
                     prevFamilyDto.lastParentPosition().y()
             );
+            spousePosition = coupleCenterPosition.addXAndY(config.getSpouseDistance() / 2, 0);
         } else {
             maxChildrenWidth = getMaxChildrenWidth(spouseCouple);
             coupleCenterPosition = new Position(
                     prevFamilyDto.maxX() + maxChildrenWidth / 2 + Spaces.HORIZONTAL_GAP,
                     prevFamilyDto.lastParentPosition().y()
             );
+            spousePosition = coupleCenterPosition;
         }
 
         Position heraldryPosition = coupleCenterPosition.addXAndY(0, configService.getHeraldryVerticalDistance());
@@ -164,12 +169,6 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             treeModelService.addHeraldry(heraldryPosition, spouseCouple.getChildren().get(0).getBirthDatePlace().getSimplePlace());
         }
 
-        Position spousePosition;
-        if (spouseCouple.isNotSingle()) {
-            spousePosition = coupleCenterPosition.addXAndY(config.getSpouseDistance() / 2, 0);
-        } else {
-            spousePosition = coupleCenterPosition;
-        }
         Position childrenPosition = prevFamilyDto.lastChildrenPosition();
 
         FamilyDto currentFamily = new FamilyDto(
@@ -182,20 +181,32 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         for (int i = 0; i < childrenCount; i++) {
             child = spouseCouple.getChildren().get(i);
             if (!child.getSpouseCouples().isEmpty()) {
-                currentFamily = generateChildren(currentFamily, child.getSpouseCouple(), child);
+                List<AncestorCouple> spouseCouples = child.getSpouseCouples();
+                for (int j = 0; j < spouseCouples.size(); j++) {
+                    AncestorCouple ancestorCouple = spouseCouples.get(j);
+                    currentFamily = generateChildren(currentFamily, ancestorCouple, child);
 
-                maxX = Math.max(maxX, currentFamily.maxX());
-                childrenPosition = currentFamily.lastParentPosition();
-                Position childrenSpouse;
-                if (child.getSpouse() != null) {
-                    childrenSpouse = childrenPosition.addXAndY(-config.getSpouseDistance(), 0);
-                } else {
-                    childrenSpouse = childrenPosition;
-                }
-                if (i == 0 || i == childrenCount - 1) {
-                    treeModelService.addLine(childrenSpouse, heraldryPosition);
-                } else {
-                    treeModelService.addLine(childrenSpouse, new Position(childrenSpouse.x(), heraldryPosition.y()));
+                    maxX = Math.max(maxX, currentFamily.maxX());
+                    childrenPosition = currentFamily.lastParentPosition();
+                    Position childrenSpouse;
+                    if (child.getSpouse() != null) {
+                        childrenSpouse = childrenPosition.addXAndY(-config.getSpouseDistance(), 0);
+                    } else {
+                        childrenSpouse = childrenPosition;
+                    }
+                    if (j == 0) {
+                        if (i == 0 || i == childrenCount - 1) {
+                            treeModelService.addLine(childrenSpouse, heraldryPosition);
+                        } else {
+                            treeModelService.addLine(childrenSpouse, new Position(childrenSpouse.x(), heraldryPosition.y()));
+                        }
+                    }
+                    if (spouseCouples.size() > 1 && j < spouseCouples.size() - 1) {
+                        currentFamily = new FamilyDto(
+                                currentFamily.lastParentPosition().addXAndY(-Spaces.HORIZONTAL_GAP, 0),
+                                currentFamily.lastChildrenPosition().addXAndY(-Spaces.HORIZONTAL_GAP, 0)
+                        );
+                    }
                 }
             } else {
                 if (childrenCount == 1) {

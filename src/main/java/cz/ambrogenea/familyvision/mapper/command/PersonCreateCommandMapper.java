@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class PersonCreateCommandMapper {
 
-    public static PersonCreateCommand map(Person gedcomPerson) {
-        PersonCreateCommand createCommand = new PersonCreateCommand();
+    public static PersonCreateCommand map(Person gedcomPerson, Long familyTreeId) {
+        PersonCreateCommand createCommand = new PersonCreateCommand(familyTreeId);
         List<ResidenceCreateCommand> residences = new ArrayList<>();
 
         String name = gedcomPerson.getNames().get(0).getValue();

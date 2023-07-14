@@ -15,6 +15,7 @@ public class PersonMapper {
     public static Person map(PersonCreateCommand personCreateCommand) {
         return new Person(
                 personCreateCommand.getGedcomId(),
+                personCreateCommand.getFamilyTreeId(),
                 Objects.requireNonNullElse(personCreateCommand.getFirstName(), ""),
                 Objects.requireNonNullElse(personCreateCommand.getSurname(), ""),
                 personCreateCommand.getSex(),

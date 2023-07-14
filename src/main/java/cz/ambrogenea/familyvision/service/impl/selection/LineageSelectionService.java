@@ -8,9 +8,13 @@ import cz.ambrogenea.familyvision.service.util.Services;
 
 public class LineageSelectionService extends CommonSelectionService implements SelectionService {
 
+    public LineageSelectionService(Long treeId) {
+        super(treeId);
+    }
+
     @Override
     public AncestorPerson select(String personId) {
-        Person person = Services.person().getPersonByGedcomId(personId);
+        Person person = Services.person().getPersonByGedcomId(personId, treeId);
         switch (Config.treeShape().getLineageType()) {
             case FATHER -> fromPersonWithManParents(person, 1);
             case MOTHER -> fromPersonWithWomanParents(person);

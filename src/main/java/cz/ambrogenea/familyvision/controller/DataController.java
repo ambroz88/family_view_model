@@ -16,8 +16,8 @@ public class DataController {
         parsingService = new GedcomParsingService();
     }
 
-    public String parseData(File gedcomFile) throws IOException, SAXParseException {
-        return parsingService.saveData(new FileInputStream(gedcomFile));
+    public String parseData(File gedcomFile, Long familyTreeId) throws IOException, SAXParseException {
+        return parsingService.saveData(new FileInputStream(gedcomFile), familyTreeId);
     }
 
 }

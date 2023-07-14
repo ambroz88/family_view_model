@@ -10,6 +10,7 @@ import java.util.List;
 public class Person {
 
     final private String gedcomId;
+    final private Long familyTreeId;
     final private String firstName;
     final private String surname;
     final private Sex sex;
@@ -24,10 +25,11 @@ public class Person {
     private String motherId;
 
 
-    public Person(String gedcomId, String firstName, String surname, Sex sex, boolean living,
+    public Person(String gedcomId, Long familyTreeId, String firstName, String surname, Sex sex, boolean living,
                   DatePlace birthDatePlace, DatePlace deathDatePlace, String occupation,
                   List<Residence> residences, List<String> spouseId) {
         this.gedcomId = gedcomId;
+        this.familyTreeId = familyTreeId;
         this.firstName = firstName;
         this.surname = surname;
         this.sex = sex;
@@ -50,6 +52,10 @@ public class Person {
 
     public String getGedcomId() {
         return gedcomId;
+    }
+
+    public Long getFamilyTreeId() {
+        return familyTreeId;
     }
 
     public String getFirstName() {
