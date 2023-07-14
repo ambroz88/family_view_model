@@ -23,6 +23,7 @@ public class VisualConfigurationMapper {
         visualConfiguration.setShowPlaces(configurationCommand.showPlaces());
         visualConfiguration.setShortenPlaces(configurationCommand.shortenPlaces());
         visualConfiguration.setShowOrdinances(configurationCommand.showOrdinances());
+        visualConfiguration.setShowChildrenCount(configurationCommand.showChildrenCount());
         visualConfiguration.setLocale(configurationCommand.locale());
         visualConfiguration.setResetMode(configurationCommand.resetMode());
         return visualConfiguration;

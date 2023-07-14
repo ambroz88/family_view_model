@@ -45,7 +45,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     private Position generateSpousesWithDescendents(AncestorPerson rootPerson, Position rootPersonPosition) {
-        if (rootPerson.getSpouse() != null) {
+        if (!rootPerson.getSpouseCouples().isEmpty()) {
             ConfigurationExtensionService config = Config.horizontal();
             Position spousePosition = rootPersonPosition;
             Position lastChildPosition = rootPersonPosition.addXAndY(0, config.getGenerationsVerticalDistance());
@@ -58,9 +58,15 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 } else {
                     if (index == 0) {
                         int childrenHalfWidth = getMaxChildrenWidth(spouseCouple) / 2;
-                        lastChildPosition = rootPersonPosition.addXAndY(
-                                -childrenHalfWidth - configService.nextChildrenX() + (configService.getAdultImageWidth() + config.getSpouseDistance()) / 2,
-                                config.getGenerationsVerticalDistance());
+                        if (spouseCouple.isNotSingle()) {
+                            lastChildPosition = rootPersonPosition.addXAndY(
+                                    -childrenHalfWidth - configService.nextChildrenX() + (configService.getAdultImageWidth() + config.getSpouseDistance()) / 2,
+                                    config.getGenerationsVerticalDistance());
+                        } else {
+                            lastChildPosition = rootPersonPosition.addXAndY(
+                                    -childrenHalfWidth - configService.nextChildrenX() + configService.getAdultImageWidth() / 2,
+                                    config.getGenerationsVerticalDistance());
+                        }
                         spousePosition = new Position(lastChildPosition.x(), rootPersonPosition.y());
                     }
                     FamilyDto familyDto = generateChildren(
@@ -81,9 +87,13 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
             FamilyDto familyDto;
             if (!spouseCouple.getChildren().isEmpty()) {
                 familyDto = addChildren(prevFamilyDto, spouseCouple);
-                spousePosition = familyDto.lastParentPosition();
+                spousePosition = familyDto.lastParentPosition(); // new Position(familyDto.maxX, familyDto.lastParentPosition().y
             } else {
-                spousePosition = prevFamilyDto.lastParentPosition().addXAndY(configService.nextChildrenX() + Config.horizontal().getSpouseDistance(), 0);
+                if (spouseCouple.isNotSingle()) {
+                    spousePosition = prevFamilyDto.lastParentPosition().addXAndY(configService.nextChildrenX() + Config.horizontal().getSpouseDistance(), 0);
+                } else {
+                    spousePosition = prevFamilyDto.lastParentPosition().addXAndY(configService.nextChildrenX(), 0);
+                }
                 familyDto = new FamilyDto(spousePosition, prevFamilyDto.lastChildrenPosition());
             }
             addBothSpouseWithMarriage(spousePosition, spouseCouple, rootSpouse);
@@ -102,15 +112,20 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     private void addBothSpouseWithMarriage(Position spousePosition, AncestorCouple spouseCouple, AncestorPerson rootSpouse) {
         ConfigurationExtensionService config = Config.horizontal();
-        addPerson(spousePosition.addXAndY(-config.getSpouseDistance(), 0), rootSpouse);
-        addPerson(spousePosition, spouseCouple.getSpouse(rootSpouse.getSex()));
-        String marriageDate = "";
-        if (spouseCouple.getDatePlace() != null) {
-            marriageDate = spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale());
+        if (spouseCouple.isNotSingle()) {
+            addPerson(spousePosition.addXAndY(-config.getSpouseDistance(), 0), rootSpouse);
+            addPerson(spousePosition, spouseCouple.getSpouse(rootSpouse.getSex()));
+            String marriageDate = "";
+            if (spouseCouple.getDatePlace() != null) {
+                marriageDate = spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale());
+            }
+            treeModelService.addMarriage(spousePosition.addXAndY(-config.getSpouseDistance() / 2, 0),
+                    marriageDate,
+                    spouseCouple,
+                    LabelType.TALL);
+        } else {
+            addPerson(spousePosition, rootSpouse);
         }
-        treeModelService.addMarriage(spousePosition.addXAndY(-config.getSpouseDistance() / 2, 0),
-                marriageDate,
-                LabelType.TALL);
     }
 
     private void addSpouseWithMarriage(Position spousePosition, AncestorCouple spouseCouple, AncestorPerson rootSpouse) {
@@ -121,49 +136,73 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         }
         treeModelService.addMarriage(spousePosition.addXAndY(-Config.horizontal().getSpouseDistance() / 2, 0),
                 marriageDate,
+                spouseCouple,
                 LabelType.TALL);
     }
 
     private FamilyDto addChildren(FamilyDto prevFamilyDto, AncestorCouple spouseCouple) {
         ConfigurationExtensionService config = Config.horizontal();
-        int maxChildrenWidth = getMaxChildrenWidth(spouseCouple);
+        int maxChildrenWidth;
+        Position coupleCenterPosition;
+        if (spouseCouple.isNotSingle()) {
+            maxChildrenWidth = Math.max(getMaxChildrenWidth(spouseCouple), config.getCoupleWidth());
+            coupleCenterPosition = new Position(
+                    prevFamilyDto.maxX() + (maxChildrenWidth + configService.getAdultImageWidth()) / 2 + Spaces.HORIZONTAL_GAP,
+                    prevFamilyDto.lastParentPosition().y()
+            );
+        } else {
+            maxChildrenWidth = getMaxChildrenWidth(spouseCouple);
+            coupleCenterPosition = new Position(
+                    prevFamilyDto.maxX() + maxChildrenWidth / 2 + Spaces.HORIZONTAL_GAP,
+                    prevFamilyDto.lastParentPosition().y()
+            );
+        }
 
-        Position coupleCenterPosition = new Position(
-                prevFamilyDto.maxX() + (maxChildrenWidth + configService.getAdultImageWidth()) / 2 + Spaces.HORIZONTAL_GAP,
-                prevFamilyDto.lastParentPosition().y()
-        );
         Position heraldryPosition = coupleCenterPosition.addXAndY(0, configService.getHeraldryVerticalDistance());
         treeModelService.addLine(heraldryPosition, coupleCenterPosition);
         if (Config.treeShape().isShowHeraldry()) {
             treeModelService.addHeraldry(heraldryPosition, spouseCouple.getChildren().get(0).getBirthDatePlace().getSimplePlace());
         }
 
-        Position spousePosition = coupleCenterPosition.addXAndY(config.getSpouseDistance() / 2, 0);
+        Position spousePosition;
+        if (spouseCouple.isNotSingle()) {
+            spousePosition = coupleCenterPosition.addXAndY(config.getSpouseDistance() / 2, 0);
+        } else {
+            spousePosition = coupleCenterPosition;
+        }
         Position childrenPosition = prevFamilyDto.lastChildrenPosition();
 
-        FamilyDto currentFamily;
+        FamilyDto currentFamily = new FamilyDto(
+                prevFamilyDto.lastChildrenPosition(),
+                prevFamilyDto.lastChildrenPosition().addXAndY(0, config.getGenerationsVerticalDistance())
+        );
         int childrenCount = spouseCouple.getChildren().size();
         int maxX = prevFamilyDto.maxX();
         AncestorPerson child;
         for (int i = 0; i < childrenCount; i++) {
             child = spouseCouple.getChildren().get(i);
-            if (child.getSpouse() != null) {
-                currentFamily = generateChildren(new FamilyDto(
-                        childrenPosition,
-                        childrenPosition.addXAndY(0, config.getGenerationsVerticalDistance())
-                ), child.getSpouseCouple(), child);
+            if (!child.getSpouseCouples().isEmpty()) {
+                currentFamily = generateChildren(currentFamily, child.getSpouseCouple(), child);
 
                 maxX = Math.max(maxX, currentFamily.maxX());
                 childrenPosition = currentFamily.lastParentPosition();
-                Position childrenSpouse = childrenPosition.addXAndY(-config.getSpouseDistance(), 0);
-//                TODO: what about single parent? ___________________________|
+                Position childrenSpouse;
+                if (child.getSpouse() != null) {
+                    childrenSpouse = childrenPosition.addXAndY(-config.getSpouseDistance(), 0);
+                } else {
+                    childrenSpouse = childrenPosition;
+                }
                 if (i == 0 || i == childrenCount - 1) {
                     treeModelService.addLine(childrenSpouse, heraldryPosition);
                 } else {
                     treeModelService.addLine(childrenSpouse, new Position(childrenSpouse.x(), heraldryPosition.y()));
                 }
             } else {
-                childrenPosition = childrenPosition.addXAndY(configService.nextChildrenX(), 0);
+                if (childrenCount == 1) {
+                    childrenPosition = new Position(coupleCenterPosition.x(), childrenPosition.y());
+                } else {
+                    childrenPosition = childrenPosition.addXAndY(configService.nextChildrenX(), 0);
+                }
                 maxX = Math.max(maxX, childrenPosition.x());
 
                 treeModelService.addPerson(childrenPosition, child);
@@ -172,6 +211,9 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 } else {
                     treeModelService.addLine(childrenPosition, new Position(childrenPosition.x(), heraldryPosition.y()));
                 }
+                //TODO: toto upravit - druhy parametr by mel byt jeste osetren podminkou vzhledem k childrenMaxWidth
+                int lastChildrenX = Math.max(currentFamily.lastChildrenPosition().x(), coupleCenterPosition.x() - (maxChildrenWidth + configService.getAdultImageWidth()) / 2);
+                currentFamily = new FamilyDto(childrenPosition, new Position(lastChildrenX, currentFamily.lastChildrenPosition().y()));
             }
         }
         return new FamilyDto(spousePosition, new Position(maxX, childrenPosition.y()));
@@ -273,6 +315,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         treeModelService.addMarriage(
                 extensionConfig.getSiblingsMarriagePosition(spousePosition),
                 marriageDate,
+                spouseCouple,
                 extensionConfig.getMarriageLabelType()
         );
     }
@@ -343,7 +386,9 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                                 0,
                                 -extensionConfig.getMarriageLabelVerticalDistance()
                         ),
-                        marriageDate, extensionConfig.getMarriageLabelType()
+                        marriageDate,
+                        child.getParents(),
+                        extensionConfig.getMarriageLabelType()
                 );
             }
             return new ParentsDto(fatherPosition, motherPosition, heraldryPosition.y() - extensionConfig.getGenerationsVerticalDistance());

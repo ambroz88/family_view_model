@@ -26,6 +26,7 @@ public record VisualConfigurationResponse(
         boolean showPlaces,
         boolean shortenPlaces,
         boolean showOrdinances,
+        boolean showChildrenCount,
         Locale locale,
         boolean resetMode
 ) {

@@ -23,6 +23,7 @@ public class VisualConfigurationResponseMapper {
                 visualConfiguration.isShowPlaces(),
                 visualConfiguration.isShortenPlaces(),
                 visualConfiguration.isShowOrdinances(),
+                visualConfiguration.isShowChildrenCount(),
                 visualConfiguration.getLocale(),
                 visualConfiguration.isResetMode()
         );

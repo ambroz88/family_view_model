@@ -29,6 +29,7 @@ public class VisualConfiguration {
     private boolean showPlaces;
     private boolean shortenPlaces;
     private boolean showOrdinances;
+    private boolean showChildrenCount;
 
     private Locale locale;
     private boolean resetMode;
@@ -53,6 +54,7 @@ public class VisualConfiguration {
         showPlaces = true;
         shortenPlaces = true;
         showOrdinances = false;
+        showChildrenCount = false;
 
         locale = new Locale("cs", "CZ");
         resetMode = false;
@@ -212,6 +214,14 @@ public class VisualConfiguration {
 
     public void setShowOrdinances(boolean showOrdinances) {
         this.showOrdinances = showOrdinances;
+    }
+
+    public boolean isShowChildrenCount() {
+        return showChildrenCount;
+    }
+
+    public void setShowChildrenCount(boolean showChildrenCount) {
+        this.showChildrenCount = showChildrenCount;
     }
 
     public Locale getLocale() {

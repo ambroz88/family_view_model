@@ -26,6 +26,7 @@ public record VisualConfigurationRequest(
         boolean showPlaces,
         boolean shortenPlaces,
         boolean showOrdinances,
+        boolean showChildrenCount,
         Locale locale,
         boolean resetMode
 ) {
@@ -49,6 +50,7 @@ public record VisualConfigurationRequest(
                 ", showPlaces=" + showPlaces +
                 ", shortenPlaces=" + shortenPlaces +
                 ", showOrdinances=" + showOrdinances +
+                ", showChildrenCount=" + showChildrenCount +
                 ", locale=" + locale +
                 ", resetMode=" + resetMode +
                 '}';
