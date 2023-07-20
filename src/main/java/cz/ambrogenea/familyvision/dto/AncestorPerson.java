@@ -1,6 +1,5 @@
 package cz.ambrogenea.familyvision.dto;
 
-import cz.ambrogenea.familyvision.domain.DatePlace;
 import cz.ambrogenea.familyvision.domain.Residence;
 import cz.ambrogenea.familyvision.enums.Sex;
 
@@ -18,8 +17,8 @@ public class AncestorPerson {
     private final String surname;
     private final Sex sex;
     private final boolean living;
-    private final DatePlace birthDatePlace;
-    private final DatePlace deathDatePlace;
+    private final DatePlaceDto birthDatePlace;
+    private final DatePlaceDto deathDatePlace;
     private final String occupation;
     private final List<Residence> residences;
     private final LinkedList<AncestorPerson> youngerSiblings;
@@ -39,7 +38,7 @@ public class AncestorPerson {
     private int maxYoungerSiblings;
 
     public AncestorPerson(String gedcomId, String firstName, String surname, Sex sex, boolean living,
-                          DatePlace birthDatePlace, DatePlace deathDatePlace, String occupation,
+                          DatePlaceDto birthDatePlace, DatePlaceDto deathDatePlace, String occupation,
                           List<Residence> residences) {
         this.gedcomId = gedcomId;
         this.firstName = firstName;
@@ -364,11 +363,11 @@ public class AncestorPerson {
         return sex;
     }
 
-    public DatePlace getBirthDatePlace() {
+    public DatePlaceDto getBirthDatePlace() {
         return birthDatePlace;
     }
 
-    public DatePlace getDeathDatePlace() {
+    public DatePlaceDto getDeathDatePlace() {
         return deathDatePlace;
     }
 

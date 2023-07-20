@@ -5,7 +5,6 @@ package cz.ambrogenea.familyvision.model.response;
  */
 public record DatePlaceResponse(
         String year,
-        String dateNote,
         String city
 ) {
 }

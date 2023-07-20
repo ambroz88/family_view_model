@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.domain;
+package cz.ambrogenea.familyvision.dto;
 
 import cz.ambrogenea.familyvision.enums.DateSpecification;
 
@@ -11,14 +11,14 @@ import java.util.Locale;
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class DatePlace {
+public class DatePlaceDto {
 
     private Date date;
     private DateSpecification dateSpecification;
     private String place;
     private String datePattern;
 
-    public DatePlace() {
+    public DatePlaceDto() {
         place = "";
         datePattern = "d MMM yyyy";
     }

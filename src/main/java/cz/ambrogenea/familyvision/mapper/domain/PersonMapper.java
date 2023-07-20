@@ -20,8 +20,10 @@ public class PersonMapper {
                 Objects.requireNonNullElse(personCreateCommand.getSurname(), ""),
                 personCreateCommand.getSex(),
                 personCreateCommand.isLiving(),
-                DatePlaceMapper.map(personCreateCommand.getBirthDatePlace()),
-                DatePlaceMapper.map(personCreateCommand.getDeathDatePlace()),
+                personCreateCommand.getBirthDate(),
+                personCreateCommand.getBirthPlace(),
+                personCreateCommand.getDeathDate(),
+                personCreateCommand.getDeathPlace(),
                 Objects.requireNonNullElse(personCreateCommand.getOccupation(), ""),
                 personCreateCommand.getResidenceList().stream()
                         .map(ResidenceMapper::map)

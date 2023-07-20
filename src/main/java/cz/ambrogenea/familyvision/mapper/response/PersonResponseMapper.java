@@ -11,8 +11,8 @@ public class PersonResponseMapper {
                 person.getFirstName(),
                 person.getSurname(),
                 person.getSex(),
-                DatePlaceResponseMapper.map(person.getBirthDatePlace()),
-                DatePlaceResponseMapper.map(person.getDeathDatePlace()),
+                DatePlaceResponseMapper.map(person.getBirthDate(),person.getBirthPlace()),
+                DatePlaceResponseMapper.map(person.getDeathDate(),person.getDeathPlace()),
                 person.getOccupation()
         );
     }

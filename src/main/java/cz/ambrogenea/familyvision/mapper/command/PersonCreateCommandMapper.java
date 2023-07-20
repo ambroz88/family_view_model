@@ -3,7 +3,6 @@ package cz.ambrogenea.familyvision.mapper.command;
 import cz.ambrogenea.familyvision.enums.InfoType;
 import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.mapper.util.Verification;
-import cz.ambrogenea.familyvision.model.command.DatePlaceCreateCommand;
 import cz.ambrogenea.familyvision.model.command.PersonCreateCommand;
 import cz.ambrogenea.familyvision.model.command.ResidenceCreateCommand;
 import org.folg.gedcom.model.Person;
@@ -38,11 +37,13 @@ public class PersonCreateCommandMapper {
                     if (fact.getTag().equals(InfoType.SEX.toString())) {
                         createCommand.setSex(Sex.getSex(fact.getValue()));
                     } else if (fact.getTag().equals(InfoType.BIRTH.toString())) {
-                        createCommand.setBirthDatePlace(new DatePlaceCreateCommand(fact.getDate(), fact.getPlace()));
+                        createCommand.setBirthDate(fact.getDate());
+                        createCommand.setBirthPlace(fact.getPlace());
                     } else if (fact.getTag().equals(InfoType.DEATH.toString())) {
                         createCommand.setLiving(false);
                         if (!"DECEASED".equals(fact.getValue())) {
-                            createCommand.setDeathDatePlace(new DatePlaceCreateCommand(fact.getDate(), fact.getPlace()));
+                            createCommand.setDeathDate(fact.getDate());
+                            createCommand.setDeathPlace(fact.getPlace());
                         }
                     } else if (fact.getTag().equals(InfoType.OCCUPATION.toString())) {
                         createCommand.setOccupation(fact.getValue());

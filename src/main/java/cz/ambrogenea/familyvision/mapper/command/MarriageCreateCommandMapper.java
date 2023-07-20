@@ -2,7 +2,6 @@ package cz.ambrogenea.familyvision.mapper.command;
 
 import cz.ambrogenea.familyvision.enums.InfoType;
 import cz.ambrogenea.familyvision.mapper.util.Verification;
-import cz.ambrogenea.familyvision.model.command.DatePlaceCreateCommand;
 import cz.ambrogenea.familyvision.model.command.MarriageCreateCommand;
 import org.folg.gedcom.model.Family;
 
@@ -24,7 +23,8 @@ public class MarriageCreateCommandMapper {
         }
         gedcomFamily.getEventsFacts().forEach(fact -> {
                     if (fact.getTag().equals(InfoType.MARRIAGE.toString())) {
-                        createCommand.setDatePlace(new DatePlaceCreateCommand(fact.getDate(), fact.getPlace()));
+                        createCommand.setDate(fact.getDate());
+                        createCommand.setPlace(fact.getPlace());
                     }
                 }
         );

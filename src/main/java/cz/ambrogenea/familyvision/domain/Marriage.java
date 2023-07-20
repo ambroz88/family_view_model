@@ -11,7 +11,8 @@ public class Marriage {
     private String husbandId;
     private String wifeId;
 
-    private DatePlace weddingDatePlace;
+    private String weddingDate;
+    private String weddingPlace;
     private List<String> childrenIds;
 
     public String getGedcomFamilyId() {
@@ -46,13 +47,20 @@ public class Marriage {
         return wifeId;
     }
 
-
-    public DatePlace getWeddingDatePlace() {
-        return weddingDatePlace;
+    public String getWeddingDate() {
+        return weddingDate;
     }
 
-    public void setWeddingDatePlace(DatePlace weddingDatePlace) {
-        this.weddingDatePlace = weddingDatePlace;
+    public void setWeddingDate(String weddingDate) {
+        this.weddingDate = weddingDate;
+    }
+
+    public String getWeddingPlace() {
+        return weddingPlace;
+    }
+
+    public void setWeddingPlace(String weddingPlace) {
+        this.weddingPlace = weddingPlace;
     }
 
     public List<String> getChildrenIds() {

@@ -1,8 +1,7 @@
-package cz.ambrogenea.familyvision.mapper.domain;
+package cz.ambrogenea.familyvision.mapper.dto;
 
-import cz.ambrogenea.familyvision.domain.DatePlace;
+import cz.ambrogenea.familyvision.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.enums.DateSpecification;
-import cz.ambrogenea.familyvision.model.command.DatePlaceCreateCommand;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,30 +14,29 @@ import java.util.Locale;
  */
 public class DatePlaceMapper {
 
-    public static DatePlace map(DatePlaceCreateCommand createCommand) {
-        DatePlace datePlace = new DatePlace();
-        if (createCommand != null) {
-            if (createCommand.date() != null) {
-                String[] dateParts = createCommand.date().split(" ", 2);
-                if (dateParts.length == 2) {
-                    try {
-                        datePlace.setDateSpecification(DateSpecification.valueOf(dateParts[0]));
-                        parseDate(dateParts[1], datePlace);
-                    } catch (IllegalArgumentException e) {
-                        parseDate(createCommand.date(), datePlace);
-                    }
-                } else {
-                    parseDate(createCommand.date(), datePlace);
+    public static DatePlaceDto map(String date, String place) {
+        DatePlaceDto datePlace = new DatePlaceDto();
+        if (date != null) {
+            String[] dateParts = date.split(" ", 2);
+            if (dateParts.length == 2) {
+                try {
+                    datePlace.setDateSpecification(DateSpecification.valueOf(dateParts[0]));
+                    parseDate(dateParts[1], datePlace);
+                } catch (IllegalArgumentException e) {
+                    parseDate(date, datePlace);
                 }
+            } else {
+                parseDate(date, datePlace);
             }
-            if (createCommand.place() != null) {
-                datePlace.setPlace(createCommand.place());
-            }
+        }
+
+        if (place != null) {
+            datePlace.setPlace(place);
         }
         return datePlace;
     }
 
-    private static void parseDate(String date, DatePlace datePlace) {
+    private static void parseDate(String date, DatePlaceDto datePlace) {
         String normalizeDate = date.toLowerCase();
         if (!normalizeDate.contains("sept")) {
             normalizeDate = normalizeDate.replace("sep", "sept");
@@ -59,7 +57,7 @@ public class DatePlaceMapper {
         }
     }
 
-    private static void parseFullDate(String date, Locale locale, DatePlace datePlace) throws ParseException {
+    private static void parseFullDate(String date, Locale locale, DatePlaceDto datePlace) throws ParseException {
         Date finalDate;
         String datePattern;
         try {
@@ -81,10 +79,6 @@ public class DatePlaceMapper {
         }
         datePlace.setDate(finalDate);
         datePlace.setDatePattern(datePattern);
-    }
-
-    public static boolean isValidDatePlace(DatePlaceCreateCommand datePlace) {
-        return datePlace != null && (datePlace.date() != null || datePlace.place() != null);
     }
 
 }

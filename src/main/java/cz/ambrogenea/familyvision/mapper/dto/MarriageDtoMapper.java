@@ -11,7 +11,7 @@ public class MarriageDtoMapper {
                 Services.person().getPersonByGedcomId(marriage.getHusbandId(), marriage.getFamilyTreeId()),
                 Services.person().getPersonByGedcomId(marriage.getWifeId(), marriage.getFamilyTreeId()),
                 marriage.getFamilyTreeId(),
-                marriage.getWeddingDatePlace(),
+                DatePlaceMapper.map(marriage.getWeddingDate(), marriage.getWeddingPlace()),
                 marriage.getChildrenIds()
         );
     }

@@ -14,9 +14,8 @@ public class MarriageMapper {
         marriage.setFamilyTreeId(createCommand.getFamilyTreeId());
         marriage.setHusbandId(createCommand.getGedcomHusbandId());
         marriage.setWifeId(createCommand.getGedcomWifeId());
-        if (DatePlaceMapper.isValidDatePlace(createCommand.getDatePlace())) {
-            marriage.setWeddingDatePlace(DatePlaceMapper.map(createCommand.getDatePlace()));
-        }
+        marriage.setWeddingDate(createCommand.getDate());
+        marriage.setWeddingPlace(createCommand.getPlace());
         marriage.setChildrenIds(createCommand.getChildrenGedcomIds());
         return marriage;
     }

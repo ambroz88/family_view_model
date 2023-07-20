@@ -10,7 +10,8 @@ public class MarriageCreateCommand {
     private String gedcomFamilyId;
     private String gedcomWifeId;
     private String gedcomHusbandId;
-    private DatePlaceCreateCommand datePlace;
+    private String date;
+    private String place;
     private List<String> childrenGedcomIds;
 
     public MarriageCreateCommand(Long familyTreeId) {
@@ -45,12 +46,20 @@ public class MarriageCreateCommand {
         this.gedcomHusbandId = gedcomHusbandId;
     }
 
-    public DatePlaceCreateCommand getDatePlace() {
-        return datePlace;
+    public String getDate() {
+        return date;
     }
 
-    public void setDatePlace(DatePlaceCreateCommand datePlace) {
-        this.datePlace = datePlace;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public List<String> getChildrenGedcomIds() {

@@ -1,6 +1,6 @@
 package cz.ambrogenea.familyvision.dto.tree;
 
-import cz.ambrogenea.familyvision.domain.DatePlace;
+import cz.ambrogenea.familyvision.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.domain.Personalize;
 import cz.ambrogenea.familyvision.domain.Residence;
 import cz.ambrogenea.familyvision.enums.Sex;
@@ -13,8 +13,8 @@ public record PersonRecord(
         String firstName,
         String surname,
         Sex sex,
-        DatePlace birthDatePlace,
-        DatePlace deathDatePlace,
+        DatePlaceDto birthDatePlace,
+        DatePlaceDto deathDatePlace,
         String occupation,
         boolean living,
         boolean directLineage,

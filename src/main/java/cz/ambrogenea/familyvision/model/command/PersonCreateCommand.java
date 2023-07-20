@@ -15,8 +15,10 @@ public class PersonCreateCommand {
     private Sex sex;
     private boolean living;
     private String occupation;
-    private DatePlaceCreateCommand birthDatePlace;
-    private DatePlaceCreateCommand deathDatePlace;
+    private String birthDate;
+    private String birthPlace;
+    private String deathDate;
+    private String deathPlace;
     private List<ResidenceCreateCommand> residenceList;
 
     public PersonCreateCommand(Long familyTreeId) {
@@ -75,20 +77,36 @@ public class PersonCreateCommand {
         this.occupation = occupation;
     }
 
-    public DatePlaceCreateCommand getBirthDatePlace() {
-        return birthDatePlace;
+    public String getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirthDatePlace(DatePlaceCreateCommand birthDatePlace) {
-        this.birthDatePlace = birthDatePlace;
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 
-    public DatePlaceCreateCommand getDeathDatePlace() {
-        return deathDatePlace;
+    public String getBirthPlace() {
+        return birthPlace;
     }
 
-    public void setDeathDatePlace(DatePlaceCreateCommand deathDatePlace) {
-        this.deathDatePlace = deathDatePlace;
+    public void setBirthPlace(String birthPlace) {
+        this.birthPlace = birthPlace;
+    }
+
+    public String getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(String deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public String getDeathPlace() {
+        return deathPlace;
+    }
+
+    public void setDeathPlace(String deathPlace) {
+        this.deathPlace = deathPlace;
     }
 
     public List<ResidenceCreateCommand> getResidenceList() {

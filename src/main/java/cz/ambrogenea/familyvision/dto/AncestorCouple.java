@@ -3,7 +3,6 @@ package cz.ambrogenea.familyvision.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.ambrogenea.familyvision.domain.DatePlace;
 import cz.ambrogenea.familyvision.enums.Sex;
 
 /**
@@ -18,14 +17,14 @@ public class AncestorCouple {
 
     private AncestorPerson wife;
     private AncestorPerson husband;
-    private DatePlace datePlace;
+    private DatePlaceDto datePlace;
     private DescendentTreeInfo descendentTreeInfo;
 
     public AncestorCouple() {
         boys = 0;
         girls = 0;
         children = new ArrayList<>();
-        datePlace = new DatePlace();
+        datePlace = new DatePlaceDto();
         descendentTreeInfo = new DescendentTreeInfo();
     }
 
@@ -40,7 +39,7 @@ public class AncestorCouple {
         girls = 0;
         childrenID = new ArrayList<>();
         children = new ArrayList<>();
-        datePlace = new DatePlace();
+        datePlace = new DatePlaceDto();
         descendentTreeInfo = new DescendentTreeInfo();
     }
 
@@ -52,11 +51,11 @@ public class AncestorCouple {
         this.husband = husband;
     }
 
-    public DatePlace getDatePlace() {
+    public DatePlaceDto getDatePlace() {
         return datePlace;
     }
 
-    public void setDatePlace(DatePlace datePlace) {
+    public void setDatePlace(DatePlaceDto datePlace) {
         this.datePlace = datePlace;
     }
 

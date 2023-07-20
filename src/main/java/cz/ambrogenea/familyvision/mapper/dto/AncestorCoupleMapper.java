@@ -28,9 +28,7 @@ public class AncestorCoupleMapper {
             couple.setWife(ancestorWife);
         }
 
-        if (marriage.getWeddingDatePlace() != null) {
-            couple.setDatePlace(marriage.getWeddingDatePlace());
-        }
+        couple.setDatePlace(DatePlaceMapper.map(marriage.getWeddingDate(), marriage.getWeddingPlace()));
         couple.setChildrenID(new ArrayList<>(marriage.getChildrenIds()));
         return couple;
     }

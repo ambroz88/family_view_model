@@ -15,8 +15,10 @@ public class Person {
     final private String surname;
     final private Sex sex;
     final private boolean living;
-    final private DatePlace birthDatePlace;
-    final private DatePlace deathDatePlace;
+    final private String birthDate;
+    final private String birthPlace;
+    final private String deathDate;
+    final private String deathPlace;
     final private String occupation;
     final private List<Residence> residences;
     final private List<String> spouseId;
@@ -26,7 +28,7 @@ public class Person {
 
 
     public Person(String gedcomId, Long familyTreeId, String firstName, String surname, Sex sex, boolean living,
-                  DatePlace birthDatePlace, DatePlace deathDatePlace, String occupation,
+                  String birthDate, String birthPlace, String deathDate, String deathPlace, String occupation,
                   List<Residence> residences, List<String> spouseId) {
         this.gedcomId = gedcomId;
         this.familyTreeId = familyTreeId;
@@ -34,8 +36,10 @@ public class Person {
         this.surname = surname;
         this.sex = sex;
         this.living = living;
-        this.birthDatePlace = birthDatePlace;
-        this.deathDatePlace = deathDatePlace;
+        this.birthDate = birthDate;
+        this.birthPlace = birthPlace;
+        this.deathDate = deathDate;
+        this.deathPlace = deathPlace;
         this.occupation = occupation;
         this.residences = residences;
         this.spouseId = spouseId;
@@ -74,12 +78,20 @@ public class Person {
         return living;
     }
 
-    public DatePlace getBirthDatePlace() {
-        return birthDatePlace;
+    public String getBirthDate() {
+        return birthDate;
     }
 
-    public DatePlace getDeathDatePlace() {
-        return deathDatePlace;
+    public String getBirthPlace() {
+        return birthPlace;
+    }
+
+    public String getDeathDate() {
+        return deathDate;
+    }
+
+    public String getDeathPlace() {
+        return deathPlace;
     }
 
     public String getOccupation() {

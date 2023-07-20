@@ -1,30 +1,22 @@
 package cz.ambrogenea.familyvision.mapper.response;
 
-import cz.ambrogenea.familyvision.domain.DatePlace;
 import cz.ambrogenea.familyvision.model.response.DatePlaceResponse;
-import cz.ambrogenea.familyvision.service.util.Config;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DatePlaceResponseMapper {
 
-    public static DatePlaceResponse map(DatePlace datePlace) {
-        String dateSpecification = null;
-        if (datePlace.getDateSpecification() != null) {
-            dateSpecification = datePlace.getDateSpecification().getString(Config.visual().getLocale());
-        }
-
+    public static DatePlaceResponse map(String date, String place) {
         String year = "";
-        Date date = datePlace.getDate();
-        if (date != null) {
-            SimpleDateFormat dtf = new SimpleDateFormat("yyyy");
-            year = dtf.format(date);
+        if (date != null && !date.isEmpty()) {
+            int index = date.lastIndexOf(" ");
+            if (index != -1) {
+                year = date.substring(index + 1);
+            } else {
+                year = date;
+            }
         }
         return new DatePlaceResponse(
                 year,
-                dateSpecification,
-                datePlace.getSimplePlace()
+                place != null ? place.split(",")[0] : ""
         );
     }
 

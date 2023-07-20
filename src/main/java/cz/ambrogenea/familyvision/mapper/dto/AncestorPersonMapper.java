@@ -14,8 +14,8 @@ public class AncestorPersonMapper {
                 person.getSurname(),
                 person.getSex(),
                 person.isLiving(),
-                person.getBirthDatePlace(),
-                person.getDeathDatePlace(),
+                DatePlaceMapper.map(person.getBirthDate(), person.getBirthPlace()),
+                DatePlaceMapper.map(person.getDeathDate(), person.getDeathPlace()),
                 person.getOccupation(),
                 new ArrayList<>(person.getResidences())
         );

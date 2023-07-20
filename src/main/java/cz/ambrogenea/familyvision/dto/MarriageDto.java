@@ -1,6 +1,5 @@
 package cz.ambrogenea.familyvision.dto;
 
-import cz.ambrogenea.familyvision.domain.DatePlace;
 import cz.ambrogenea.familyvision.domain.Person;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public record MarriageDto(
         Person husband,
         Person wife,
         Long treeId,
-        DatePlace weddingDatePlace,
+        DatePlaceDto weddingDatePlace,
         List<String> childrenIds
 ) {
 }
