@@ -7,6 +7,7 @@ import java.util.*;
 public class PersonRepository {
 
     private final HashMap<Long, SortedMap<String, Person>> personMap = new HashMap<>();
+    private final HashMap<Long, Person> personIdMap = new HashMap<>();
 
     public Person save(Person person) {
         if (personMap.containsKey(person.getFamilyTreeId())) {
@@ -16,6 +17,7 @@ public class PersonRepository {
             map.put(person.getGedcomId(), person);
             personMap.put(person.getFamilyTreeId(), map);
         }
+        personIdMap.put(person.getId(), person);
         return person;
     }
 
@@ -24,6 +26,13 @@ public class PersonRepository {
             return Optional.empty();
         }
         return Optional.ofNullable(personMap.get(treeId).get(gedcomId));
+    }
+
+    public Optional<Person> findById(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(personIdMap.get(id));
     }
 
     public List<Person> findAll(Long treeId) {

@@ -20,12 +20,12 @@ public class TreeGeneratorController {
 
     private AncestorPerson rootPerson;
 
-    public String generateTree(String gedcomId, Long treeId) {
+    public String generateTree(Long id) {
         SelectionService selectionService;
         if (Config.treeShape().getLineageType() == LineageType.ALL) {
-            selectionService = new AllAncestorsSelectionService(treeId);
+            selectionService = new AllAncestorsSelectionService();
         } else {
-            selectionService = new LineageSelectionService(treeId);
+            selectionService = new LineageSelectionService();
         }
 
         TreeService treeService = switch (Config.treeShape().getLineageType()) {
@@ -35,7 +35,7 @@ public class TreeGeneratorController {
             case ALL -> new AllAncestorTreeService();
         };
 
-        rootPerson = selectionService.select(gedcomId);
+        rootPerson = selectionService.select(id);
         try {
             TreeModelResponse treeModelResponse = TreeModelResponseMapper.map(treeService.generateTreeModel(rootPerson));
             return JsonParser.get().writeValueAsString(treeModelResponse);

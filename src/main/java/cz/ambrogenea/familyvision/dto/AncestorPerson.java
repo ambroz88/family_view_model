@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class AncestorPerson {
 
+    private final Long id;
     private final String gedcomId;
     private final String firstName;
     private final String surname;
@@ -37,9 +38,10 @@ public class AncestorPerson {
     private int maxOlderSiblings;
     private int maxYoungerSiblings;
 
-    public AncestorPerson(String gedcomId, String firstName, String surname, Sex sex, boolean living,
+    public AncestorPerson(Long id, String gedcomId, String firstName, String surname, Sex sex, boolean living,
                           DatePlaceDto birthDatePlace, DatePlaceDto deathDatePlace, String occupation,
                           List<Residence> residences) {
+        this.id = id;
         this.gedcomId = gedcomId;
         this.firstName = firstName;
         this.surname = surname;
@@ -336,6 +338,10 @@ public class AncestorPerson {
             count = count + spouse.getChildren().size();
         }
         return count;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getGedcomId() {

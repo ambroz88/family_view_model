@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 public class PersonController {
 
-    public String getPerson(String gedcomId, Long treeId) {
+    public String getPerson(Long id) {
         try {
-            final Person response = Services.person().getPersonByGedcomId(gedcomId, treeId);
+            final Person response = Services.person().getById(id);
             return JsonParser.get().writeValueAsString(PersonResponseMapper.map(response));
         } catch (JsonProcessingException e) {
             return null;

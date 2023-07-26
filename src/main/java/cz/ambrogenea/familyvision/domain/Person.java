@@ -1,6 +1,7 @@
 package cz.ambrogenea.familyvision.domain;
 
 import cz.ambrogenea.familyvision.enums.Sex;
+import cz.ambrogenea.familyvision.utils.IdGenerator;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  */
 public class Person {
 
+    final private Long id;
     final private String gedcomId;
     final private Long familyTreeId;
     final private String firstName;
@@ -21,15 +23,15 @@ public class Person {
     final private String deathPlace;
     final private String occupation;
     final private List<Residence> residences;
-    final private List<String> spouseId;
-    private String parentId;
-    private String fatherId;
-    private String motherId;
-
+    final private List<Long> spouseId;
+    private Long parentId;
+    private Long fatherId;
+    private Long motherId;
 
     public Person(String gedcomId, Long familyTreeId, String firstName, String surname, Sex sex, boolean living,
                   String birthDate, String birthPlace, String deathDate, String deathPlace, String occupation,
-                  List<Residence> residences, List<String> spouseId) {
+                  List<Residence> residences, List<Long> spouseId) {
+        this.id = IdGenerator.generate(Person.class.getSimpleName());
         this.gedcomId = gedcomId;
         this.familyTreeId = familyTreeId;
         this.firstName = firstName;
@@ -43,6 +45,10 @@ public class Person {
         this.occupation = occupation;
         this.residences = residences;
         this.spouseId = spouseId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -102,31 +108,31 @@ public class Person {
         return residences;
     }
 
-    public List<String> getSpouseId() {
+    public List<Long> getSpouseId() {
         return spouseId;
     }
 
-    public String getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(String parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
-    public String getFatherId() {
+    public Long getFatherId() {
         return fatherId;
     }
 
-    public void setFatherId(String fatherId) {
+    public void setFatherId(Long fatherId) {
         this.fatherId = fatherId;
     }
 
-    public String getMotherId() {
+    public Long getMotherId() {
         return motherId;
     }
 
-    public void setMotherId(String motherId) {
+    public void setMotherId(Long motherId) {
         this.motherId = motherId;
     }
 

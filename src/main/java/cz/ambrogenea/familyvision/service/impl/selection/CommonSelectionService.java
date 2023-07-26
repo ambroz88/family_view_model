@@ -18,17 +18,15 @@ import java.util.stream.Collectors;
 public class CommonSelectionService {
 
     private final TreeShapeConfiguration configuration;
-    protected final Long treeId;
 
-    public CommonSelectionService(Long treeId) {
-        this.treeId = treeId;
+    public CommonSelectionService() {
         this.configuration = Config.treeShape();
     }
 
-    protected List<AncestorCouple> addSpouse(List<String> spouseId, boolean isDirectLineage) {
+    protected List<AncestorCouple> addSpouse(List<Long> spouseId, boolean isDirectLineage) {
         return spouseId.stream()
                 .map(coupleID -> {
-                    Marriage dbCouple = Services.marriage().getMarriageByGedcomId(coupleID);
+                    Marriage dbCouple = Services.marriage().getMarriageById(coupleID);
                     if (dbCouple != null) {
                         return AncestorCoupleMapper.mapWithoutKids(dbCouple, isDirectLineage);
                     } else {
@@ -39,17 +37,17 @@ public class CommonSelectionService {
                 .collect(Collectors.toList());
     }
 
-    protected void addSiblings(AncestorPerson person, String parentId) {
+    protected void addSiblings(AncestorPerson person, Long parentId) {
         if (configuration.isShowSiblings()) {
-            Marriage parents = Services.marriage().getMarriageByGedcomId(parentId);
+            Marriage parents = Services.marriage().getMarriageById(parentId);
             if (parents != null) {
-                List<String> children = parents.getChildrenIds();
+                List<Long> children = parents.getChildrenIds();
                 int position = 0;
                 AncestorPerson sibling;
                 Person dbPerson;
 
-                while (!children.get(position).equals(person.getGedcomId())) {
-                    dbPerson = Services.person().getPersonByGedcomId(children.get(position), treeId);
+                while (!children.get(position).equals(person.getId())) {
+                    dbPerson = Services.person().getById(children.get(position));
                     if (dbPerson != null) {
                         sibling = AncestorPersonMapper.map(dbPerson);
                         sibling.setDirectLineage(false);
@@ -67,7 +65,7 @@ public class CommonSelectionService {
 
                 position++;
                 while (position < children.size()) {
-                    dbPerson = Services.person().getPersonByGedcomId(children.get(position), treeId);
+                    dbPerson = Services.person().getById(children.get(position));
                     if (dbPerson != null) {
                         sibling = AncestorPersonMapper.map(dbPerson);
                         sibling.setDirectLineage(false);
@@ -130,7 +128,7 @@ public class CommonSelectionService {
         List<AncestorPerson> children = spouseCouple.getChildrenIds()
                 .stream()
                 .map(childId -> {
-                    Person dbChild = Services.person().getPersonByGedcomId(childId, treeId);
+                    Person dbChild = Services.person().getById(childId);
                     return fromPersonWithAllDescendents(dbChild, generation);
                 })
                 .filter(Objects::nonNull)
@@ -158,8 +156,8 @@ public class CommonSelectionService {
         return null;
     }
 
-    private void addManParents(AncestorPerson person, String parentId, int generation) {
-        MarriageDto parents = Services.marriage().getMarriageDtoByGedcomId(parentId);
+    private void addManParents(AncestorPerson person, Long parentId, int generation) {
+        MarriageDto parents = Services.marriage().getMarriageDtoById(parentId);
 
         if (person != null && parents != null) {
             person.setParents(AncestorCoupleMapper.mapWithoutKids(parents, true));
@@ -183,8 +181,8 @@ public class CommonSelectionService {
         }
     }
 
-    private void addWomanParents(AncestorPerson person, String parentId) {
-        MarriageDto parents = Services.marriage().getMarriageDtoByGedcomId(parentId);
+    private void addWomanParents(AncestorPerson person, Long parentId) {
+        MarriageDto parents = Services.marriage().getMarriageDtoById(parentId);
 
         if (person != null && parents != null) {
             person.setParents(AncestorCoupleMapper.mapWithoutKids(parents, true));

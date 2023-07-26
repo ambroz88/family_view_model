@@ -11,7 +11,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  */
 public interface DocumentGeneratorService {
 
-    List<DocumentInputs> generateFamilies(String personId, Long treeId);
+    List<DocumentInputs> generateFamilies(Long id);
 
     XWPFDocument generateDocument(List<DocumentInputs> familyInputs);
 

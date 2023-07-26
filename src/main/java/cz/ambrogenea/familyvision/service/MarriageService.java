@@ -6,6 +6,6 @@ import cz.ambrogenea.familyvision.model.command.MarriageCreateCommand;
 
 public interface MarriageService {
     Marriage createMarriage(MarriageCreateCommand marriageCreateCommand);
-    Marriage getMarriageByGedcomId(String gedcomId);
-    MarriageDto getMarriageDtoByGedcomId(String gedcomId);
+    Marriage getMarriageById(Long id);
+    MarriageDto getMarriageDtoById(Long id);
 }

@@ -12,6 +12,6 @@ public record MarriageDto(
         Person wife,
         Long treeId,
         DatePlaceDto weddingDatePlace,
-        List<String> childrenIds
+        List<Long> childrenIds
 ) {
 }

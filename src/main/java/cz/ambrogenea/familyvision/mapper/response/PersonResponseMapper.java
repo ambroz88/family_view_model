@@ -7,6 +7,7 @@ public class PersonResponseMapper {
 
     public static PersonResponse map(Person person){
         return new PersonResponse(
+                person.getId(),
                 person.getGedcomId(),
                 person.getFirstName(),
                 person.getSurname(),

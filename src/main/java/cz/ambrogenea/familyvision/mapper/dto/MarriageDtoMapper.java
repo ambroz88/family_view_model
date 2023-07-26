@@ -8,8 +8,8 @@ public class MarriageDtoMapper {
 
     public static MarriageDto map(Marriage marriage) {
         return new MarriageDto(
-                Services.person().getPersonByGedcomId(marriage.getHusbandId(), marriage.getFamilyTreeId()),
-                Services.person().getPersonByGedcomId(marriage.getWifeId(), marriage.getFamilyTreeId()),
+                Services.person().getByGedcomId(marriage.getHusbandId(), marriage.getFamilyTreeId()),
+                Services.person().getByGedcomId(marriage.getWifeId(), marriage.getFamilyTreeId()),
                 marriage.getFamilyTreeId(),
                 DatePlaceMapper.map(marriage.getWeddingDate(), marriage.getWeddingPlace()),
                 marriage.getChildrenIds()

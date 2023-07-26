@@ -1,26 +1,28 @@
 package cz.ambrogenea.familyvision.domain;
 
+import cz.ambrogenea.familyvision.utils.IdGenerator;
+
 import java.util.List;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class Marriage {
-    private String gedcomFamilyId;
+    private final Long id;
     private Long familyTreeId;
     private String husbandId;
     private String wifeId;
 
     private String weddingDate;
     private String weddingPlace;
-    private List<String> childrenIds;
+    private List<Long> childrenIds;
 
-    public String getGedcomFamilyId() {
-        return gedcomFamilyId;
+    public Marriage() {
+        this.id = IdGenerator.generate(Marriage.class.getSimpleName());
     }
 
-    public void setGedcomFamilyId(String gedcomFamilyId) {
-        this.gedcomFamilyId = gedcomFamilyId;
+    public Long getId() {
+        return id;
     }
 
     public Long getFamilyTreeId() {
@@ -63,11 +65,11 @@ public class Marriage {
         this.weddingPlace = weddingPlace;
     }
 
-    public List<String> getChildrenIds() {
+    public List<Long> getChildrenIds() {
         return childrenIds;
     }
 
-    public void setChildrenIds(List<String> childrenIds) {
+    public void setChildrenIds(List<Long> childrenIds) {
         this.childrenIds = childrenIds;
     }
 

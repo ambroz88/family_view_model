@@ -17,41 +17,49 @@ public class MarriageServiceImpl implements MarriageService {
     @Override
     public Marriage createMarriage(MarriageCreateCommand marriageCreateCommand) {
         Marriage marriage = marriageRepository.save(MarriageMapper.map(marriageCreateCommand));
-        saveSpousesId(marriageCreateCommand);
-        marriage.getChildrenIds().forEach(childId -> {
-                    Person child = Services.person().getPersonByGedcomId(childId, marriageCreateCommand.getFamilyTreeId());
+        saveSpousesId(marriageCreateCommand, marriage.getId());
+        final Long treeId = marriageCreateCommand.getFamilyTreeId();
+        marriageCreateCommand.getChildrenGedcomIds().forEach(childId -> {
+                    Person child = Services.person().getByGedcomId(childId, treeId);
                     if (child != null) {
-                        child.setFatherId(marriageCreateCommand.getGedcomHusbandId());
-                        child.setMotherId(marriageCreateCommand.getGedcomWifeId());
-                        child.setParentId(marriageCreateCommand.getGedcomFamilyId());
+                        Person father = Services.person().getByGedcomId(marriageCreateCommand.getGedcomHusbandId(), treeId);
+                        Person mother = Services.person().getByGedcomId(marriageCreateCommand.getGedcomWifeId(), treeId);
+                        if (father != null) {
+                            child.setFatherId(father.getId());
+                        }
+                        if (mother != null) {
+                            child.setMotherId(mother.getId());
+                        }
+                        child.setParentId(marriage.getId());
                         Services.person().savePerson(child);
+                        marriage.getChildrenIds().add(child.getId());
                     }
                 }
         );
         return marriage;
     }
 
-    private void saveSpousesId(MarriageCreateCommand marriageCreateCommand) {
-        Person husband = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomHusbandId(), marriageCreateCommand.getFamilyTreeId());
-        Person wife = Services.person().getPersonByGedcomId(marriageCreateCommand.getGedcomWifeId(), marriageCreateCommand.getFamilyTreeId());
+    private void saveSpousesId(MarriageCreateCommand marriageCreateCommand, Long marriageId) {
+        Person husband = Services.person().getByGedcomId(marriageCreateCommand.getGedcomHusbandId(), marriageCreateCommand.getFamilyTreeId());
+        Person wife = Services.person().getByGedcomId(marriageCreateCommand.getGedcomWifeId(), marriageCreateCommand.getFamilyTreeId());
         if (husband != null) {
-            husband.getSpouseId().add(marriageCreateCommand.getGedcomFamilyId());
+            husband.getSpouseId().add(marriageId);
             Services.person().savePerson(husband);
         }
         if (wife != null) {
-            wife.getSpouseId().add(marriageCreateCommand.getGedcomFamilyId());
+            wife.getSpouseId().add(marriageId);
             Services.person().savePerson(wife);
         }
     }
 
     @Override
-    public Marriage getMarriageByGedcomId(String gedcomId) {
-        return marriageRepository.findByGedcomId(gedcomId).orElse(null);
+    public Marriage getMarriageById(Long id) {
+        return marriageRepository.findById(id).orElse(null);
     }
 
     @Override
-    public MarriageDto getMarriageDtoByGedcomId(String gedcomId) {
-        return getMarriageByGedcomId(gedcomId) != null ? MarriageDtoMapper.map(getMarriageByGedcomId(gedcomId)) : null;
+    public MarriageDto getMarriageDtoById(Long id) {
+        return getMarriageById(id) != null ? MarriageDtoMapper.map(getMarriageById(id)) : null;
     }
 
 }

@@ -10,7 +10,7 @@ import cz.ambrogenea.familyvision.enums.Sex;
  */
 public class AncestorCouple {
 
-    private ArrayList<String> childrenID;
+    private ArrayList<Long> childrenID;
     private int boys;
     private int girls;
     private ArrayList<AncestorPerson> children;
@@ -87,11 +87,11 @@ public class AncestorCouple {
         return hasHusband() && hasWife();
     }
 
-    public ArrayList<String> getChildrenIds() {
+    public ArrayList<Long> getChildrenIds() {
         return childrenID;
     }
 
-    public void setChildrenID(ArrayList<String> childrenID) {
+    public void setChildrenID(ArrayList<Long> childrenID) {
         this.childrenID = childrenID;
     }
 

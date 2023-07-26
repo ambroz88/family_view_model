@@ -9,6 +9,7 @@ public class AncestorPersonMapper {
 
     public static AncestorPerson map(Person person) {
         return new AncestorPerson(
+                person.getId(),
                 person.getGedcomId(),
                 person.getFirstName(),
                 person.getSurname(),
