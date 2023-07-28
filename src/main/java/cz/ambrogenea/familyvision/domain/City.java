@@ -99,19 +99,6 @@ public class City {
         this.country = country;
     }
 
-    public boolean contains(String name) {
-        if (name == null) {
-            return false;
-        }
-        return Objects.equals(name, this.name) ||
-                Objects.equals(name, this.originalName) ||
-                Objects.equals(name, this.shortName) ||
-                Objects.equals(name, this.alternativeName) ||
-                Objects.equals(name, this.district) ||
-                Objects.equals(name, this.region)
-                ;
-    }
-
     public boolean isTheSame(String originalName) {
         String[] nameParts = originalName.split(",");
         String name = nameParts[0];
@@ -130,9 +117,13 @@ public class City {
             district = "";
             region = "";
         }
-        return ((Objects.equals(originalName, this.originalName))
-                || (Objects.equals(name, this.name) &&
-                (Objects.equals(district, this.district) || Objects.equals(region, this.region)))
-                || Objects.equals(name, this.alternativeName));
+        return Objects.equals(originalName, this.originalName)
+                || (Objects.equals(name, this.name) && isTheSameArea(district, region))
+                || Objects.equals(name, this.alternativeName);
+    }
+
+    private boolean isTheSameArea(String district, String region) {
+        return Objects.equals(district, this.district) || Objects.equals(region, this.region)
+                || Objects.equals(district, this.region) || Objects.equals(region, this.district);
     }
 }
