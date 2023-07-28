@@ -10,13 +10,13 @@ import java.util.ArrayList;
  */
 public class MarriageMapper {
 
-    public static Marriage map(MarriageCreateCommand createCommand) {
+    public static Marriage map(MarriageCreateCommand createCommand, Long cityId) {
         Marriage marriage = new Marriage();
         marriage.setFamilyTreeId(createCommand.getFamilyTreeId());
         marriage.setHusbandId(createCommand.getGedcomHusbandId());
         marriage.setWifeId(createCommand.getGedcomWifeId());
         marriage.setWeddingDate(createCommand.getDate());
-        marriage.setWeddingPlace(createCommand.getPlace());
+        marriage.setWeddingPlace(cityId);
         marriage.setChildrenIds(new ArrayList<>());
         return marriage;
     }

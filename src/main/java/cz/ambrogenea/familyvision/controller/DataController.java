@@ -10,11 +10,7 @@ import java.io.IOException;
 
 public class DataController {
 
-    private final ParsingService parsingService;
-
-    public DataController() {
-        parsingService = new GedcomParsingService();
-    }
+    private final ParsingService parsingService = new GedcomParsingService();
 
     public String parseData(File gedcomFile, Long familyTreeId) throws IOException, SAXParseException {
         return parsingService.saveData(new FileInputStream(gedcomFile), familyTreeId);

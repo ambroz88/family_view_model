@@ -5,15 +5,15 @@ import cz.ambrogenea.familyvision.model.response.PersonResponse;
 
 public class PersonResponseMapper {
 
-    public static PersonResponse map(Person person){
+    public static PersonResponse map(Person person) {
         return new PersonResponse(
                 person.getId(),
                 person.getGedcomId(),
                 person.getFirstName(),
                 person.getSurname(),
                 person.getSex(),
-                DatePlaceResponseMapper.map(person.getBirthDate(),person.getBirthPlace()),
-                DatePlaceResponseMapper.map(person.getDeathDate(),person.getDeathPlace()),
+                DatePlaceResponseMapper.map(person.getBirthDate(), person.getBirthPlaceId()),
+                DatePlaceResponseMapper.map(person.getDeathDate(), person.getDeathPlaceId()),
                 person.getOccupation()
         );
     }

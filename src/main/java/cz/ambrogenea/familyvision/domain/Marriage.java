@@ -14,7 +14,7 @@ public class Marriage {
     private String wifeId;
 
     private String weddingDate;
-    private String weddingPlace;
+    private Long weddingPlace;
     private List<Long> childrenIds;
 
     public Marriage() {
@@ -57,11 +57,11 @@ public class Marriage {
         this.weddingDate = weddingDate;
     }
 
-    public String getWeddingPlace() {
+    public Long getWeddingPlace() {
         return weddingPlace;
     }
 
-    public void setWeddingPlace(String weddingPlace) {
+    public void setWeddingPlace(Long weddingPlace) {
         this.weddingPlace = weddingPlace;
     }
 

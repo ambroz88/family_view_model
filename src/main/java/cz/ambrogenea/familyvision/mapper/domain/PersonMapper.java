@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 public class PersonMapper {
 
-    public static Person map(PersonCreateCommand personCreateCommand) {
+    public static Person map(PersonCreateCommand personCreateCommand, Long birthCityId, Long deathCityId) {
         return new Person(
                 personCreateCommand.getGedcomId(),
                 personCreateCommand.getFamilyTreeId(),
@@ -21,9 +21,9 @@ public class PersonMapper {
                 personCreateCommand.getSex(),
                 personCreateCommand.isLiving(),
                 personCreateCommand.getBirthDate(),
-                personCreateCommand.getBirthPlace(),
+                birthCityId,
                 personCreateCommand.getDeathDate(),
-                personCreateCommand.getDeathPlace(),
+                deathCityId,
                 Objects.requireNonNullElse(personCreateCommand.getOccupation(), ""),
                 personCreateCommand.getResidenceList().stream()
                         .map(ResidenceMapper::map)

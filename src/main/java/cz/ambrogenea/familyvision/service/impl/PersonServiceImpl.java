@@ -4,17 +4,24 @@ import cz.ambrogenea.familyvision.domain.Person;
 import cz.ambrogenea.familyvision.mapper.domain.PersonMapper;
 import cz.ambrogenea.familyvision.model.command.PersonCreateCommand;
 import cz.ambrogenea.familyvision.repository.PersonRepository;
+import cz.ambrogenea.familyvision.service.CityService;
 import cz.ambrogenea.familyvision.service.PersonService;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 import java.util.List;
 
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository = new PersonRepository();
+    private final CityService cityService = Services.city();
 
     @Override
-    public Person createPerson(PersonCreateCommand person) {
-        return personRepository.save(PersonMapper.map(person));
+    public Person createPerson(PersonCreateCommand createCommand) {
+        String birthPlace = createCommand.getBirthPlace();
+        String deathPlace = createCommand.getDeathPlace();
+        Long birthCityId = cityService.getCityId(birthPlace);
+        Long deathCityId = cityService.getCityId(deathPlace);
+        return personRepository.save(PersonMapper.map(createCommand, birthCityId, deathCityId));
     }
 
     @Override

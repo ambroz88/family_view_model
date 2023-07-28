@@ -18,9 +18,9 @@ public class Person {
     final private Sex sex;
     final private boolean living;
     final private String birthDate;
-    final private String birthPlace;
+    final private Long birthPlaceId;
     final private String deathDate;
-    final private String deathPlace;
+    final private Long deathPlaceId;
     final private String occupation;
     final private List<Residence> residences;
     final private List<Long> spouseId;
@@ -29,7 +29,7 @@ public class Person {
     private Long motherId;
 
     public Person(String gedcomId, Long familyTreeId, String firstName, String surname, Sex sex, boolean living,
-                  String birthDate, String birthPlace, String deathDate, String deathPlace, String occupation,
+                  String birthDate, Long birthPlaceId, String deathDate, Long deathPlaceId, String occupation,
                   List<Residence> residences, List<Long> spouseId) {
         this.id = IdGenerator.generate(Person.class.getSimpleName());
         this.gedcomId = gedcomId;
@@ -39,9 +39,9 @@ public class Person {
         this.sex = sex;
         this.living = living;
         this.birthDate = birthDate;
-        this.birthPlace = birthPlace;
+        this.birthPlaceId = birthPlaceId;
         this.deathDate = deathDate;
-        this.deathPlace = deathPlace;
+        this.deathPlaceId = deathPlaceId;
         this.occupation = occupation;
         this.residences = residences;
         this.spouseId = spouseId;
@@ -88,16 +88,16 @@ public class Person {
         return birthDate;
     }
 
-    public String getBirthPlace() {
-        return birthPlace;
+    public Long getBirthPlaceId() {
+        return birthPlaceId;
     }
 
     public String getDeathDate() {
         return deathDate;
     }
 
-    public String getDeathPlace() {
-        return deathPlace;
+    public Long getDeathPlaceId() {
+        return deathPlaceId;
     }
 
     public String getOccupation() {

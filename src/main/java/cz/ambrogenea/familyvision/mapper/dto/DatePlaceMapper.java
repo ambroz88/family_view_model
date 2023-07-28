@@ -1,7 +1,10 @@
 package cz.ambrogenea.familyvision.mapper.dto;
 
+import cz.ambrogenea.familyvision.domain.City;
 import cz.ambrogenea.familyvision.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.enums.DateSpecification;
+import cz.ambrogenea.familyvision.service.CityService;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,7 +17,9 @@ import java.util.Locale;
  */
 public class DatePlaceMapper {
 
-    public static DatePlaceDto map(String date, String place) {
+    private static final CityService cityService = Services.city();
+
+    public static DatePlaceDto map(String date, Long cityId) {
         DatePlaceDto datePlace = new DatePlaceDto();
         if (date != null) {
             String[] dateParts = date.split(" ", 2);
@@ -30,8 +35,9 @@ public class DatePlaceMapper {
             }
         }
 
+        City place = cityService.getCityById(cityId);
         if (place != null) {
-            datePlace.setPlace(place);
+            datePlace.setPlace(place.getName());
         }
         return datePlace;
     }
@@ -52,6 +58,7 @@ public class DatePlaceMapper {
                     datePlace.setDate(new SimpleDateFormat("yyyy").parse(normalizeDate));
                     datePlace.setDatePattern("yyyy");
                 } catch (ParseException ex) {
+                    System.out.println("Date '" + date + "' was not possible to parsed.");
                 }
             }
         }

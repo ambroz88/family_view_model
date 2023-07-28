@@ -7,16 +7,19 @@ import cz.ambrogenea.familyvision.mapper.domain.MarriageMapper;
 import cz.ambrogenea.familyvision.mapper.dto.MarriageDtoMapper;
 import cz.ambrogenea.familyvision.model.command.MarriageCreateCommand;
 import cz.ambrogenea.familyvision.repository.MarriageRepository;
+import cz.ambrogenea.familyvision.service.CityService;
 import cz.ambrogenea.familyvision.service.MarriageService;
 import cz.ambrogenea.familyvision.service.util.Services;
 
 public class MarriageServiceImpl implements MarriageService {
 
     private final MarriageRepository marriageRepository = new MarriageRepository();
+    private final CityService cityService = Services.city();
 
     @Override
     public Marriage createMarriage(MarriageCreateCommand marriageCreateCommand) {
-        Marriage marriage = marriageRepository.save(MarriageMapper.map(marriageCreateCommand));
+        Long cityId = cityService.getCityId(marriageCreateCommand.getPlace());
+        Marriage marriage = marriageRepository.save(MarriageMapper.map(marriageCreateCommand, cityId));
         saveSpousesId(marriageCreateCommand, marriage.getId());
         final Long treeId = marriageCreateCommand.getFamilyTreeId();
         marriageCreateCommand.getChildrenGedcomIds().forEach(childId -> {

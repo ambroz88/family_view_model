@@ -6,7 +6,7 @@ import cz.ambrogenea.familyvision.model.command.PersonCreateCommand;
 import java.util.List;
 
 public interface PersonService {
-    Person createPerson(PersonCreateCommand person);
+    Person createPerson(PersonCreateCommand createCommand);
     Person savePerson(Person person);
     Person getByGedcomId(String gedcomId, Long treeId);
     Person getById(Long id);
