@@ -1,13 +1,13 @@
 package cz.ambrogenea.familyvision.service.impl.selection;
 
-import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.domain.Person;
+import cz.ambrogenea.familyvision.mapper.dto.AncestorCoupleMapper;
+import cz.ambrogenea.familyvision.mapper.dto.AncestorPersonMapper;
 import cz.ambrogenea.familyvision.model.dto.AncestorCouple;
 import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.MarriageDto;
-import cz.ambrogenea.familyvision.mapper.dto.AncestorCoupleMapper;
-import cz.ambrogenea.familyvision.mapper.dto.AncestorPersonMapper;
 import cz.ambrogenea.familyvision.service.SelectionService;
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.service.util.Services;
 
 public class AllAncestorsSelectionService extends CommonSelectionService implements SelectionService {

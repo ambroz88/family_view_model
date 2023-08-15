@@ -2,15 +2,15 @@ package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
+import cz.ambrogenea.familyvision.enums.CoupleType;
+import cz.ambrogenea.familyvision.enums.LabelType;
+import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.model.dto.AncestorCouple;
 import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.FamilyDto;
 import cz.ambrogenea.familyvision.model.dto.ParentsDto;
 import cz.ambrogenea.familyvision.model.dto.tree.Position;
 import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.enums.CoupleType;
-import cz.ambrogenea.familyvision.enums.LabelType;
-import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.service.CommonAncestorService;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.TreeModelService;

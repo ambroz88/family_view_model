@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.service;
 
-import java.util.List;
-
 import cz.ambrogenea.familyvision.model.dto.parsing.DocumentInputs;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import java.util.List;
 
 /**
  *

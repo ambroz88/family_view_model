@@ -1,10 +1,10 @@
 package cz.ambrogenea.familyvision.service;
 
+import cz.ambrogenea.familyvision.enums.LabelType;
 import cz.ambrogenea.familyvision.model.dto.AncestorCouple;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.tree.Position;
 import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.enums.LabelType;
 
 public interface TreeModelService {
     void addPerson(Position center, AncestorPerson person);

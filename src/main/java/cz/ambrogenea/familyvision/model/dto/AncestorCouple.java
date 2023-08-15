@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.model.dto;
 
+import cz.ambrogenea.familyvision.enums.Sex;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import cz.ambrogenea.familyvision.enums.Sex;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>

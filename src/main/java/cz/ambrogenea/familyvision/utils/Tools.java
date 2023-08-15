@@ -1,8 +1,8 @@
 package cz.ambrogenea.familyvision.utils;
 
-import cz.ambrogenea.familyvision.model.dto.tree.Personalize;
-import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.enums.Sex;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.tree.Personalize;
 import cz.ambrogenea.familyvision.service.util.Config;
 
 /**

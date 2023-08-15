@@ -1,13 +1,13 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
-import cz.ambrogenea.familyvision.service.util.Config;
+import cz.ambrogenea.familyvision.enums.CoupleType;
 import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.ParentsDto;
 import cz.ambrogenea.familyvision.model.dto.tree.Position;
 import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.enums.CoupleType;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.LineageService;
+import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.service.util.Services;
 
 import java.util.Objects;

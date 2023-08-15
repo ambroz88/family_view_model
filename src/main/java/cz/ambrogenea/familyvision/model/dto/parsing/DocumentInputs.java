@@ -1,8 +1,8 @@
 package cz.ambrogenea.familyvision.model.dto.parsing;
 
-import java.io.InputStream;
-
 import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
+
+import java.io.InputStream;
 
 /**
  *

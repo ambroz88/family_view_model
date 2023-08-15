@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.service.impl.parsing;
 
+import cz.ambrogenea.familyvision.mapper.response.PageSetupResponseMapper;
 import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.parsing.DocumentInputs;
 import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
-import cz.ambrogenea.familyvision.mapper.response.PageSetupResponseMapper;
 import cz.ambrogenea.familyvision.model.response.tree.PageSetupResponse;
 import cz.ambrogenea.familyvision.service.DocumentGeneratorService;
 import cz.ambrogenea.familyvision.service.TreeService;

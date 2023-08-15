@@ -1,8 +1,8 @@
 package cz.ambrogenea.familyvision.mapper.dto;
 
 import cz.ambrogenea.familyvision.domain.City;
-import cz.ambrogenea.familyvision.model.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.enums.DateSpecification;
+import cz.ambrogenea.familyvision.model.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.service.CityService;
 import cz.ambrogenea.familyvision.service.util.Services;
 

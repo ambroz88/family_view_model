@@ -6,7 +6,6 @@ import cz.ambrogenea.familyvision.repository.FamilyTreeRepository;
 import cz.ambrogenea.familyvision.service.FamilyTreeService;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FamilyTreeServiceImpl implements FamilyTreeService {
 

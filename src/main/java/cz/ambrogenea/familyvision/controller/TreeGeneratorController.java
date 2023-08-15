@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.enums.LineageType;
 import cz.ambrogenea.familyvision.mapper.response.TreeModelResponseMapper;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.response.tree.TreeModelResponse;
 import cz.ambrogenea.familyvision.service.SelectionService;
 import cz.ambrogenea.familyvision.service.TreeService;

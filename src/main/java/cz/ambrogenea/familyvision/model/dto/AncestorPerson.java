@@ -147,11 +147,12 @@ public class AncestorPerson {
         if (parents != null && !parents.isEmpty()) {
             if (getFather() == null) {
                 ancestorGenerations = getMother().getAncestorGenerations() + 1;
-            } else if (getMother() == null) {
-            } else if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
-                ancestorGenerations = getMother().getAncestorGenerations() + 1;
-            } else {
-                ancestorGenerations = getFather().getAncestorGenerations() + 1;
+            } else if (getMother() != null) {
+                if (getMother().getAncestorGenerations() >= getFather().getAncestorGenerations()) {
+                    ancestorGenerations = getMother().getAncestorGenerations() + 1;
+                } else {
+                    ancestorGenerations = getFather().getAncestorGenerations() + 1;
+                }
             }
         }
     }
