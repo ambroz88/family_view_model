@@ -11,11 +11,7 @@ import cz.ambrogenea.familyvision.service.VisualConfigurationService;
  */
 public class VisualConfigurationServiceImpl implements VisualConfigurationService {
 
-    private final VisualConfigurationRepository configurationRepository;
-
-    public VisualConfigurationServiceImpl() {
-        this.configurationRepository = VisualConfigurationRepository.get();
-    }
+    private final VisualConfigurationRepository configurationRepository = new VisualConfigurationRepository();
 
     @Override
     public VisualConfiguration get() {

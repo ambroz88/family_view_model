@@ -2,7 +2,7 @@ package cz.ambrogenea.familyvision.service.impl;
 
 import cz.ambrogenea.familyvision.domain.Marriage;
 import cz.ambrogenea.familyvision.domain.Person;
-import cz.ambrogenea.familyvision.dto.MarriageDto;
+import cz.ambrogenea.familyvision.model.dto.MarriageDto;
 import cz.ambrogenea.familyvision.mapper.domain.MarriageMapper;
 import cz.ambrogenea.familyvision.mapper.dto.MarriageDtoMapper;
 import cz.ambrogenea.familyvision.model.command.MarriageCreateCommand;

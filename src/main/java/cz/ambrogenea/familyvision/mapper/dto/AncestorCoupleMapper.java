@@ -2,9 +2,9 @@ package cz.ambrogenea.familyvision.mapper.dto;
 
 import cz.ambrogenea.familyvision.domain.Marriage;
 import cz.ambrogenea.familyvision.domain.Person;
-import cz.ambrogenea.familyvision.dto.AncestorCouple;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.MarriageDto;
+import cz.ambrogenea.familyvision.model.dto.AncestorCouple;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.MarriageDto;
 import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.service.util.Services;
 

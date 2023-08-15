@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.dto.tree;
+package cz.ambrogenea.familyvision.model.dto.tree;
 
 import cz.ambrogenea.familyvision.domain.Residence;
 

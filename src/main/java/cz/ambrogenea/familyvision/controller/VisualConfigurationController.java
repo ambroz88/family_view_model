@@ -6,16 +6,12 @@ import cz.ambrogenea.familyvision.mapper.response.VisualConfigurationResponseMap
 import cz.ambrogenea.familyvision.model.request.VisualConfigurationRequest;
 import cz.ambrogenea.familyvision.model.response.VisualConfigurationResponse;
 import cz.ambrogenea.familyvision.service.VisualConfigurationService;
-import cz.ambrogenea.familyvision.service.impl.VisualConfigurationServiceImpl;
 import cz.ambrogenea.familyvision.service.util.JsonParser;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class VisualConfigurationController {
 
-    private final VisualConfigurationService configurationService;
-
-    public VisualConfigurationController() {
-        configurationService = new VisualConfigurationServiceImpl();
-    }
+    private final VisualConfigurationService configurationService = Services.visual();
 
     public String get() throws JsonProcessingException {
         VisualConfigurationResponse response = VisualConfigurationResponseMapper.map(configurationService.get());

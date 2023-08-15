@@ -1,6 +1,6 @@
 package cz.ambrogenea.familyvision.service;
 
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 
 public interface IsolatedTreeCreator {
     TreeModel generateAllAncestorCreator(String personId);

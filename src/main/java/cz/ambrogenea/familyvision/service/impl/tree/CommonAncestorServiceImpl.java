@@ -2,12 +2,12 @@ package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
-import cz.ambrogenea.familyvision.dto.AncestorCouple;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.FamilyDto;
-import cz.ambrogenea.familyvision.dto.ParentsDto;
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.AncestorCouple;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.FamilyDto;
+import cz.ambrogenea.familyvision.model.dto.ParentsDto;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.enums.CoupleType;
 import cz.ambrogenea.familyvision.enums.LabelType;
 import cz.ambrogenea.familyvision.enums.Sex;
@@ -16,6 +16,7 @@ import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.TreeModelService;
 import cz.ambrogenea.familyvision.service.impl.TreeModelServiceImpl;
 import cz.ambrogenea.familyvision.service.util.Config;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     private Position generateSpousesWithDescendents(AncestorPerson rootPerson, Position rootPersonPosition) {
         if (!rootPerson.getSpouseCouples().isEmpty()) {
-            ConfigurationExtensionService config = Config.horizontal();
+            ConfigurationExtensionService config = Services.horizontal();
             Position spousePosition = rootPersonPosition;
             Position lastChildPosition = rootPersonPosition.addXAndY(0, config.getGenerationsVerticalDistance());
 
@@ -92,7 +93,7 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
                 spousePosition = familyDto.lastParentPosition(); // new Position(familyDto.maxX, familyDto.lastParentPosition().y
             } else {
                 if (spouseCouple.isNotSingle()) {
-                    spousePosition = prevFamilyDto.lastParentPosition().addXAndY(configService.nextChildrenX() + Config.horizontal().getSpouseDistance(), 0);
+                    spousePosition = prevFamilyDto.lastParentPosition().addXAndY(configService.nextChildrenX() + Services.horizontal().getSpouseDistance(), 0);
                 } else {
                     spousePosition = prevFamilyDto.lastParentPosition().addXAndY(configService.nextChildrenX(), 0);
                 }
@@ -106,14 +107,14 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     }
 
     private int getMaxChildrenWidth(AncestorCouple spouseCouple) {
-        ConfigurationExtensionService config = Config.horizontal();
+        ConfigurationExtensionService config = Services.horizontal();
         int maxSinglesWidth = spouseCouple.getDescendentTreeInfo().getMaxSinglesCount() * (configService.getAdultImageWidth() + Spaces.HORIZONTAL_GAP);
         int maxCouplesWidth = spouseCouple.getDescendentTreeInfo().getMaxCouplesCount() * (config.getCoupleWidth() + Spaces.HORIZONTAL_GAP);
         return Math.max(maxSinglesWidth + maxCouplesWidth - Spaces.HORIZONTAL_GAP, config.getCoupleWidth());
     }
 
     private void addBothSpouseWithMarriage(Position spousePosition, AncestorCouple spouseCouple, AncestorPerson rootSpouse) {
-        ConfigurationExtensionService config = Config.horizontal();
+        ConfigurationExtensionService config = Services.horizontal();
         if (spouseCouple.isNotSingle()) {
             addPerson(spousePosition.addXAndY(-config.getSpouseDistance(), 0), rootSpouse);
             addPerson(spousePosition, spouseCouple.getSpouse(rootSpouse.getSex()));
@@ -136,14 +137,14 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
         if (spouseCouple.getDatePlace() != null) {
             marriageDate = spouseCouple.getDatePlace().getLocalizedDate(configService.getLocale());
         }
-        treeModelService.addMarriage(spousePosition.addXAndY(-Config.horizontal().getSpouseDistance() / 2, 0),
+        treeModelService.addMarriage(spousePosition.addXAndY(-Services.horizontal().getSpouseDistance() / 2, 0),
                 marriageDate,
                 spouseCouple,
                 LabelType.TALL);
     }
 
     private FamilyDto addChildren(FamilyDto prevFamilyDto, AncestorCouple spouseCouple) {
-        ConfigurationExtensionService config = Config.horizontal();
+        ConfigurationExtensionService config = Services.horizontal();
         int maxChildrenWidth;
         Position coupleCenterPosition;
         Position spousePosition;
@@ -333,12 +334,12 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
 
     @Override
     public ParentsDto generateHorizontalParents(Position heraldryPosition, AncestorPerson child) {
-        return generateParents(heraldryPosition, child, Config.horizontal());
+        return generateParents(heraldryPosition, child, Services.horizontal());
     }
 
     @Override
     public ParentsDto generateVerticalParents(Position heraldryPosition, AncestorPerson child) {
-        return generateParents(heraldryPosition, child, Config.vertical());
+        return generateParents(heraldryPosition, child, Services.vertical());
     }
 
     @Override
@@ -349,9 +350,9 @@ public class CommonAncestorServiceImpl implements CommonAncestorService {
     @Override
     public ParentsDto generateParents(Position heraldryPosition, AncestorPerson child) {
         if (Config.treeShape().getCoupleType() == CoupleType.VERTICAL) {
-            return generateParents(heraldryPosition, child, Config.vertical());
+            return generateParents(heraldryPosition, child, Services.vertical());
         } else {
-            return generateParents(heraldryPosition, child, Config.horizontal());
+            return generateParents(heraldryPosition, child, Services.horizontal());
         }
     }
 

@@ -1,6 +1,6 @@
-package cz.ambrogenea.familyvision.dto;
+package cz.ambrogenea.familyvision.model.dto;
 
-import cz.ambrogenea.familyvision.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
 
 import java.util.Objects;
 

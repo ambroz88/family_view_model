@@ -1,7 +1,7 @@
 package cz.ambrogenea.familyvision.utils;
 
-import cz.ambrogenea.familyvision.dto.tree.PageSetup;
-import cz.ambrogenea.familyvision.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.PageSetup;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
 
 import java.util.Arrays;
 import java.util.LinkedList;

@@ -1,6 +1,6 @@
 package cz.ambrogenea.familyvision.model.response.tree;
 
-import cz.ambrogenea.familyvision.dto.DatePlaceDto;
+import cz.ambrogenea.familyvision.model.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.enums.Sex;
 
 public record PersonRecordResponse(

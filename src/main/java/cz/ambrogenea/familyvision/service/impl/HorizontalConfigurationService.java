@@ -2,18 +2,14 @@ package cz.ambrogenea.familyvision.service.impl;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
-import cz.ambrogenea.familyvision.dto.tree.Position;
 import cz.ambrogenea.familyvision.enums.LabelType;
-import cz.ambrogenea.familyvision.repository.VisualConfigurationRepository;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class HorizontalConfigurationService implements ConfigurationExtensionService {
 
-    private final VisualConfiguration configuration;
-
-    public HorizontalConfigurationService() {
-        this.configuration = VisualConfigurationRepository.get().find();
-    }
+    private final VisualConfiguration configuration = Services.visual().get();
 
     @Override
     public int getMarriageLabelWidth() {

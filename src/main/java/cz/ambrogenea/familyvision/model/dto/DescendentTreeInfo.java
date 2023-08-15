@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.dto;
+package cz.ambrogenea.familyvision.model.dto;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>

@@ -1,6 +1,6 @@
 package cz.ambrogenea.familyvision.mapper.response;
 
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.model.response.tree.ImageModelResponse;
 import cz.ambrogenea.familyvision.model.response.tree.TreeModelResponse;
 

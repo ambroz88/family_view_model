@@ -1,8 +1,8 @@
 package cz.ambrogenea.familyvision.mapper.dto;
 
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.tree.PersonRecord;
-import cz.ambrogenea.familyvision.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.tree.PersonRecord;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
 
 import java.util.ArrayList;
 

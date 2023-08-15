@@ -6,16 +6,12 @@ import cz.ambrogenea.familyvision.mapper.response.TreeShapeConfigurationResponse
 import cz.ambrogenea.familyvision.model.request.TreeShapeConfigurationRequest;
 import cz.ambrogenea.familyvision.model.response.TreeShapeConfigurationResponse;
 import cz.ambrogenea.familyvision.service.TreeShapeConfigurationService;
-import cz.ambrogenea.familyvision.service.impl.TreeShapeConfigurationServiceImpl;
 import cz.ambrogenea.familyvision.service.util.JsonParser;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class TreeShapeConfigurationController {
 
-    private final TreeShapeConfigurationService configurationService;
-
-    public TreeShapeConfigurationController() {
-        configurationService = new TreeShapeConfigurationServiceImpl();
-    }
+    private final TreeShapeConfigurationService configurationService = Services.treeShape();
 
     public String get() throws JsonProcessingException {
         TreeShapeConfigurationResponse response = TreeShapeConfigurationResponseMapper.map(configurationService.get());

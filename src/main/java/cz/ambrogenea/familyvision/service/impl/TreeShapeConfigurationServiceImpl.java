@@ -5,18 +5,13 @@ import cz.ambrogenea.familyvision.mapper.domain.TreeShapeConfigurationMapper;
 import cz.ambrogenea.familyvision.model.command.TreeShapeConfigurationCommand;
 import cz.ambrogenea.familyvision.repository.TreeShapeConfigurationRepository;
 import cz.ambrogenea.familyvision.service.TreeShapeConfigurationService;
-import cz.ambrogenea.familyvision.service.util.Config;
 
 /**
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class TreeShapeConfigurationServiceImpl implements TreeShapeConfigurationService {
 
-    private final TreeShapeConfigurationRepository configurationRepository;
-
-    public TreeShapeConfigurationServiceImpl() {
-        configurationRepository = TreeShapeConfigurationRepository.get();
-    }
+    private final TreeShapeConfigurationRepository configurationRepository = new TreeShapeConfigurationRepository();
 
     @Override
     public TreeShapeConfiguration get() {

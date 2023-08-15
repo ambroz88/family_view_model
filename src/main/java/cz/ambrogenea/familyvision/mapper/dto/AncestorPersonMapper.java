@@ -1,7 +1,7 @@
 package cz.ambrogenea.familyvision.mapper.dto;
 
 import cz.ambrogenea.familyvision.domain.Person;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 
 import java.util.ArrayList;
 

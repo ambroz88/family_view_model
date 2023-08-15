@@ -1,9 +1,9 @@
 package cz.ambrogenea.familyvision.service;
 
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.ParentsDto;
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.ParentsDto;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 
 public interface CommonAncestorService {
     Position addSiblingsAndDescendents(AncestorPerson person);

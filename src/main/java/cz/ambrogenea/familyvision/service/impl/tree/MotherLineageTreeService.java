@@ -1,8 +1,8 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.service.LineageService;
 import cz.ambrogenea.familyvision.service.TreeService;
 import cz.ambrogenea.familyvision.service.util.Config;

@@ -1,7 +1,7 @@
 package cz.ambrogenea.familyvision.service.impl.selection;
 
 import cz.ambrogenea.familyvision.domain.Person;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.service.SelectionService;
 import cz.ambrogenea.familyvision.service.util.Config;
 import cz.ambrogenea.familyvision.service.util.Services;

@@ -1,14 +1,15 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.ParentsDto;
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.ParentsDto;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.service.CommonAncestorService;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.TreeService;
 import cz.ambrogenea.familyvision.service.util.Config;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class AllAncestorTreeService implements TreeService {
 
@@ -38,8 +39,8 @@ public class AllAncestorTreeService implements TreeService {
         } else {
             parentsDto = ancestorService.generateHorizontalParents(heraldryPosition, child);
         }
-        ConfigurationExtensionService horizontalConfig = Config.horizontal();
-        ConfigurationExtensionService verticalConfig = Config.vertical();
+        ConfigurationExtensionService horizontalConfig = Services.horizontal();
+        ConfigurationExtensionService verticalConfig = Services.vertical();
 
         if (child.getMother() != null) {
             AncestorPerson mother = child.getMother();
@@ -58,7 +59,7 @@ public class AllAncestorTreeService implements TreeService {
             );
             if (mother.hasMinOneParent()) {
                 mother.moveOlderSiblingsToYounger();
-                ancestorService.addSiblings(new Position(motherHeraldryPosition.x() - Config.horizontal().getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
+                ancestorService.addSiblings(new Position(motherHeraldryPosition.x() - Services.horizontal().getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
                 if (mother.getYoungerSiblings().isEmpty()) {
                     ancestorService.addLine(motherHeraldryPosition, parentsDto.wifePosition());
                 } else {

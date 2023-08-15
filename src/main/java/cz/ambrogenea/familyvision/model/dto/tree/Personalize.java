@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.domain;
+package cz.ambrogenea.familyvision.model.dto.tree;
 
 import cz.ambrogenea.familyvision.enums.Sex;
 

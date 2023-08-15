@@ -1,7 +1,6 @@
-package cz.ambrogenea.familyvision.dto.tree;
+package cz.ambrogenea.familyvision.model.dto.tree;
 
-import cz.ambrogenea.familyvision.dto.DatePlaceDto;
-import cz.ambrogenea.familyvision.domain.Personalize;
+import cz.ambrogenea.familyvision.model.dto.DatePlaceDto;
 import cz.ambrogenea.familyvision.domain.Residence;
 import cz.ambrogenea.familyvision.enums.Sex;
 

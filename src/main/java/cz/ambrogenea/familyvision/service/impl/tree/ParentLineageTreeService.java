@@ -2,14 +2,15 @@ package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.ParentsDto;
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.ParentsDto;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.LineageService;
 import cz.ambrogenea.familyvision.service.TreeService;
 import cz.ambrogenea.familyvision.service.util.Config;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 public class ParentLineageTreeService implements TreeService {
 
@@ -61,7 +62,7 @@ public class ParentLineageTreeService implements TreeService {
             }
         }
 
-        int fatherHeraldryX = parentsDto.husbandPosition().x() - Config.horizontal().getMotherHorizontalDistance() - fatherSiblingsWidth;
+        int fatherHeraldryX = parentsDto.husbandPosition().x() - Services.horizontal().getMotherHorizontalDistance() - fatherSiblingsWidth;
 
         Position fatherHeraldry = new Position(fatherHeraldryX, parentsDto.nextHeraldryY());
         lineageService.generateFathersFamily(fatherHeraldry, father);
@@ -84,7 +85,7 @@ public class ParentLineageTreeService implements TreeService {
             }
         }
 
-        ConfigurationExtensionService extensionConfig = Config.horizontal();
+        ConfigurationExtensionService extensionConfig = Services.horizontal();
         int motherHeraldryX = parentsDto.wifePosition().x() + extensionConfig.getFatherHorizontalDistance() + motherSiblingsWidth;
 
         Position motherHeraldry = new Position(motherHeraldryX, parentsDto.nextHeraldryY());

@@ -1,13 +1,14 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.service.util.Config;
-import cz.ambrogenea.familyvision.dto.AncestorPerson;
-import cz.ambrogenea.familyvision.dto.ParentsDto;
-import cz.ambrogenea.familyvision.dto.tree.Position;
-import cz.ambrogenea.familyvision.dto.tree.TreeModel;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.dto.ParentsDto;
+import cz.ambrogenea.familyvision.model.dto.tree.Position;
+import cz.ambrogenea.familyvision.model.dto.tree.TreeModel;
 import cz.ambrogenea.familyvision.enums.CoupleType;
 import cz.ambrogenea.familyvision.service.ConfigurationExtensionService;
 import cz.ambrogenea.familyvision.service.LineageService;
+import cz.ambrogenea.familyvision.service.util.Services;
 
 import java.util.Objects;
 
@@ -59,9 +60,9 @@ public class LineageServiceImpl extends CommonAncestorServiceImpl implements Lin
 
     private ParentsDto generateSwitchedParents(Position heraldryPosition, AncestorPerson child) {
         if (Config.treeShape().getCoupleType() == CoupleType.VERTICAL) {
-            return generateSwitchedParents(heraldryPosition, child, Config.vertical());
+            return generateSwitchedParents(heraldryPosition, child, Services.vertical());
         } else {
-            return generateSwitchedParents(heraldryPosition, child, Config.horizontal());
+            return generateSwitchedParents(heraldryPosition, child, Services.horizontal());
         }
     }
 

@@ -1,4 +1,4 @@
-package cz.ambrogenea.familyvision.dto;
+package cz.ambrogenea.familyvision.model.dto;
 
 import java.util.ArrayList;
 import java.util.List;

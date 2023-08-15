@@ -1,6 +1,6 @@
 package cz.ambrogenea.familyvision.mapper.response;
 
-import cz.ambrogenea.familyvision.dto.tree.Arc;
+import cz.ambrogenea.familyvision.model.dto.tree.Arc;
 import cz.ambrogenea.familyvision.model.response.tree.ArcResponse;
 import cz.ambrogenea.familyvision.model.response.tree.PositionResponse;
 

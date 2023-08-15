@@ -1,21 +1,38 @@
 package cz.ambrogenea.familyvision.service.util;
 
-import cz.ambrogenea.familyvision.service.CityService;
-import cz.ambrogenea.familyvision.service.FamilyTreeService;
-import cz.ambrogenea.familyvision.service.MarriageService;
-import cz.ambrogenea.familyvision.service.PersonService;
-import cz.ambrogenea.familyvision.service.impl.CityServiceImpl;
-import cz.ambrogenea.familyvision.service.impl.FamilyTreeServiceImpl;
-import cz.ambrogenea.familyvision.service.impl.MarriageServiceImpl;
-import cz.ambrogenea.familyvision.service.impl.PersonServiceImpl;
+import cz.ambrogenea.familyvision.service.*;
+import cz.ambrogenea.familyvision.service.impl.*;
 
 public class Services {
 
+    private static VisualConfigurationService visualConfigService;
+    private static TreeShapeConfigurationService treeShapeConfigService;
     private static PersonService personService;
     private static MarriageService marriageService;
     private static FamilyTreeService familyTreeService;
     private static CityService cityService;
 
+    public static ConfigurationExtensionService horizontal() {
+        return new HorizontalConfigurationService();
+    }
+
+    public static ConfigurationExtensionService vertical() {
+        return new VerticalConfigurationService();
+    }
+
+    public static VisualConfigurationService visual() {
+        if (visualConfigService == null) {
+            visualConfigService = new VisualConfigurationServiceImpl();
+        }
+        return visualConfigService;
+    }
+
+    public static TreeShapeConfigurationService treeShape() {
+        if (treeShapeConfigService == null) {
+            treeShapeConfigService = new TreeShapeConfigurationServiceImpl();
+        }
+        return treeShapeConfigService;
+    }
 
     public static PersonService person() {
         if (personService == null) {
@@ -44,5 +61,4 @@ public class Services {
         }
         return cityService;
     }
-
 }

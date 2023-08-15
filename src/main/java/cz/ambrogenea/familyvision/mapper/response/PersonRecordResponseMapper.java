@@ -1,6 +1,6 @@
 package cz.ambrogenea.familyvision.mapper.response;
 
-import cz.ambrogenea.familyvision.dto.tree.PersonRecord;
+import cz.ambrogenea.familyvision.model.dto.tree.PersonRecord;
 import cz.ambrogenea.familyvision.model.response.tree.PersonRecordResponse;
 import cz.ambrogenea.familyvision.model.response.tree.PositionResponse;
 

@@ -2,7 +2,7 @@ package cz.ambrogenea.familyvision.mapper.response;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.VisualConfiguration;
-import cz.ambrogenea.familyvision.dto.tree.PageMaxCoordinates;
+import cz.ambrogenea.familyvision.model.dto.tree.PageMaxCoordinates;
 import cz.ambrogenea.familyvision.model.response.tree.PageSetupResponse;
 import cz.ambrogenea.familyvision.model.response.tree.PositionResponse;
 import cz.ambrogenea.familyvision.service.util.Config;
