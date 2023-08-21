@@ -1,7 +1,6 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
-import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.ParentsDto;
 import cz.ambrogenea.familyvision.model.dto.tree.Position;
@@ -15,11 +14,9 @@ import cz.ambrogenea.familyvision.service.util.Services;
 public class ParentLineageTreeService implements TreeService {
 
     private LineageService lineageService;
-    private VisualConfiguration configService;
 
     @Override
     public TreeModel generateTreeModel(AncestorPerson rootPerson) {
-        configService = Config.visual();
         final String treeName;
         if (Config.treeShape().getAncestorGenerations() == 0) {
             treeName = "Rozrod ";
@@ -58,7 +55,7 @@ public class ParentLineageTreeService implements TreeService {
 
             int fathersSiblings = father.getFather().getMaxYoungerSiblings();
             if (fathersSiblings > 0) {
-                fatherSiblingsWidth = fathersSiblings * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
+                fatherSiblingsWidth = fathersSiblings * (Config.visual().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
             }
         }
 
@@ -69,7 +66,7 @@ public class ParentLineageTreeService implements TreeService {
         if (father.getOlderSiblings().isEmpty()) {
             lineageService.addLine(fatherHeraldry, parentsDto.husbandPosition());
         } else {
-            lineageService.addSiblings(new Position(fatherHeraldryX + configService.getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
+            lineageService.addSiblings(new Position(fatherHeraldryX + Config.visual().getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
             lineageService.addLine(parentsDto.husbandPosition(), fatherHeraldry);
         }
     }
@@ -81,7 +78,7 @@ public class ParentLineageTreeService implements TreeService {
 
             int mothersSiblings = mother.getFather().getMaxOlderSiblings();
             if (mothersSiblings > 0) {
-                motherSiblingsWidth = mothersSiblings * (configService.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
+                motherSiblingsWidth = mothersSiblings * (Config.visual().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) + Spaces.SIBLINGS_GAP;
             }
         }
 
@@ -93,7 +90,7 @@ public class ParentLineageTreeService implements TreeService {
         if (mother.getYoungerSiblings().isEmpty()) {
             lineageService.addLine(motherHeraldry, parentsDto.wifePosition());
         } else {
-            lineageService.addSiblings(new Position(motherHeraldryX - extensionConfig.getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
+            lineageService.addSiblings(new Position(motherHeraldryX - extensionConfig.getSpouseDistance() - Config.visual().getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
             lineageService.addLine(parentsDto.wifePosition(), motherHeraldry);
         }
     }

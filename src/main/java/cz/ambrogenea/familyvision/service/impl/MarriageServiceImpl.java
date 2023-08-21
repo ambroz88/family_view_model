@@ -25,14 +25,6 @@ public class MarriageServiceImpl implements MarriageService {
         marriageCreateCommand.getChildrenGedcomIds().forEach(childId -> {
                     Person child = Services.person().getByGedcomId(childId, treeId);
                     if (child != null) {
-                        Person father = Services.person().getByGedcomId(marriageCreateCommand.getGedcomHusbandId(), treeId);
-                        Person mother = Services.person().getByGedcomId(marriageCreateCommand.getGedcomWifeId(), treeId);
-                        if (father != null) {
-                            child.setFatherId(father.getId());
-                        }
-                        if (mother != null) {
-                            child.setMotherId(mother.getId());
-                        }
                         child.setParentId(marriage.getId());
                         Services.person().savePerson(child);
                         marriage.getChildrenIds().add(child.getId());

@@ -13,23 +13,23 @@ import java.util.stream.Collectors;
 public class PersonMapper {
 
     public static Person map(PersonCreateCommand personCreateCommand, Long birthCityId, Long deathCityId) {
-        return new Person(
-                personCreateCommand.getGedcomId(),
-                personCreateCommand.getFamilyTreeId(),
-                Objects.requireNonNullElse(personCreateCommand.getFirstName(), ""),
-                Objects.requireNonNullElse(personCreateCommand.getSurname(), ""),
-                personCreateCommand.getSex(),
-                personCreateCommand.isLiving(),
-                personCreateCommand.getBirthDate(),
-                birthCityId,
-                personCreateCommand.getDeathDate(),
-                deathCityId,
-                Objects.requireNonNullElse(personCreateCommand.getOccupation(), ""),
-                personCreateCommand.getResidenceList().stream()
-                        .map(ResidenceMapper::map)
-                        .collect(Collectors.toList()),
-                new ArrayList<>()
-        );
+        Person person = new Person();
+        person.setGedcomId(personCreateCommand.getGedcomId());
+        person.setFamilyTreeId(personCreateCommand.getFamilyTreeId());
+        person.setFirstName(Objects.requireNonNullElse(personCreateCommand.getFirstName(), ""));
+        person.setSurname(Objects.requireNonNullElse(personCreateCommand.getSurname(), ""));
+        person.setSex(personCreateCommand.getSex());
+        person.setLiving(personCreateCommand.isLiving());
+        person.setBirthDate(personCreateCommand.getBirthDate());
+        person.setBirthPlaceId(birthCityId);
+        person.setDeathDate(personCreateCommand.getDeathDate());
+        person.setDeathPlaceId(deathCityId);
+        person.setOccupation(Objects.requireNonNullElse(personCreateCommand.getOccupation(), ""));
+        person.setResidences(personCreateCommand.getResidenceList().stream()
+                .map(ResidenceMapper::map)
+                .collect(Collectors.toList()));
+        person.setSpouseId(new ArrayList<>());
+        return person;
     }
 
 }

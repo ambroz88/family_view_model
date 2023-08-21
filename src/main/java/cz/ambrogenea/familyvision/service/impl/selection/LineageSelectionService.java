@@ -11,19 +11,20 @@ public class LineageSelectionService extends CommonSelectionService implements S
     @Override
     public AncestorPerson select(Long personId) {
         Person person = Services.person().getById(personId);
-        switch (Config.treeShape().getLineageType()) {
-            case FATHER -> fromPersonWithManParents(person, 1);
+        return switch (Config.treeShape().getLineageType()) {
+            case FATHER, ALL -> fromPersonWithManParents(person, 1);
             case MOTHER -> fromPersonWithWomanParents(person);
-            case PARENTS -> {
-                AncestorPerson ancestorPerson = fromPersonWithManParents(person, 1);
-                AncestorPerson ancestorPersonCopy = fromPersonWithWomanParents(person);
-                ancestorPerson.setMother(ancestorPersonCopy.getMother());
+            case PARENTS -> loadParents(person);
+        };
+    }
 
-                switchParentSiblings(ancestorPerson);
-                return ancestorPerson;
-            }
-        }
-        return fromPersonWithManParents(person, 1);
+    private AncestorPerson loadParents(Person person) {
+        AncestorPerson ancestorPerson = fromPersonWithManParents(person, 1);
+        AncestorPerson ancestorPersonCopy = fromPersonWithWomanParents(person);
+        ancestorPerson.setMother(ancestorPersonCopy.getMother());
+
+        switchParentSiblings(ancestorPerson);
+        return ancestorPerson;
     }
 
     private void switchParentSiblings(AncestorPerson person) {

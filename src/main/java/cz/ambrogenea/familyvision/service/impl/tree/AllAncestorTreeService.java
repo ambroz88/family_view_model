@@ -1,6 +1,5 @@
 package cz.ambrogenea.familyvision.service.impl.tree;
 
-import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
 import cz.ambrogenea.familyvision.model.dto.ParentsDto;
 import cz.ambrogenea.familyvision.model.dto.tree.Position;
@@ -14,7 +13,6 @@ import cz.ambrogenea.familyvision.service.util.Services;
 public class AllAncestorTreeService implements TreeService {
 
     private CommonAncestorService ancestorService;
-    private VisualConfiguration configService;
 
     @Override
     public TreeModel generateTreeModel(AncestorPerson rootPerson) {
@@ -24,7 +22,6 @@ public class AllAncestorTreeService implements TreeService {
         } else {
             treeName = "Vývod z předků ";
         }
-        configService = Config.visual();
         ancestorService = new CommonAncestorServiceImpl(rootPerson, treeName);
         Position heraldryPosition = ancestorService.addSiblingsAndDescendents(rootPerson);
 
@@ -51,7 +48,7 @@ public class AllAncestorTreeService implements TreeService {
                 mothersParentHeraldryHorizontalShift = 0;
             } else {
                 mothersParentHeraldryHorizontalShift = (int) (motherParentsCount * (verticalConfig.getCoupleWidth() + horizontalConfig.getMarriageLabelWidth()))
-                        - configService.getAdultImageWidth() / 2 - horizontalConfig.getMarriageLabelWidth() + horizontalConfig.getMarriageLabelWidth() / 2;
+                        - Config.visual().getAdultImageWidth() / 2 - horizontalConfig.getMarriageLabelWidth() + horizontalConfig.getMarriageLabelWidth() / 2;
             }
             Position motherHeraldryPosition = new Position(
                     parentsDto.wifePosition().x() + mothersParentHeraldryHorizontalShift,
@@ -59,7 +56,7 @@ public class AllAncestorTreeService implements TreeService {
             );
             if (mother.hasMinOneParent()) {
                 mother.moveOlderSiblingsToYounger();
-                ancestorService.addSiblings(new Position(motherHeraldryPosition.x() - Services.horizontal().getSpouseDistance() - configService.getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
+                ancestorService.addSiblings(new Position(motherHeraldryPosition.x() - Services.horizontal().getSpouseDistance() - Config.visual().getAdultImageWidth() / 2, parentsDto.wifePosition().y()), mother);
                 if (mother.getYoungerSiblings().isEmpty()) {
                     ancestorService.addLine(motherHeraldryPosition, parentsDto.wifePosition());
                 } else {
@@ -79,7 +76,7 @@ public class AllAncestorTreeService implements TreeService {
                 fathersParentHeraldryHorizontalShift = verticalConfig.getMarriageLabelWidth();
             } else {
                 fathersParentHeraldryHorizontalShift = (int) (fatherParentsCount * (verticalConfig.getCoupleWidth() + horizontalConfig.getMarriageLabelWidth()))
-                        - configService.getAdultImageWidth() / 2 - horizontalConfig.getMarriageLabelWidth() + horizontalConfig.getMarriageLabelWidth() / 2;
+                        - Config.visual().getAdultImageWidth() / 2 - horizontalConfig.getMarriageLabelWidth() + horizontalConfig.getMarriageLabelWidth() / 2;
             }
 
             Position fatherHeraldryPosition = new Position(
@@ -88,7 +85,7 @@ public class AllAncestorTreeService implements TreeService {
             );
             if (father.hasMinOneParent()) {
                 father.moveYoungerSiblingsToOlder();
-                ancestorService.addSiblings(new Position(fatherHeraldryPosition.x() + configService.getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
+                ancestorService.addSiblings(new Position(fatherHeraldryPosition.x() + Config.visual().getAdultImageWidth() / 2, parentsDto.husbandPosition().y()), father);
                 if (father.getOlderSiblings().isEmpty()) {
                     ancestorService.addLine(fatherHeraldryPosition, parentsDto.husbandPosition());
                 } else {

@@ -2,7 +2,6 @@ package cz.ambrogenea.familyvision.service.impl;
 
 import cz.ambrogenea.familyvision.constant.Spaces;
 import cz.ambrogenea.familyvision.domain.Residence;
-import cz.ambrogenea.familyvision.domain.VisualConfiguration;
 import cz.ambrogenea.familyvision.enums.LabelType;
 import cz.ambrogenea.familyvision.enums.Sex;
 import cz.ambrogenea.familyvision.mapper.dto.PersonRecordMapper;
@@ -15,11 +14,9 @@ import cz.ambrogenea.familyvision.utils.Tools;
 
 public class TreeModelServiceImpl implements TreeModelService {
 
-    private final VisualConfiguration configuration;
     private final TreeModel treeModel;
 
     public TreeModelServiceImpl(AncestorPerson rootPerson, String treeName) {
-        this.configuration = Config.visual();
         final PersonRecord personRecord = PersonRecordMapper.map(rootPerson, new Position());
         if (Config.treeShape().isShowResidence()) {
             addResidence(personRecord);
@@ -48,19 +45,19 @@ public class TreeModelServiceImpl implements TreeModelService {
             if (!residence.getCity().isEmpty()) {
 
                 if (person.directLineage()) {
-                    yShift = -configuration.getAdultImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5);
+                    yShift = -Config.visual().getAdultImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5);
 
                     if (person.sex().equals(Sex.FEMALE)) {
                         position = person.position().addXAndY(
-                                (configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2, yShift);
+                                (Config.visual().getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2, yShift);
                     } else {
                         position = person.position().addXAndY(
-                                -(configuration.getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2 - Spaces.RESIDENCE_SIZE, yShift);
+                                -(Config.visual().getAdultImageWidth() + Spaces.HORIZONTAL_GAP) / 2 - Spaces.RESIDENCE_SIZE, yShift);
                     }
                 } else {
                     position = person.position().addXAndY(
-                            -(configuration.getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) / 2 - Spaces.RESIDENCE_SIZE,
-                            -configuration.getSiblingImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5)
+                            -(Config.visual().getSiblingImageWidth() + Spaces.HORIZONTAL_GAP) / 2 - Spaces.RESIDENCE_SIZE,
+                            -Config.visual().getSiblingImageHeight() / 2 + i * (Spaces.RESIDENCE_SIZE + 5)
                     );
                 }
 
