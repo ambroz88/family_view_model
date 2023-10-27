@@ -1,7 +1,6 @@
 package cz.ambrogenea.familyvision.domain;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
 public class Residence {
@@ -25,25 +24,7 @@ public class Residence {
     }
 
     public void setCity(String city) {
-        int lastCommaIndex = city.indexOf(" - ");
-        int lastSpaceIndex = city.lastIndexOf(" ");
-        if (lastCommaIndex != -1) {
-            //removing part of the city e.g Praha - Strahov
-            this.city = city.substring(0, lastCommaIndex);
-            try {
-                this.number = Integer.parseInt(city.substring(lastSpaceIndex + 1));
-            } catch (NumberFormatException e) {
-            }
-        } else if (lastSpaceIndex != -1) {
-            this.city = city.substring(0, lastSpaceIndex);
-            try {
-                this.number = Integer.parseInt(city.substring(lastSpaceIndex + 1));
-            } catch (NumberFormatException e) {
-                this.city = city;
-            }
-        } else {
-            this.city = city;
-        }
+        this.city = city;
     }
 
     public String getDate() {

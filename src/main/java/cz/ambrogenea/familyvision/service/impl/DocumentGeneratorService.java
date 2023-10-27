@@ -1,5 +1,12 @@
-package cz.ambrogenea.familyvision.word;
+package cz.ambrogenea.familyvision.service.impl;
 
+import cz.ambrogenea.familyvision.mapper.response.TreeModelResponseMapper;
+import cz.ambrogenea.familyvision.model.dto.AncestorPerson;
+import cz.ambrogenea.familyvision.model.response.tree.TreeModelResponse;
+import cz.ambrogenea.familyvision.service.SelectionService;
+import cz.ambrogenea.familyvision.service.impl.selection.LineageSelectionService;
+import cz.ambrogenea.familyvision.service.impl.tree.FatherLineageTreeService;
+import cz.ambrogenea.familyvision.service.util.Config;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
@@ -9,12 +16,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * @author Jiri Ambroz <ambroz88@seznam.cz>
  */
-public class WordGenerator {
+public class DocumentGeneratorService {
 
     public static final String FORMAT_A4 = "A4";
     public static final String FORMAT_A5 = "A5";
@@ -34,8 +42,48 @@ public class WordGenerator {
     private static int MAX_HEIGHT_A4 = 18;
     private static final int GENERATION_HEIGHT_A4 = 6;
 
-    public static XWPFDocument createWordDocument(String format) {
-        XWPFDocument document = new XWPFDocument();
+    private XWPFDocument document;
+
+    public List<TreeModelResponse> createWordDocument(Long personId, String format) {
+        createWordDocument(format);
+        List<TreeModelResponse> resultModels = new ArrayList<>();
+
+        int originalGenerations = Config.treeShape().getAncestorGenerations();
+        Config.treeShape().setAncestorGenerations(15);
+        List<Long> fathers = getFathersId(personId);
+        Config.treeShape().setAncestorGenerations(originalGenerations);
+
+        resultModels.add(addFamilyToDoc(personId));
+
+        int index = originalGenerations;
+        while (index < fathers.size()){
+            resultModels.add(addFamilyToDoc(fathers.get(index)));
+            index = index + originalGenerations;
+        }
+
+        return resultModels;
+    }
+
+    private List<Long> getFathersId(Long personId) {
+        SelectionService selectionService = new LineageSelectionService();
+        AncestorPerson person = selectionService.select(personId);
+        List<Long> fathersId = new ArrayList<>();
+        AncestorPerson actualPerson = person;
+        while (actualPerson != null) {
+            fathersId.add(actualPerson.getId());
+            actualPerson = actualPerson.getParent();
+        }
+        return fathersId;
+    }
+
+    private TreeModelResponse addFamilyToDoc(Long id) {
+        SelectionService selectionService = new LineageSelectionService();
+        AncestorPerson person = selectionService.select(id);
+        return TreeModelResponseMapper.map(new FatherLineageTreeService().generateTreeModel(person));
+    }
+
+    public void createWordDocument(String format) {
+        document = new XWPFDocument();
         CTBody body = document.getDocument().getBody();
         FORMAT = format;
 
@@ -86,18 +134,16 @@ public class WordGenerator {
         pageMar.setTop(BigInteger.valueOf(795L));
         pageMar.setRight(BigInteger.valueOf(568L));
         pageMar.setBottom(BigInteger.valueOf(568L));
-
-        return document;
     }
 
-    public static void writeDocument(String fileName, XWPFDocument document) throws IOException {
+    public void saveDocument(String fileName) throws IOException {
         try (FileOutputStream out = new FileOutputStream(fileName)) {
             document.write(out);
             document.close();
         }
     }
 
-    public static void createFamilyPage(XWPFDocument document, String titleText) {
+    public void createFamilyPage(String titleText) {
         XWPFParagraph title = document.createParagraph();
         title.setAlignment(ParagraphAlignment.CENTER);
         title.setSpacingAfter(0);
@@ -110,7 +156,7 @@ public class WordGenerator {
         titleRun.setFontSize(TITLE_FONT_SIZE);
     }
 
-    public static void addImageToPage(XWPFDocument document, InputStream imageStream, int imageWidth, int imageHeight) {
+    public void addImageToPage(String name, InputStream imageStream, int imageWidth, int imageHeight) {
         try {
             int emuHeight = Units.EMU_PER_CENTIMETER * MAX_HEIGHT_A4;
             int emuMaxWidth = Units.EMU_PER_CENTIMETER * MAX_WIDTH_A4;
@@ -131,19 +177,20 @@ public class WordGenerator {
                 emuHeight = Units.pixelToEMU(pixelHeight);
             }
 
+            createFamilyPage(name);
             XWPFParagraph image = document.createParagraph();
             image.setAlignment(ParagraphAlignment.CENTER);
             XWPFRun imageRun = image.createRun();
             imageRun.addPicture(imageStream, XWPFDocument.PICTURE_TYPE_PNG, "", emuWidth, emuHeight);
 
-            addFamilyDescription(document);
+            addFamilyDescription();
             imageStream.close();
         } catch (InvalidFormatException | IOException ex) {
             System.out.println("Image was not added to word document: " + ex.getMessage());
         }
     }
 
-    private static void addFamilyDescription(XWPFDocument document) {
+    private void addFamilyDescription() {
         XWPFParagraph blankInfo = document.createParagraph();
         blankInfo.setAlignment(ParagraphAlignment.CENTER);
         blankInfo.setSpacingBetween(2);
@@ -166,7 +213,7 @@ public class WordGenerator {
         description.addBreak(BreakType.PAGE);
     }
 
-    public static void setMaxHeight(int generations) {
+    public void setMaxHeight(int generations) {
         if (generations != 0) {
             if (FORMAT.equals(FORMAT_A5)) {
                 MAX_HEIGHT_A5 = generations * GENERATION_HEIGHT_A5;
@@ -175,4 +222,9 @@ public class WordGenerator {
             }
         }
     }
+
+    public XWPFDocument getDocument() {
+        return document;
+    }
+
 }

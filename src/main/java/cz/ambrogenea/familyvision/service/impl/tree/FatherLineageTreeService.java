@@ -14,6 +14,8 @@ public class FatherLineageTreeService implements TreeService {
         final String treeName;
         if (Config.treeShape().getAncestorGenerations() == 0) {
             treeName = "Rozrod ";
+        } else if (Config.treeShape().getAncestorGenerations() <= 1 && Config.treeShape().getDescendentGenerations() <= 1) {
+            treeName = "Rodina ";
         } else {
             treeName = "Rodová linie ";
         }

@@ -9,23 +9,20 @@ public class ResidenceMapper {
         String city = createCommand.place();
         Residence residence = new Residence();
 
-        int lastCommaIndex = city.indexOf("-");
         int lastSpaceIndex = city.lastIndexOf(" ");
+        try {
+            int houseNumber = Integer.parseInt(city.substring(lastSpaceIndex + 1));
+            residence.setNumber(houseNumber);
+        } catch (NumberFormatException e) {
+            System.out.println("It wasn't possible to identify house number at residence '" + city + "'.");
+        }
+
+        int lastCommaIndex = city.indexOf(" - ");
         if (lastCommaIndex != -1) {
             //removing part of the city e.g Praha - Strahov
-            if (lastSpaceIndex != -1) {
-                try {
-                    residence.setNumber(Integer.parseInt(city.substring(lastSpaceIndex + 1)));
-                } catch (NumberFormatException e) {
-                }
-            }
             city = city.substring(0, lastCommaIndex).stripTrailing();
         } else if (lastSpaceIndex != -1) {
-            try {
-                residence.setNumber(Integer.parseInt(city.substring(lastSpaceIndex + 1)));
-                city = city.substring(0, lastSpaceIndex);
-            } catch (NumberFormatException e) {
-            }
+            city = city.substring(0, lastSpaceIndex);
         }
 
         residence.setCity(city);

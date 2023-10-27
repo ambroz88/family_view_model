@@ -172,6 +172,10 @@ public class AncestorPerson {
         return parents.getWife();
     }
 
+    public AncestorPerson getParent(){
+        return getFather() != null ? getFather() : getMother();
+    }
+
     public boolean hasMinOneParent() {
         return getFather() != null || getMother() != null;
     }
